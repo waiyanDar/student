@@ -23,6 +23,9 @@ public class AdminService {
 	}
 	
 	public void register(Admin admin) {
+		int nextId = findAllAdmin().size()+1;
+		String formattedId = String.format("USR%03d",nextId);
+		admin.setAdminId(formattedId);
 		Role role = roleDao.findByName(admin.getRole().getName()).get();
 		admin.setRole(role);
 		adminDao.save(admin);

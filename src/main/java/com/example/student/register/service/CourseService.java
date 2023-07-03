@@ -15,12 +15,13 @@ public class CourseService {
 	private CourseDao courseDao;
 	
 	public Course addCourse(Course course) {
-		
+		int nextId = findAllCourse().size()+1;
+		String formattedId = String.format("COU%03d",nextId);
+		course.setCourseId(formattedId);
 		return courseDao.save(course);
 	}
 	
 	public List<Course> findAllCourse(){
-		
 		return courseDao.findAll();
 	}
 
