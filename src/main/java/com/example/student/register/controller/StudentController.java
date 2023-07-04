@@ -23,7 +23,7 @@ public class StudentController {
             return "something's wrong";
         }
 
-        studentService.register(student);
+        studentService.registerStudent(student);
         return "successfully register";
     }
 
@@ -34,7 +34,7 @@ public class StudentController {
 
     @GetMapping("/findAll")
     public List<Student> findAllStudent(){
-        return studentService.findAll();
+        return studentService.findAllStudent();
     }
     @DeleteMapping("/delete")
     public String deleteStudent(@RequestParam("id") int id){

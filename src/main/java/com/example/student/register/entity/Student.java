@@ -1,7 +1,5 @@
 package com.example.student.register.entity;
 
-import java.time.LocalDate;
-
 import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -42,4 +40,9 @@ public class Student {
 		BACHELOR
 	}
 
+	@PostPersist
+	public void generateStudentId(){
+		String formattedId = String.format("STU%03d",id);
+		studentId = formattedId;
+	}
 }

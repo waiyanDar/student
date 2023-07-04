@@ -15,10 +15,7 @@ public class CourseService {
 	private CourseDao courseDao;
 	
 	public Course addCourse(Course course) {
-		courseDao.save(course);
-		String formattedId = String.format("COU%03d",course.getId());
-		course.setCourseId(formattedId);
-		return courseDao.saveAndFlush(course);
+		return courseDao.save(course);
 	}
 	
 	public List<Course> findAllCourse(){

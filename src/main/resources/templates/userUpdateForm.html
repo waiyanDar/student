@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html th:replace="layout/masterLayout :: layout(~{::main})" xmlns:th="http://www.thymeleaf.org">
+<body>
+<main role="main">
+
+    <div class="main_contents text-dark">
+        <div id="sub_content">
+            <form th:object="${oUser}" th:action="@{/userUpdate}" method="post">
+
+                <h2 class="col-md-6 offset-md-2 mb-5 mt-4">User Update</h2>
+                <div th:if="${usernameIsNull}" class="alert alert-danger text-center" role="alert">
+                    <span>Username is empty</span>
+                </div>
+                <div th:if="${passwordIsNull}" class="alert alert-danger text-center" role="alert">
+                    <span>Password is empty</span>
+                </div>
+                <div th:if="${passwordNotMatch}" class="alert alert-danger text-center" role="alert">
+                    <span>Password and confirm password aren't match</span>
+                </div>
+                <div th:if="${emailIsNull}" class="alert alert-danger text-center" role="alert">
+                    <span>Email is empty</span>
+                </div>
+                <div th:if="${emailPatternInvalid}" class="alert alert-danger text-center" role="alert">
+                    <span>Invalid email</span>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-2"></div>
+                    <label for="id" class="col-md-2 col-form-label">User Id</label>
+                    <div class="col-md-4">
+                        <input type="text" id="id" class="form-control"
+                               disabled th:field="*{userId}">
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-2"></div>
+                    <label for="email" class="col-md-2 col-form-label">Name</label>
+                    <div class="col-md-4">
+                        <input type="text" id="username" class="form-control"
+                               th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'" th:field="*{username}">
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('username')}"
+                               th:errors="*{username}"></small>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-2"></div>
+                    <label for="email" class="col-md-2 col-form-label">Email</label>
+                    <div class="col-md-4">
+                        <input type="text" id="email" class="form-control"
+                               th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" th:field="*{email}">
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('email')}"
+                               th:errors="*{email}"></small>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-2"></div>
+                    <label for="password" class="col-md-2 col-form-label">Password</label>
+                    <div class="col-md-4">
+                        <input type="text" id="password" class="form-control"
+                               th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'" th:field="*{password}">
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('password')}"
+                               th:errors="*{password}"></small>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-2"></div>
+                    <label for="confirmPassword" class="col-md-2 col-form-label">Confirm Password</label>
+                    <div class="col-md-4">
+                        <input type="text" id="confirmPassword" class="form-control"
+                               th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"
+                               th:field="*{confirmPassword}">
+                        <small class="invalid-feedback" th:if="${#fields.hasErrors('confirmPassword')}"
+                               th:errors="*{confirmPassword}"></small>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-2"></div>
+                    <label for="userRole" class="col-md-2 col-form-label">User Role</label>
+                    <div class="col-md-4">
+                        <select class="form-select" aria-label="Education" id="userRole" th:field="*{role.id}">
+                            <option th:each="r :${role}" th:value="${r.id}" th:text="${r.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-4"></div>
+
+                    <div class="col-md-6">
+
+
+                        <button type="submit" class="btn btn-secondary col-md-2" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">Add
+                        </button>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-dark" id="exampleModalLabel">Admin Update</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <h5 style="color: rgb(127, 209, 131);"> Successfully updated!</h5>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-success col-md-2" data-bs-dismiss="modal">
+                                            Ok
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -12,17 +12,15 @@ public class StudentService {
     @Autowired
     private StudentDao studentDao;
 
-    public void register(Student student){
+    public void registerStudent(Student student){
         studentDao.save(student);
-        String formattedId= String.format("STU%03d",student.getId());
-        student.setStudentId(formattedId);
     }
 
     public Student findStudent(int id){
         return studentDao.findById(id).get();
     }
 
-    public List<Student> findAll() {
+    public List<Student> findAllStudent() {
         return studentDao.findAll();
     }
 
