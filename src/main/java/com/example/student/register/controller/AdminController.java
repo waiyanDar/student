@@ -1,28 +1,21 @@
 package com.example.student.register.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.student.register.dao.RoleDao;
 import com.example.student.register.entity.Admin;
-import com.example.student.register.entity.Role;
 import com.example.student.register.service.AdminService;
 import com.example.student.register.service.RoleService;
 
-@RestController
-@RequestMapping("/api/v1")
+@Controller
 public class AdminController {
 
 	@Autowired
@@ -34,51 +27,75 @@ public class AdminController {
 	@Autowired
 	private RoleDao dao;
 
+	@GetMapping("/register")
+	public String registerForm(Model model) {
+		model.addAttribute("admin", new Admin());
+		model.addAttribute("role",roleService.findAllRole());
+		return "adminForm";
+	}
 	@PostMapping("/register")
-	public String register(@RequestBody @Validated Admin admin, BindingResult result) {
+	public String register( @Validated Admin admin, BindingResult result) {
 		if (result.hasErrors()){
-			String errorMessage = "";
-			for (FieldError error : result.getFieldErrors()) {
-				errorMessage += error.getDefaultMessage() + "; ";
-			}
-			return errorMessage;
+			return "adminForm";
 		}
 		adminService.register(admin);
-		return "successfully uploaded";
+		return "redirect:/findAllAdmin";
 	}
 
-	@PostMapping("/addRole")
-	public ResponseEntity<?> addRole(@RequestBody Role role) {
-		roleService.saveRole(role);
-		return ResponseEntity.status(HttpStatus.OK).body(role);
-	}
+//	@PostMapping("/addRole")
+//	public ResponseEntity<?> addRole(@RequestBody Role role) {
+//		roleService.saveRole(role);
+//		return ResponseEntity.status(HttpStatus.OK).body(role);
+//	}
 
 	@GetMapping("/getAdmin") 
-	public ResponseEntity<?> getAdmin(@RequestParam("id") int id) {
+	public String getAdmin(@RequestParam("id") int id) {
 	 
-		return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdmin(id)); 
+//		return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdmin(id)); 
+		return "hello";
 	 
 	 }
 	
-	@DeleteMapping("/delete")
+	@GetMapping("/delete")
 	public String deleteAdmin(@RequestParam("id") int id) {
 		
 		adminService.deleteAdmin(id);
 		
-		return "successfully deleted";
+		return "redirect:/findAllAdmin";
 	}
 	
-	@PutMapping("/update")
-	public ResponseEntity<?> updateAdmin(@RequestBody  Admin admin){
-		
-		return ResponseEntity.status(HttpStatus.OK).body(adminService.updateAdmin(admin));
+	String oAdminId;
+	int oId;
+	
+	@GetMapping("/adminForm")
+	public String uiChange(@RequestParam("id")int id, Model model) {
+		Admin oAdmin = adminService.getAdmin(id);
+		oAdminId = oAdmin.getAdminId();
+		oId = oAdmin.getId();
+		model.addAttribute("oAdmin",oAdmin);
+		model.addAttribute("role", roleService.findAllRole());
+		return "adminUploadForm";
+	}
+
+	
+	@PostMapping("/update")
+	public String updateAdmin(@Validated Admin admin, BindingResult result,RedirectAttributes redirectAttributes){
+		if (result.hasErrors()) {
+			return "redirect:/adminForm";
+		}
+		admin.setId(oId);
+		admin.setAdminId(oAdminId);
+		adminService.updateAdmin(admin);
+		return "redirect:/findAllAdmin";
 	}
 	
 	
-	@GetMapping("/findAll")
-	public ResponseEntity<?> findAllAdmin(){
+	@GetMapping("/findAllAdmin")
+	public String findAllAdmin(Model model){
 		
-		return ResponseEntity.status(HttpStatus.OK).body(adminService.findAllAdmin());
+		model.addAttribute("adminList", adminService.findAllAdmin());
+		
+		return "adminList";
 	}
 	 
 }

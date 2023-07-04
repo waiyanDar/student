@@ -13,10 +13,9 @@ public class StudentService {
     private StudentDao studentDao;
 
     public void register(Student student){
-        int nextId= studentDao.findAll().size()+1;
-        String formattedId= String.format("STU%03d",nextId);
-        student.setStudentId(formattedId);
         studentDao.save(student);
+        String formattedId= String.format("STU%03d",student.getId());
+        student.setStudentId(formattedId);
     }
 
     public Student findStudent(int id){
@@ -30,5 +29,15 @@ public class StudentService {
     public void deleteStudent(int id) {
         Student student = findStudent(id);
         studentDao.delete(student);
+    }
+    
+    public Student updateStudent(Student student) {
+    	Student oStudent = findStudent(student.getId());
+    	oStudent.setName(student.getName());
+    	oStudent.setDateOfBirth(student.getDateOfBirth());
+    	oStudent.setPhone(student.getPhone());
+    	oStudent.setGender(student.getGender());
+    	oStudent.setEducation(student.getEducation());
+    	return studentDao.saveAndFlush(oStudent);
     }
 }

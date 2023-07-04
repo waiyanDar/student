@@ -26,29 +26,20 @@ public class Student {
 	
 	private String phone;
 	
+	@Enumerated(EnumType.STRING)
 	private Gender gender;
 
+	@Enumerated( EnumType.STRING)
 	private Education education;
 
-	
 	public enum Gender {
-		male,
-		female
+		MALE,
+		FEMALE
 	}
 
 	public enum Education{
-		DIPLOMA("Diploma in IT"),
-		BACHELOR("Bachelor of Computer Science");
-
-		private final String displayName;
-
-		Education(String displayName) {
-			this.displayName = displayName;
-		}
-
-		public String getDisplayName() {
-			return displayName;
-		}
+		DIPLOMA,
+		BACHELOR
 	}
 
 }

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<nav th:fragment="navbar" class="navbar bg-light navbar-dark text-dark">
+    <div class="container">       
+          <div class="col-5">
+            <a class="nav-link text-dark" th:href="@{/}"><h3>Student Registration</h3></a>
+        	</div>  
+        	<div class="col-6">
+            	<p>User: USR001 Harry</p>
+            	<p>Current Date : YY.MM.DD </p>
+        	</div>  
+        	<div class="col-1" >
+            	<input type="button" class="btn-basic" id="lgnout-button" value="Log Out" onclick="location.href='LGN001.html'">
+        	</div>              
+
+</div>
+</nav>
+</body>
+</html>

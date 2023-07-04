@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div  th:fragment="sidenav" class="sidenav">
+        
+        <button class="dropdown-btn" > Class Management <i class="fa fa-caret-down"></i></button>
+        
+            <div class="dropdown-container">
+          <a th:href="@{/addCourse}">Course Registration </a>
+          <a href="#">Student Registration </a>
+          <a href="#">Student Search </a>
+        </div>
+        <a th:href="@{/findAllAdmin}">Users Management</a>
+      </div>
+</body>
+</html>

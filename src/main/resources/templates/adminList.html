@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html  th:replace="layout/masterLayout :: layout(~{::main})" xmlns:th="http://www.thymeleaf.org">
+<body>
+<main role="main">
+<div class="main_contents">
+    <div id="sub_content">
+        <form class="row g-3 mt-3 ms-2">
+            <div class="col-auto">
+                <label for="staticEmail2" class="visually-hidden">User Id</label>
+                <input type="text" class="form-control" id="staticEmail2" placeholder="User ID">
+            </div>
+            <div class="col-auto">
+                <label for="inputPassword2" class="visually-hidden">User Name</label>
+                <input type="text" class="form-control" id="inputPassword2" placeholder="User Name">
+            </div>
+    
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary mb-3">Search</button>
+            </div>
+            <div class="col-auto">
+                <!-- <button type="button" class="btn btn-secondary " onclick="location.href = 'USR001.html';">
+                    Add
+                </button> -->
+                <a th:href="@{/register}" class="btn btn-secondary">Add</a>
+    
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-danger mb-3">Reset</button>
+            </div>
+        </form>
+    
+        <table class="table table-striped" id="stduentTable">
+            <thead>
+                <tr>
+                    
+                    <th scope="col">User ID</th>
+                    <th scope="col">User Name</th>
+                    <th scope="col">Details</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="admin : ${adminList}">
+    
+                    
+                    <td th:text="${admin.adminId}"></td>
+                    <td th:text="${admin.username}"></td>
+                    
+                <td>
+                    <!-- <button type="button" class="btn btn-success  " onclick="location.href = 'USR002.html';">
+                        Update
+                    </button> -->
+                    <a th:href="@{'/adminForm?id='+${admin.id}}" class="btn btn-success" type="button">Update</a>
+                </td>
+                <td><!-- <button type="submit" class="btn btn-secondary mb-3" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal">Delete</button> -->
+                    <a th:href="@{'/delete?id='+${admin.id}}" class="btn btn-secondary mb-3">Delete</a>
+                   </td>
+    
+                </tr>
+    
+            </tbody>
+        </table>
+    
+        <!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-dark" id="exampleModalLabel">Student Deletion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        
+                         <h5 class="text-danger">Are you sure want to delete !</h5>
+                    </div>
+                    <div class="modal-footer">
+                     <a th:href="@{'/delete?id='+${admin.id}}" class="btn btn-danger col-md-2">Delete</a>
+                     <button type="button" class="btn btn-success col-md-2" data-bs-dismiss="modal">Ok</button>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+</div></main>
+</body>
+</html>

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -30,10 +31,11 @@ public class Admin {
 	@NotBlank(message = "Username cannot be blank")
 	@NotNull(message = "Username cannot be empty")
 	@Pattern(regexp = "[A-Z a-z]*", message = "Name cannot be illegal characters")
-	@Column(unique = true)
 	private String username;
 
 	@Email(message = "Invalid Email format")
+	@NotBlank(message = "Email cannot be blank")
+	@NotEmpty(message = "Email cannot be empty")
 	private String email;
 
 	@NotNull(message = "password cannot be empty")
@@ -42,5 +44,36 @@ public class Admin {
 	
 	@ManyToOne
 	private Role role;
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Admin other = (Admin) obj;
+		if (adminId == null) {
+			if (other.adminId != null)
+				return false;
+		} else if (!adminId.equals(other.adminId))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((adminId == null) ? 0 : adminId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
 	
 }

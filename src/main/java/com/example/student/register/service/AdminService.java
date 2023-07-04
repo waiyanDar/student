@@ -12,7 +12,6 @@ import com.example.student.register.entity.Role;
 @Service
 public class AdminService {
 
-	
 	private final AdminDao adminDao;
 	
 	private final RoleDao roleDao;
@@ -23,12 +22,16 @@ public class AdminService {
 	}
 	
 	public void register(Admin admin) {
-		int nextId = findAllAdmin().size()+1;
-		String formattedId = String.format("USR%03d",nextId);
-		admin.setAdminId(formattedId);
-		Role role = roleDao.findByName(admin.getRole().getName()).get();
+		/*
+		 * int nextId = findAllAdmin().size()+1; String formattedId =
+		 * String.format("USR%03d",nextId); admin.setAdminId(formattedId);
+		 */
+		Role role = roleDao.findById(admin.getRole().getId()).get();
 		admin.setRole(role);
 		adminDao.save(admin);
+		String formattedId= String.format("USR%03d",admin.getId());
+		admin.setAdminId(formattedId);
+		adminDao.saveAndFlush(admin);
 	}
 	
 	public Admin getAdmin(int id) {
@@ -46,7 +49,7 @@ public class AdminService {
 		oAdmin.setUsername(admin.getUsername());
 		oAdmin.setEmail(admin.getEmail());
 		oAdmin.setPassword(admin.getPassword());
-		oAdmin.setRole(roleDao.findByName(admin.getRole().getName()).get());
+		oAdmin.setRole(roleDao.findById(admin.getRole().getId()).get());
 		
 		return adminDao.saveAndFlush(oAdmin);
 	}
