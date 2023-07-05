@@ -38,15 +38,13 @@ public class UserController {
 	}
 
 	@PostMapping("/registerUser")
-	public String registerUser(UserDto userDto, BindingResult result, RedirectAttributes attributes) {
+	public String registerUser(@Valid UserDto userDto, BindingResult result, RedirectAttributes attributes) {
 
 		String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 		Pattern pattern = Pattern.compile(emailRegex);
 		Matcher matcher = pattern.matcher(userDto.getEmail());
 		boolean isValidEmail = matcher.matches();
-		if (result.hasErrors()) {
-			return "redirect:/registerUser";
-		}
+
 		if (userDto.getUsername() == null || userDto.getUsername().isEmpty()) {
 			attributes.addFlashAttribute("usernameIsNull", true);
 			return "redirect:/registerUser";

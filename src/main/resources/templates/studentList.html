@@ -41,6 +41,9 @@
 							</tr>
 						</thead>
 						<tbody>
+						<tr th:if="${students.isEmpty()}">
+							<td>No Student available</td>
+						</tr>
 							<tr th:each="stu : ${students}">
 								<td th:text="${stu.studentId}"></td>
 								<td th:text="${stu.name}"></td>
