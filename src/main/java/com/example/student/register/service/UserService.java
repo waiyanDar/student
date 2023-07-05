@@ -57,6 +57,6 @@ public class UserService {
 
     public List<User> searchUser(Optional<String> userId, Optional<String> name) {
         Specification<User> specification = withUserId(userId).and(withName(name));
-        return userDao.findAllBy(specification);
+        return userDao.findAll(specification);
     }
 }

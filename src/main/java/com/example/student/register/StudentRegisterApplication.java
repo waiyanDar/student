@@ -22,12 +22,11 @@ public class StudentRegisterApplication implements CommandLineRunner {
 
 
     @Override
-    @Profile("test")
     public void run(String... args) throws Exception {
-//		Role role1 = new Role();
-//		role1.setName("ADMIN");
-//		Role role2 = new Role();
-//		role2.setName("STUDENT");
+		Role role1 = new Role();
+		role1.setName("ADMIN");
+		Role role2 = new Role();
+		role2.setName("STUDENT");
 //		roleDao.save(role1);
 //		roleDao.save(role2);
     }

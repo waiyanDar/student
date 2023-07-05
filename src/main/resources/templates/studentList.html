@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html th:replace="layout/masterLayout :: layout(~{::main})"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+	<main role="main">
+		<div class="main_contents">
+			<div id="sub_content">
+				<form th:action="@{/searchStudent}" method="get"
+					class="row g-3 mt-3 ms-2">
+					<div class="col-auto">
+						<label for="id" class="visually-hidden">studentID</label>
+						 <input type="text"  class="form-control" id="id"
+							name="studentId" th:value="${studentId}" placeholder="Student ID">
+					</div>
+					<div class="col-auto">
+						<label for="stuName" class="visually-hidden">studentName</label>
+						<input type="text"  class="form-control" th:value="${studentName}"
+							name="studentName" id="stuName" placeholder="Student Name">
+					</div>
+					<div class="col-auto">
+						<label for="inputPassword2" class="visually-hidden">Course</label>
+						<input type="text"  class="form-control" th:value="${courseName}"
+							name="courseName" id="inputPassword2" placeholder="Course">
+					</div>
+					<div class="col-auto">
+						<button type="submit" class="btn btn-success mb-3">Search</button>
+					</div>
+					<div class="col-auto">
+						<!-- <button type="submit" class="btn btn-secondary mb-3">Reset</button> -->
+						<a th:href="@{/findAllStudent}" class="btn btn-secondary mb-3">Reset</a>
+					</div>
+				</form>
+				<div>
+					<table class="table table-striped" id="stduentTable">
+						<thead>
+							<tr>
+								<th scope="col">Student ID</th>
+								<th scope="col">Name</th>
+								<th scope="col">Course Name</th>
+								<th scope="col">Details</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="stu : ${students}">
+								<td th:text="${stu.studentId}"></td>
+								<td th:text="${stu.name}"></td>
+								<td><span style="margin-right: 10px;"
+									th:each="c : ${stu.courses}" th:text="${c.name}"> </span></td>
+								<td><a th:href="@{'/seeMore?id='+${stu.id}}"><button
+											type="submit" class="btn btn-secondary mb-2">See
+											More</button></a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</main>
+</body>
+</html>

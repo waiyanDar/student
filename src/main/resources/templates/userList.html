@@ -1,79 +1,73 @@
 <!DOCTYPE html>
-<html th:replace="layout/masterLayout :: layout(~{::main})" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="layout/masterLayout :: layout(~{::main})"
+	xmlns:th="http://www.thymeleaf.org">
 <body>
-<main role="main">
-    <div class="main_contents">
-        <div id="sub_content">
-            <form th:action="@{/searchUser}" method="get" class="row g-3 mt-3 ms-2">
-<!--                <div class="col-auto">-->
-<!--                    <label for="staticEmail2" class="visually-hidden">User Id</label>-->
-<!--                    <input type="text" class="form-control" id="staticEmail2" placeholder="User ID">-->
-<!--                </div>-->
-<!--                <div class="col-auto">-->
-<!--                    <label for="inputPassword2" class="visually-hidden">User Name</label>-->
-<!--                    <input type="text" class="form-control" id="inputPassword2" placeholder="User Name">-->
-<!--                </div>-->
+	<main role="main">
+		<div class="main_contents">
+			<div id="sub_content">
+				<form th:action="@{/searchUser}" method="get"
+					class="row g-3 mt-3 ms-2">
 
-                    <div class="col-auto">
-                    <label for="userId" class="visually-hidden">User ID</label>
-                    <input type="text" id="userId" name="userId" th:value="${searchUserId}" placeholder="User ID">
-                    </div>
+					<div class="col-auto">
+						<label for="userId" class="visually-hidden">User ID</label>
+						 <input type="text" id="userId" name="userId" th:value="${searchUserId}"
+							placeholder="User ID">
+					</div>
 
-                    <div class="col-auto">
-                    <label for="username" class="visually-hidden">Username:</label>
-                    <input type="text" id="username" name="username" th:value="${searchUsername}" placeholder="Username">
-                    </div>
+					<div class="col-auto">
+						<label for="username" class="visually-hidden">Username:</label> <input
+							type="text" id="username" name="username"
+							th:value="${searchUsername}" placeholder="Username">
+					</div>
 
-<!--                    <button type="submit">Search</button>-->
+					<!--                    <button type="submit">Search</button>-->
 
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-primary mb-3">Search</button>
-                </div>
+					<div class="col-auto">
+						<button type="submit" class="btn btn-primary mb-3">Search</button>
+					</div>
 
-                <div class="col-auto">
+					<div class="col-auto">
 
-                    <a th:href="@{/registerUser}" class="btn btn-secondary">Add</a>
+						<a th:href="@{/registerUser}" class="btn btn-secondary">Add</a>
 
-                </div>
+					</div>
 
-                <div class="col-auto">
-                    <a th:href="@{/findAllUser}" class="btn btn-danger mb-3">Reset</a>
-                </div>
-            </form>
+					<div class="col-auto">
+						<a th:href="@{/findAllUser}" class="btn btn-danger mb-3">Reset</a>
+					</div>
+				</form>
 
-            <div th:if="${success}" class="alert alert-warning" role="alert">
-                <span>Successfully added.</span>
-            </div>
+				<div th:if="${success}" class="alert alert-warning" role="alert">
+					<span>Successfully added.</span>
+				</div>
 
-            <table class="table table-striped" id="stduentTable">
-                <thead>
-                <tr>
+				<table class="table table-striped" id="stduentTable">
+					<thead>
+						<tr>
 
-                    <th scope="col">User ID</th>
-                    <th scope="col">User Name</th>
-                    <th scope="col">Details</th>
+							<th scope="col">User ID</th>
+							<th scope="col">User Name</th>
+							<th scope="col">Details</th>
 
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="user : ${userList}">
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="user : ${userList}">
 
-                    <td th:text="${user.getUserId}"></td>
-                    <td th:text="${user.username}"></td>
+							<td th:text="${user.getUserId}"></td>
+							<td th:text="${user.username}"></td>
 
-                    <td>
-                        <a th:href="@{'/userUpdate?id='+${user.id}}" class="btn btn-success" type="button">Update</a>
-                    </td>
-                    <td>
-                        <a th:href="@{'/deleteUser?id='+${user.id}}" class="btn btn-secondary mb-3">Delete</a>
-                    </td>
+							<td><a th:href="@{'/userUpdate?id='+${user.id}}"
+								class="btn btn-success" type="button">Update</a></td>
+							<td><a th:href="@{'/deleteUser?id='+${user.id}}"
+								class="btn btn-secondary mb-3">Delete</a></td>
 
-                </tr>
+						</tr>
 
-                </tbody>
-            </table>
+					</tbody>
+				</table>
 
-            <!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -90,8 +84,9 @@
                         </div>
                     </div>
                 </div> -->
-        </div>
-    </div>
-    </div></main>
+			</div>
+		</div>
+		</div>
+	</main>
 </body>
 </html>
