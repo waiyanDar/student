@@ -12,11 +12,11 @@ public class StudentService {
     @Autowired
     private StudentDao studentDao;
 
-    public void registerStudent(Student student){
+    public void registerStudent(Student student) {
         studentDao.save(student);
     }
 
-    public Student findStudent(int id){
+    public Student findStudent(int id) {
         return studentDao.findById(id).get();
     }
 
@@ -28,14 +28,14 @@ public class StudentService {
         Student student = findStudent(id);
         studentDao.delete(student);
     }
-    
+
     public Student updateStudent(Student student) {
-    	Student oStudent = findStudent(student.getId());
-    	oStudent.setName(student.getName());
-    	oStudent.setDateOfBirth(student.getDateOfBirth());
-    	oStudent.setPhone(student.getPhone());
-    	oStudent.setGender(student.getGender());
-    	oStudent.setEducation(student.getEducation());
-    	return studentDao.saveAndFlush(oStudent);
+        Student oStudent = findStudent(student.getId());
+        oStudent.setName(student.getName());
+        oStudent.setDateOfBirth(student.getDateOfBirth());
+        oStudent.setPhone(student.getPhone());
+        oStudent.setGender(student.getGender());
+        oStudent.setEducation(student.getEducation());
+        return studentDao.saveAndFlush(oStudent);
     }
 }

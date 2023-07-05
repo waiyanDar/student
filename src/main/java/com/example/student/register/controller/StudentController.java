@@ -18,8 +18,8 @@ public class StudentController {
     private StudentService studentService;
 
     @PostMapping("/registerStu")
-    public String registerStu(@RequestBody Student student, BindingResult result){
-        if (result.hasErrors()){
+    public String registerStu(@RequestBody Student student, BindingResult result) {
+        if (result.hasErrors()) {
             return "something's wrong";
         }
 
@@ -28,23 +28,24 @@ public class StudentController {
     }
 
     @GetMapping("/getStudent")
-    public String getStudent(@RequestParam("id") int id){
-       return studentService.findStudent(id).toString();
+    public String getStudent(@RequestParam("id") int id) {
+        return studentService.findStudent(id).toString();
     }
 
     @GetMapping("/findAll")
-    public List<Student> findAllStudent(){
+    public List<Student> findAllStudent() {
         return studentService.findAllStudent();
     }
+
     @DeleteMapping("/delete")
-    public String deleteStudent(@RequestParam("id") int id){
+    public String deleteStudent(@RequestParam("id") int id) {
         studentService.deleteStudent(id);
         return "successfully delete";
     }
-    
-    public ResponseEntity<?> updateStudent(@RequestBody Student student){
-    	
-    	return ResponseEntity.status(HttpStatus.OK).body(studentService.updateStudent(student));
+
+    public ResponseEntity<?> updateStudent(@RequestBody Student student) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(studentService.updateStudent(student));
     }
 
 }

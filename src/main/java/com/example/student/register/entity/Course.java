@@ -13,20 +13,20 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Course {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
 
-	private String courseId;
-	@NotNull(message = "Course name cannot be null")
-	@NotBlank(message = "Course name cannot be blank")
-	private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	@PostPersist
-	public void generateCourseId(){
-		String formattedId = String.format("COU%03d",id);
-		courseId = formattedId;
-	}
+    private String courseId;
+    @NotNull(message = "Course name cannot be null")
+    @NotBlank(message = "Course name cannot be blank")
+    private String name;
+
+    @PostPersist
+    public void generateCourseId() {
+        String formattedId = String.format("COU%03d", id);
+        courseId = formattedId;
+    }
 
 }

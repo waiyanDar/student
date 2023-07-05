@@ -11,38 +11,38 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Student {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
 
-	private String studentId;
-	private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-	@Column(name = "date_of_birth")
-	private String  dateOfBirth;
-	
-	private String phone;
-	
-	@Enumerated(EnumType.STRING)
-	private Gender gender;
+    private String studentId;
+    private String name;
 
-	@Enumerated( EnumType.STRING)
-	private Education education;
+    @Column(name = "date_of_birth")
+    private String dateOfBirth;
 
-	public enum Gender {
-		MALE,
-		FEMALE
-	}
+    private String phone;
 
-	public enum Education{
-		DIPLOMA,
-		BACHELOR
-	}
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
-	@PostPersist
-	public void generateStudentId(){
-		String formattedId = String.format("STU%03d",id);
-		studentId = formattedId;
-	}
+    @Enumerated(EnumType.STRING)
+    private Education education;
+
+    public enum Gender {
+        MALE,
+        FEMALE
+    }
+
+    public enum Education {
+        DIPLOMA,
+        BACHELOR
+    }
+
+    @PostPersist
+    public void generateStudentId() {
+        String formattedId = String.format("STU%03d", id);
+        studentId = formattedId;
+    }
 }

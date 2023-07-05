@@ -10,16 +10,16 @@ import com.example.student.register.entity.Course;
 
 @Service
 public class CourseService {
-	
-	@Autowired
-	private CourseDao courseDao;
-	
-	public Course addCourse(Course course) {
-		return courseDao.save(course);
-	}
-	
-	public List<Course> findAllCourse(){
-		return courseDao.findAll();
-	}
+
+    @Autowired
+    private CourseDao courseDao;
+
+    public void addCourse(Course course) {
+         courseDao.save(course);
+    }
+
+    public List<Course> findAllCourse() {
+        return courseDao.findAll();
+    }
 
 }

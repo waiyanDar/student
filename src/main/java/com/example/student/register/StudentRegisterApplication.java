@@ -11,25 +11,25 @@ import com.example.student.register.dao.RoleDao;
 
 @SpringBootApplication
 public class StudentRegisterApplication implements CommandLineRunner {
-	
-	@Autowired
-	private RoleDao roleDao;
-	
 
-	public static void main(String[] args) {
-		SpringApplication.run(StudentRegisterApplication.class, args);
-	}
+    @Autowired
+    private RoleDao roleDao;
 
 
-	@Override
-	@Profile("test")
-	public void run(String... args) throws Exception {
+    public static void main(String[] args) {
+        SpringApplication.run(StudentRegisterApplication.class, args);
+    }
+
+
+    @Override
+    @Profile("test")
+    public void run(String... args) throws Exception {
 //		Role role1 = new Role();
 //		role1.setName("ADMIN");
 //		Role role2 = new Role();
 //		role2.setName("STUDENT");
 //		roleDao.save(role1);
 //		roleDao.save(role2);
-	}
+    }
 
 }
