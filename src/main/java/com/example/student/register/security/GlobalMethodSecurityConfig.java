@@ -1,6 +1,9 @@
 package com.example.student.register.security;
 
+import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 
 public class GlobalMethodSecurityConfig extends GlobalMethodSecurityConfiguration {
@@ -10,4 +13,13 @@ public class GlobalMethodSecurityConfig extends GlobalMethodSecurityConfiguratio
 	public GlobalMethodSecurityConfig(RoleHierarchy roleHierarchy) {
 		this.roleHierarchy = roleHierarchy;
 	}
+
+	@Override
+	protected AccessDecisionManager accessDecisionManager() {
+		AffirmativeBased affirmativeBased = (AffirmativeBased) super.accessDecisionManager();
+		affirmativeBased.getDecisionVoters().add(new RoleHierarchyVoter(roleHierarchy));
+		return affirmativeBased;
+	}
+	
+	
 }
