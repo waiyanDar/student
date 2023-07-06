@@ -11,9 +11,12 @@ import com.example.student.register.entity.Course;
 @Service
 public class CourseService {
 
-    @Autowired
     private CourseDao courseDao;
 
+    public CourseService(CourseDao courseDao) {
+		this.courseDao = courseDao;
+	}
+    
     public void addCourse(Course course) {
          courseDao.save(course);
     }

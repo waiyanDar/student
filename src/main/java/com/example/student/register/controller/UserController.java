@@ -3,10 +3,13 @@ package com.example.student.register.controller;
 import com.example.student.register.dto.UserDto;
 import com.example.student.register.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -14,6 +17,7 @@ import com.example.student.register.service.UserService;
 import com.example.student.register.service.RoleService;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -24,11 +28,27 @@ import javax.validation.Valid;
 @Controller
 public class UserController {
 
-	@Autowired
 	private UserService userService;
 
-	@Autowired
 	private RoleService roleService;
+
+	private Authentication authentication;
+
+	public UserController(UserService userService, RoleService roleService) {
+		this.userService = userService;
+		this.roleService = roleService;
+	}
+
+	/*
+	 * @ModelAttribute("usernameAndUserId") public String loginUser() { User user=
+	 * userService.findUserByUserId(authentication.getName()); return
+	 * user.getUserId() + " " + user.getUsername(); }
+	 */
+
+	@ModelAttribute("loginDate")
+	public String loginDate() {
+		return LocalDate.now().toString();
+	}
 
 	@GetMapping("/registerUser")
 	public String registerForm(Model model) {
@@ -38,7 +58,8 @@ public class UserController {
 	}
 
 	@PostMapping("/registerUser")
-	public String registerUser(@Valid UserDto userDto, BindingResult result, RedirectAttributes attributes) {
+	public String registerUser(@Valid UserDto userDto, BindingResult result, RedirectAttributes attributes,
+			Model model) {
 
 		String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 		Pattern pattern = Pattern.compile(emailRegex);
@@ -62,31 +83,22 @@ public class UserController {
 			return "redirect:/registerUser";
 		} else if (!isValidEmail) {
 			attributes.addFlashAttribute("emailPatternInvalid", true);
-			return //
-			"redirect:/registerUser";
+			return "redirect:/registerUser";
 		}
 
 		if (result.hasErrors()) {
+
 			return "redirect:/registerUser";
 		}
 		User user = User.form(userDto);
-		userService.registerUser(user, userDto.getRole().getId());
+		try {
+			userService.registerUser(user, userDto.getRole().getId());
+		} catch (DataIntegrityViolationException e) {
+			attributes.addFlashAttribute("emailDuplicate", true);
+			return "redirect:/registerUser";
+		}
 		return "redirect:/findAllUser";
 	}
-
-//	@PostMapping("/addRole")
-//	public ResponseEntity<?> addRole(@RequestBody Role role) {
-//		roleService.saveRole(role);
-//		return ResponseEntity.status(HttpStatus.OK).body(role);
-//	}
-
-//	@GetMapping("/findUser")
-//	public String findUser(@RequestParam("id") int id) {
-//
-////		return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdmin(id));
-//		return "hello";
-//
-//	 }
 
 	@GetMapping("/searchUser")
 	public String searchUser(@RequestParam("userId") Optional<String> userId,
@@ -99,10 +111,10 @@ public class UserController {
 	}
 
 	@GetMapping("/deleteUser")
-	public String deleteUser(@RequestParam("id") int id) {
+	public String deleteUser(@RequestParam("id") int id, RedirectAttributes attributes) {
 
 		userService.deleteUser(id);
-
+		attributes.addFlashAttribute("deleteUser", true);
 		return "redirect:/findAllUser";
 	}
 
@@ -111,7 +123,7 @@ public class UserController {
 
 	@GetMapping("/userUpdate")
 	public String uiChange(@RequestParam("id") int id, Model model) {
-		User oUser = userService.findUser(id);
+		User oUser = userService.findUserById(id);
 		oUserId = oUser.getUserId();
 		oId = oUser.getId();
 		model.addAttribute("oUser", UserDto.form(oUser));
@@ -161,6 +173,19 @@ public class UserController {
 		model.addAttribute("userList", userService.findAllUser());
 
 		return "userList";
+	}
+
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
+	
+	@GetMapping("/login-error")
+	public String loginError(RedirectAttributes attributes) {
+		
+		attributes.addFlashAttribute("loginError", true);
+	
+		return "redirect:/login";
 	}
 
 }

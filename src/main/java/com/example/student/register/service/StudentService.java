@@ -13,8 +13,12 @@ import java.util.Optional;
 
 @Service
 public class StudentService {
-    @Autowired
+    
     private StudentDao studentDao;
+    
+    public StudentService(StudentDao studentDao) {
+		this.studentDao = studentDao;
+	}
 
     public void registerStudent(Student student) {
         studentDao.save(student);

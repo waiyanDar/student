@@ -24,6 +24,10 @@
 						role="alert">
 						<span>Email is empty</span>
 					</div>
+					<div th:if="${emailDuplicate}" class="alert alert-danger text-center"
+						role="alert">
+						<span>Email is taken</span>
+					</div>
 					<div th:if="${emailPatternInvalid}"
 						class="alert alert-danger text-center" role="alert">
 						<span>Invalid email</span>
@@ -33,9 +37,8 @@
 						<label for="username" class="col-md-2 col-form-label">Name</label>
 						<div class="col-md-4">
 							<input type="text" id="username" class="form-control"
-								th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'"
-								th:field="*{username}"> <small class="invalid-feedback"
-								th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
+								
+								th:field="*{username}"> 
 						</div>
 					</div>
 					<div class="row mb-4">
@@ -43,9 +46,8 @@
 						<label for="email" class="col-md-2 col-form-label">Email</label>
 						<div class="col-md-4">
 							<input type="text" id="email" class="form-control"
-								th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
-								th:field="*{email}"> <small class="invalid-feedback"
-								th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+								
+								th:field="*{email}">
 						</div>
 					</div>
 					<div class="row mb-4">
@@ -53,9 +55,8 @@
 						<label for="password" class="col-md-2 col-form-label">Password</label>
 						<div class="col-md-4">
 							<input type="text" id="password" class="form-control"
-								th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
-								th:field="*{password}"> <small class="invalid-feedback"
-								th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></small>
+								
+								th:field="*{password}">
 						</div>
 					</div>
 					<div class="row mb-4">
@@ -64,11 +65,8 @@
 							Password</label>
 						<div class="col-md-4">
 							<input type="text" id="confirmPassword" class="form-control"
-								th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"
-								th:field="*{confirmPassword}"> <small
-								class="invalid-feedback"
-								th:if="${#fields.hasErrors('confirmPassword')}"
-								th:errors="*{confirmPassword}"></small>
+								
+								th:field="*{confirmPassword}"> 
 						</div>
 					</div>
 					<div class="row mb-4">
@@ -92,7 +90,7 @@
 							<button type="submit" class="btn btn-secondary col-md-2"
 								data-bs-toggle="modal" data-bs-target="#exampleModal">Add
 							</button>
-							<div class="modal fade" id="exampleModal" tabindex="-1"
+							<!-- <div class="modal fade" id="exampleModal" tabindex="-1"
 								aria-labelledby="exampleModalLabel" aria-hidden="true">
 								<div class="modal-dialog modal-dialog-centered">
 									<div class="modal-content">
@@ -112,7 +110,7 @@
 												data-bs-dismiss="modal">Ok</button>
 
 										</div>
-									</div>
+									</div> -->
 								</div>
 							</div>
 						</div>

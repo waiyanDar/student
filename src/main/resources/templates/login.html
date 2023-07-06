@@ -1,0 +1,48 @@
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="login-page">
+      <div class="form">
+        <div class="login">
+          <div class="login-header">
+            <h1>Welcome!</h1>
+            <p>Please check your data again.</p>
+          </div>
+        </div>
+        <form class="login-form" action="@{/login}" method="post" >
+          <div class="form-group">
+                    <input type="text" name="userId" class="form-control mt-4" placeholder="User Id">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="password" class="form-control mt-4" placeholder="Password">
+                </div>
+                <input type="submit" class="btn btn-primary btn-block mt-4 mb-5" value="Log In">
+        </form>
+      </div>
+    </div>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" href="test.css">
+</head>
+<body class="login-page-body">
+	<div class="login-page">
+		<div class="form">
+			<div class="login">
+				<div class="login-header">
+					<h1>Welcome!</h1>
+				</div>
+				<p th:if="${loginError}">Invalid user id and password</p>
+			</div>
+			<form class="login-form" th:action="@{/login}" method="post">
+				<input type="text" placeholder="User ID" name="username" /> 
+				<input type="password" placeholder="Password" name="password" />
+				<button type="submit">Login</button>
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -5,12 +5,12 @@
 	<main role="main">
 		<div class="main_contents">
 			<div id="sub_content">
-				<form th:action="@{/searchUser}" method="get"
+				<!--  <form th:action="@{/searchUser}" method="get"
 					class="row g-3 mt-3 ms-2">
 
 					<div class="col-auto">
-						<label for="userId" class="visually-hidden">User ID</label>
-						 <input type="text" id="userId" name="userId" th:value="${searchUserId}"
+						<label for="userId" class="visually-hidden">User ID</label> <input
+							type="text" id="userId" name="userId" th:value="${searchUserId}"
 							placeholder="User ID">
 					</div>
 
@@ -19,8 +19,6 @@
 							type="text" id="username" name="username"
 							th:value="${searchUsername}" placeholder="Username">
 					</div>
-
-					<!--                    <button type="submit">Search</button>-->
 
 					<div class="col-auto">
 						<button type="submit" class="btn btn-primary mb-3">Search</button>
@@ -35,49 +33,44 @@
 					<div class="col-auto">
 						<a th:href="@{/findAllUser}" class="btn btn-danger mb-3">Reset</a>
 					</div>
-				</form>
+				</form>  -->
 
 				<div th:if="${success}" class="alert alert-warning" role="alert">
 					<span>Successfully added.</span>
 				</div>
-				<div>
-				<table class="table table-striped" id="studentTable">
-					<thead>
-					<tr th:if="${userList.isEmpty()}">
-						<td colspan="2"> No User Available </td>
-					</tr>
-						<tr>
 
-							<th scope="col">User ID</th>
-							<th scope="col">User Name</th>
-							<th scope="col">Details</th>
+				<div class="table" style="width: 1100px">
+					<table class="table table-striped" id="userTable">
+						<thead>
+							<tr>
 
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="user : ${userList}">
+								<th scope="col">User ID</th>
+								<th scope="col">User Name</th>
+								<th scope="col">Details</th>
 
-							<td th:text="${user.getUserId}"></td>
-							<td th:text="${user.username}"></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="user : ${userList}">
 
-							<td><a th:href="@{'/userUpdate?id='+${user.id}}"
-								class="btn btn-success" type="button">Update</a></td>
-							<td><a th:href="@{'/deleteUser?id='+${user.id}}"
-								class="btn btn-secondary mb-3">Delete</a></td>
+								<td th:text="${user.getUserId}"></td>
+								<td th:text="${user.username}"></td>
 
-						</tr>
+								<td><a th:href="@{'/userUpdate?id='+${user.id}}"
+									class="btn btn-success me-3" type="button">Update</a> <a
+									th:href="@{'/deleteUser?id='+${user.id}}"
+									class="btn btn-secondary">Delete</a></td>
+							</tr>
 
-					</tbody>
-				</table>
-				<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-				<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-				<!--<script>
-					$(document).ready(function() {
-						$('#studentTable').DataTable();
-					});
-				</script>-->
+						</tbody>
+					</table>
+					<div class="col-auto">
+
+						<a th:href="@{/registerUser}" class="btn btn-secondary">Add</a>
+
+					</div>
+				</div>
 			</div>
-		</div>
 		</div>
 	</main>
 </body>

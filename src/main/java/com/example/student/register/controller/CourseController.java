@@ -1,11 +1,13 @@
 package com.example.student.register.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.time.LocalDate;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -15,8 +17,17 @@ import com.example.student.register.service.CourseService;
 @Controller
 public class CourseController {
 
-    @Autowired
+    
     private CourseService courseService;
+    
+    public CourseController(CourseService courseService) {
+    	this.courseService = courseService;
+    }
+    
+    @ModelAttribute("loginDate")
+	public String loginDate() {
+		return LocalDate.now().toString();
+	}
 
     @GetMapping("/addCourse")
     public String courseForm(Model model) {
@@ -30,15 +41,15 @@ public class CourseController {
             return "courseForm";
         }
         courseService.addCourse(course);
-        attributes.addFlashAttribute("success", true);
-        return "courseForm";
+        attributes.addFlashAttribute("successAddCourse", true);
+        return "redirect:/registerStudent";
     }
 
-    @GetMapping("/findAllCourse")
-    public String findAllCourse(Model model) {
-        model.addAttribute("courseList", courseService.findAllCourse());
-        return "courseList";
-    }
+	/*
+	 * @GetMapping("/findAllCourse") public String findAllCourse(Model model) {
+	 * model.addAttribute("courseList", courseService.findAllCourse()); return
+	 * "courseList"; }
+	 */
 
     @GetMapping("/")
     public String goHome() {

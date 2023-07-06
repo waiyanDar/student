@@ -9,6 +9,7 @@
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
   <link th:href="@{test.css}" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
 </head>
 <body>
 <div th:replace="fragments/navbar.html :: navbar"></div>
@@ -17,6 +18,11 @@
 
 <div class="col" th:replace="${main}"></div>
 </div>
+<!-- for data table -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script
+		src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
 <script>
             /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
             var dropdown = document.getElementsByClassName("dropdown-btn");
@@ -33,6 +39,15 @@
               }
               });
             }
+
+            /* for data table */
+            $(document).ready(function(){
+				$('#userTable').DataTable();
+            });
+
+            $(document).ready(function(){
+				$('#studentTable').DataTable();
+            });
             </script>
 </body>
 </html>

@@ -35,24 +35,24 @@ public class SpecificationUtil {
 		}
 		return Specification.where(null);
 	}
-	
-	public static Specification<Student> withStudentName(Optional<String> name){
-		if(name.filter(StringUtils::hasLength).isPresent()) {
+
+	public static Specification<Student> withStudentName(Optional<String> name) {
+		if (name.filter(StringUtils::hasLength).isPresent()) {
 			return (root, query, cb) -> cb.like(cb.lower(root.get("name")), name.get().toLowerCase().concat("%"));
 		}
-		
+
 		return Specification.where(null);
 	}
-	
-	public static Specification<Student> withCourse(Optional<String> course){
-		if(course.filter(StringUtils::hasLength).isPresent()) {
+
+	public static Specification<Student> withCourse(Optional<String> course) {
+		if (course.filter(StringUtils::hasLength).isPresent()) {
 //			return (root, query, cb) -> cb.like(cb.lower(root.get("courses.name")), course.get().toLowerCase().concat("%"));
-			return (root, query, cb) ->{
+			return (root, query, cb) -> {
 				Join<Student, Course> courseJoin = root.join("courses");
-			return cb.like(cb.lower(courseJoin.get("name")), course.get().toLowerCase().concat("%"));
+				return cb.like(cb.lower(courseJoin.get("name")), course.get().toLowerCase().concat("%"));
 			};
 		}
-		
+
 		return Specification.where(null);
 	}
 }

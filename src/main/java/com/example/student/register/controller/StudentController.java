@@ -3,15 +3,13 @@ package com.example.student.register.controller;
 import com.example.student.register.entity.Student;
 import com.example.student.register.service.CourseService;
 import com.example.student.register.service.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -21,10 +19,19 @@ import java.util.regex.Pattern;
 @Controller
 public class StudentController {
 
-    @Autowired
     private StudentService studentService;
-    @Autowired
+    
     private CourseService courseService;
+    
+    public StudentController(StudentService studentService, CourseService courseService) {
+    	this.studentService = studentService;
+    	this.courseService = courseService;
+    }
+    
+    @ModelAttribute("loginDate")
+	public String loginDate() {
+		return LocalDate.now().toString();
+	}
     
     @GetMapping("/registerStudent")
     public String getStudentRegisterForm(Model model) {

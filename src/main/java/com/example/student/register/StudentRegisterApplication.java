@@ -26,7 +26,7 @@ public class StudentRegisterApplication implements CommandLineRunner {
 		Role role1 = new Role();
 		role1.setName("ADMIN");
 		Role role2 = new Role();
-		role2.setName("STUDENT");
+		role2.setName("USER");
 //		roleDao.save(role1);
 //		roleDao.save(role2);
     }
