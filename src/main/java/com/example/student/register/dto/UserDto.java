@@ -19,6 +19,7 @@ public class UserDto {
     @NotBlank(message = "Username cannot be blank")
     @NotNull(message = "Username cannot be empty")
     @Pattern(regexp = "[A-Z a-z]*", message = "Name cannot be illegal characters")
+    @NotEmpty(message = "Username cannot be empty")
     private String username;
 
     @Email(message = "Invalid Email format")

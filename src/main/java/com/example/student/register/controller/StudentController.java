@@ -16,6 +16,8 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.validation.Valid;
+
 
 @Controller
 public class StudentController {
@@ -46,39 +48,31 @@ public class StudentController {
 
     @PostMapping("/registerStudent")
     @Admin
-    public String registerStudent(Student student, BindingResult result, Model model, RedirectAttributes attributes) {
-    	String phoneRegex = "[0-9]*";
-    	Pattern pattern = Pattern.compile(phoneRegex);
-    	Matcher matcher = pattern.matcher(student.getPhone());
-    	boolean phoneIsValid = matcher.matches();
-        if (student.getName() == null || student.getName().isEmpty()) {
-            attributes.addFlashAttribute("nameIsNull", true);
-            return "redirect:/registerStudent";
-        }
-        if (student.getPhone() == null || student.getPhone().isEmpty()) {
-            attributes.addFlashAttribute("phoneIsNull", true);
-            return "redirect:/registerStudent";
-        }
-        if (student.getDateOfBirth() == null || student.getDateOfBirth().isEmpty()) {
-            attributes.addFlashAttribute("dobIsNull", true);
-            return "redirect:/registerStudent";
-        } 
-        if (student.getGender() == null || student.getGender().name().isEmpty()) {
-            attributes.addFlashAttribute("genderIsNull", true);
-            return "redirect:/registerStudent";
-        } 
-        if (student.getEducation() == null || student.getEducation().name().isEmpty()) {
-            attributes.addFlashAttribute("eduIsNull", true);
-            return "redirect:/registerStudent";
-        } 
-        if(!phoneIsValid) {
-        	attributes.addFlashAttribute("invalidPh", true);
-        	return "redirect:/registerStudent";
-        }
-        if (student.getCourses() == null || student.getCourses().isEmpty()) {
-            attributes.addFlashAttribute("courseIsNull", true);
-            return "redirect:/registerStudent";
-        } 
+    public String registerStudent(@Valid Student student, BindingResult result, Model model, RedirectAttributes attributes) {
+		/*
+		 * String phoneRegex = "[0-9]*"; Pattern pattern = Pattern.compile(phoneRegex);
+		 * Matcher matcher = pattern.matcher(student.getPhone()); boolean phoneIsValid =
+		 * matcher.matches(); if (student.getName() == null ||
+		 * student.getName().isEmpty()) { attributes.addFlashAttribute("nameIsNull",
+		 * true); return "redirect:/registerStudent"; } if (student.getPhone() == null
+		 * || student.getPhone().isEmpty()) {
+		 * attributes.addFlashAttribute("phoneIsNull", true); return
+		 * "redirect:/registerStudent"; } if (student.getDateOfBirth() == null ||
+		 * student.getDateOfBirth().isEmpty()) {
+		 * attributes.addFlashAttribute("dobIsNull", true); return
+		 * "redirect:/registerStudent"; } if (student.getGender() == null ||
+		 * student.getGender().name().isEmpty()) {
+		 * attributes.addFlashAttribute("genderIsNull", true); return
+		 * "redirect:/registerStudent"; } if (student.getEducation() == null ||
+		 * student.getEducation().name().isEmpty()) {
+		 * attributes.addFlashAttribute("eduIsNull", true); return
+		 * "redirect:/registerStudent"; } if(!phoneIsValid) {
+		 * attributes.addFlashAttribute("invalidPh", true); return
+		 * "redirect:/registerStudent"; } if (student.getCourses() == null ||
+		 * student.getCourses().isEmpty()) {
+		 * attributes.addFlashAttribute("courseIsNull", true); return
+		 * "redirect:/registerStudent"; }
+		 */
         
         if (result.hasErrors()) {
         	model.addAttribute("genders", Student.Gender.values());

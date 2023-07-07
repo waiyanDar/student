@@ -32,21 +32,10 @@ public class StudentRegisterApplication {
     public static void main(String[] args) {
         SpringApplication.run(StudentRegisterApplication.class, args);
     }
-
-
-//    @Override
-//    public void run(String... args) throws Exception {
-//		Role role1 = new Role();
-//		role1.setName("ADMIN");
-//		Role role2 = new Role();
-//		role2.setName("USER");
-//		roleDao.save(role1);
-//		roleDao.save(role2);
-//    }
     
     @Bean
     @Transactional
-//    @Profile("Test")
+    @Profile("Test")
     public CommandLineRunner runner () {
     	return arg -> {
     		Role role1 = new Role();

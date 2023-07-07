@@ -18,7 +18,12 @@ public class RoleHierarchyConfig {
 																 .append(USER_ADMIN, USER_CREATE)
 																 .append(USER_ADMIN, USER_DELETE)
 																 .append(USER_ADMIN, USER_UPDATE)
-																 .append(USER_ADMIN, USER_READ).build());
+																 .append(USER_ADMIN, USER_READ)
+																 
+//																 .append(USER_CREATE, USER_READ)
+//																 .append(USER_DELETE, USER_READ)
+//																 .append(USER_UPDATE, USER_READ)
+																 .build());
 		
 		return roleHierarchyImpl;
 	}

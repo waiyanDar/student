@@ -37,7 +37,15 @@
 						<label for="username" class="col-md-2 col-form-label">Name</label>
 						<div class="col-md-4">
 							<input type="text" id="username" class="form-control"
+								placeholder="name"
+								th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'"
 								th:field="*{username}">
+								 <small class="invalid-feedback"
+								th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
+							<!-- <input type="text" id="username" class="form-control"
+								th:field="*{username}" th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'">
+								<small class="invalid-feedback"
+								th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small> -->
 						</div>
 					</div>
 					<div class="row mb-4">

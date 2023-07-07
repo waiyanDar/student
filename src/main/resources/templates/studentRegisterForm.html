@@ -44,7 +44,8 @@
 							<input type="text" id="name" class="form-control"
 								placeholder="name"
 								th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
-								th:field="*{name}"> <small class="invalid-feedback"
+								th:field="*{name}">
+								 <small class="invalid-feedback"
 								th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
 						</div>
 					</div>

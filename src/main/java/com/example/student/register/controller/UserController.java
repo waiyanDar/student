@@ -57,7 +57,6 @@ public class UserController {
 	}
 
 	@GetMapping("/registerUser")
-	@UserAdmin
 	@UserCreate
 	public String registerForm(Model model) {
 		model.addAttribute("user", new UserDto());
@@ -66,36 +65,29 @@ public class UserController {
 	}
 
 	@PostMapping("/registerUser")
-	@UserAdmin
 	@UserCreate
 	public String registerUser(@Valid UserDto userDto, BindingResult result, RedirectAttributes attributes,
 			Model model) {
-
-		String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-		Pattern pattern = Pattern.compile(emailRegex);
-		Matcher matcher = pattern.matcher(userDto.getEmail());
-		boolean isValidEmail = matcher.matches();
-
-		if (userDto.getUsername() == null || userDto.getUsername().isEmpty()) {
-			attributes.addFlashAttribute("usernameIsNull", true);
-			return "redirect:/registerUser";
-		}
-		if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
-			attributes.addFlashAttribute("passwordIsNull", true);
-			return "redirect:registerUser";
-		}
-		if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
-			attributes.addFlashAttribute("passwordNotMatch", true);
-			return "redirect:registerUser";
-		}
-		if (userDto.getEmail() == null || userDto.getEmail().isEmpty()) {
-			attributes.addFlashAttribute("emailIsNull", true);
-			return "redirect:/registerUser";
-		} else if (!isValidEmail) {
-			attributes.addFlashAttribute("emailPatternInvalid", true);
-			return "redirect:/registerUser";
-		}
-
+		/*
+		 * String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"; Pattern pattern =
+		 * Pattern.compile(emailRegex); Matcher matcher =
+		 * pattern.matcher(userDto.getEmail()); boolean isValidEmail =
+		 * matcher.matches();
+		 * 
+		 * if (userDto.getUsername() == null || userDto.getUsername().isEmpty()) {
+		 * attributes.addFlashAttribute("usernameIsNull", true); return
+		 * "redirect:/registerUser"; } if (userDto.getPassword() == null ||
+		 * userDto.getPassword().isEmpty()) {
+		 * attributes.addFlashAttribute("passwordIsNull", true); return
+		 * "redirect:registerUser"; } if
+		 * (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
+		 * attributes.addFlashAttribute("passwordNotMatch", true); return
+		 * "redirect:registerUser"; } if (userDto.getEmail() == null ||
+		 * userDto.getEmail().isEmpty()) { attributes.addFlashAttribute("emailIsNull",
+		 * true); return "redirect:/registerUser"; } else if (!isValidEmail) {
+		 * attributes.addFlashAttribute("emailPatternInvalid", true); return
+		 * "redirect:/registerUser"; }
+		 */
 		if (result.hasErrors()) {
 
 			return "redirect:/registerUser";
@@ -125,8 +117,7 @@ public class UserController {
 
 	
 	@GetMapping("/deleteUser")
-	@UserAdmin
-	@UserUpdate
+	@UserDelete
 	public String deleteUser(@RequestParam("id") int id, RedirectAttributes attributes) {
 
 		userService.deleteUser(id);
@@ -138,7 +129,6 @@ public class UserController {
 	int oId;
 
 	@GetMapping("/userUpdate")
-	@UserAdmin
 	@UserUpdate
 	public String uiChange(@RequestParam("id") int id, Model model) {
 		User oUser = userService.findUserById(id);
@@ -151,7 +141,6 @@ public class UserController {
 
 	@PostMapping("/userUpdate")
 	@UserUpdate
-	@UserAdmin
 	public String updateAdmin(UserDto userDto, RedirectAttributes attributes, BindingResult result, Model model) {
 		String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 		Pattern pattern = Pattern.compile(emailRegex);
@@ -196,9 +185,6 @@ public class UserController {
 	}
 
 	@GetMapping("/findAllUser")
-	@UserAdmin
-	@UserDelete
-	@UserUpdate
 	@UserRead
 	public String findAllAdmin(Model model) {
 

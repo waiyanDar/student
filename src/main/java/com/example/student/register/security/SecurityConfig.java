@@ -19,16 +19,9 @@ public class SecurityConfig {
 	@Autowired
 	private  RoleHierarchy roleHierarchy;
 
-	/*
-	 * public SecurityConfig(CustomAuthProvider customAuthProvider, RoleHierarchy
-	 * roleHierarchy) { this.customAuthProvider = customAuthProvider;
-	 * this.roleHierarchy = roleHierarchy; }
-	 */
-	
 	@Bean
 	public DefaultWebSecurityExpressionHandler expressionHandler() {
 		DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
-		System.out.println(roleHierarchy.toString());
 		handler.setRoleHierarchy(roleHierarchy);
 		return handler;
 	}

@@ -9,7 +9,10 @@
 				<h3>Student Registration</h3></a>
 			</div>
 			<div sec:authorize="isAuthenticated()" class="col-6">
-				<p>User: <span th:text ="${#authentication.getName()}"></span></p>
+				<p>User:
+				 <span th:text ="${#authentication.getName()}"></span>
+				 <span th:text ="${#authentication.getAuthorities()}"></span>
+				</p>
 				<p>Current Date : <span th:text="${loginDate}"></span></p>
 			</div>
 			<div sec:authorize="isAuthenticated()">
