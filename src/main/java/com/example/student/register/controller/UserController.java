@@ -2,7 +2,6 @@ package com.example.student.register.controller;
 
 import com.example.student.register.dto.UserDto;
 import com.example.student.register.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -92,7 +91,7 @@ public class UserController {
 		}
 		User user = User.form(userDto);
 		try {
-			userService.registerUser(user, userDto.getRole().getId());
+			userService.registerUser(user, userDto.getRoles());
 		} catch (DataIntegrityViolationException e) {
 			attributes.addFlashAttribute("emailDuplicate", true);
 			return "redirect:/registerUser";
@@ -163,7 +162,8 @@ public class UserController {
 		User user = User.form(userDto);
 		user.setId(oId);
 		user.setUserId(oUserId);
-		userService.updateUser(user, userDto.getRole().getId());
+//		userService.updateUser(user, userDto.getRoles().getId());
+		userService.updateUser(user, userDto.getRoles());
 		return "redirect:/findAllUser";
 	}
 

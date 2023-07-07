@@ -37,8 +37,8 @@
 						<label for="username" class="col-md-2 col-form-label">Name</label>
 						<div class="col-md-4">
 							<input type="text" id="username" class="form-control"
-								
-								th:field="*{username}"> 
+
+								th:field="*{username}">
 						</div>
 					</div>
 					<div class="row mb-4">
@@ -46,7 +46,7 @@
 						<label for="email" class="col-md-2 col-form-label">Email</label>
 						<div class="col-md-4">
 							<input type="text" id="email" class="form-control"
-								
+
 								th:field="*{email}">
 						</div>
 					</div>
@@ -55,7 +55,7 @@
 						<label for="password" class="col-md-2 col-form-label">Password</label>
 						<div class="col-md-4">
 							<input type="text" id="password" class="form-control"
-								
+
 								th:field="*{password}">
 						</div>
 					</div>
@@ -65,8 +65,8 @@
 							Password</label>
 						<div class="col-md-4">
 							<input type="text" id="confirmPassword" class="form-control"
-								
-								th:field="*{confirmPassword}"> 
+
+								th:field="*{confirmPassword}">
 						</div>
 					</div>
 					<div class="row mb-4">
@@ -74,10 +74,8 @@
 						<label for="userRole" class="col-md-2 col-form-label">User
 							Role</label>
 						<div class="col-md-4">
-							<select class="form-select" aria-label="Education" id="userRole"
-								th:field="*{role.id}">
-								<option th:each="r :${role}" th:value="${r.id}"
-									th:text="${r.name}"></option>
+							<select class="form-select" aria-label="Education" id="userRole" multiple>
+								<option th:each="r :${role}" th:value="${r.id}" th:text="${r.name}"></option>
 							</select>
 						</div>
 					</div>

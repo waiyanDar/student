@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -42,8 +43,8 @@ public class User {
     @NotBlank(message = "password cannot be empty")
     private String password;
 
-    @ManyToOne
-    private Role role;
+    @ManyToMany
+    private List<Role> roles;
 
     @PostPersist
     public void generateUserId() {
