@@ -2,6 +2,12 @@ package com.example.student.register.controller;
 
 import com.example.student.register.dto.UserDto;
 import com.example.student.register.entity.User;
+import com.example.student.register.security.annotation.UserAdmin;
+import com.example.student.register.security.annotation.UserCreate;
+import com.example.student.register.security.annotation.UserDelete;
+import com.example.student.register.security.annotation.UserRead;
+import com.example.student.register.security.annotation.UserUpdate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
@@ -51,6 +57,8 @@ public class UserController {
 	}
 
 	@GetMapping("/registerUser")
+	@UserAdmin
+	@UserCreate
 	public String registerForm(Model model) {
 		model.addAttribute("user", new UserDto());
 		model.addAttribute("role", roleService.findAllRole());
@@ -58,6 +66,8 @@ public class UserController {
 	}
 
 	@PostMapping("/registerUser")
+	@UserAdmin
+	@UserCreate
 	public String registerUser(@Valid UserDto userDto, BindingResult result, RedirectAttributes attributes,
 			Model model) {
 
@@ -92,12 +102,15 @@ public class UserController {
 		}
 		User user = User.form(userDto);
 		try {
-			userService.registerUser(user, userDto.getRole().getId());
+			userService.registerUser(user, userDto.getRoles());
+			attributes.addFlashAttribute("usrId", user.getUserId());
+			attributes.addFlashAttribute("success", true);
+			return "redirect:/findAllUser";
 		} catch (DataIntegrityViolationException e) {
 			attributes.addFlashAttribute("emailDuplicate", true);
 			return "redirect:/registerUser";
 		}
-		return "redirect:/findAllUser";
+
 	}
 
 	@GetMapping("/searchUser")
@@ -110,7 +123,10 @@ public class UserController {
 		return "userList";
 	}
 
+	
 	@GetMapping("/deleteUser")
+	@UserAdmin
+	@UserUpdate
 	public String deleteUser(@RequestParam("id") int id, RedirectAttributes attributes) {
 
 		userService.deleteUser(id);
@@ -122,6 +138,8 @@ public class UserController {
 	int oId;
 
 	@GetMapping("/userUpdate")
+	@UserAdmin
+	@UserUpdate
 	public String uiChange(@RequestParam("id") int id, Model model) {
 		User oUser = userService.findUserById(id);
 		oUserId = oUser.getUserId();
@@ -132,7 +150,9 @@ public class UserController {
 	}
 
 	@PostMapping("/userUpdate")
-	public String updateAdmin(UserDto userDto, RedirectAttributes attributes, BindingResult result) {
+	@UserUpdate
+	@UserAdmin
+	public String updateAdmin(UserDto userDto, RedirectAttributes attributes, BindingResult result, Model model) {
 		String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 		Pattern pattern = Pattern.compile(emailRegex);
 		Matcher matcher = pattern.matcher(userDto.getEmail());
@@ -163,11 +183,23 @@ public class UserController {
 		User user = User.form(userDto);
 		user.setId(oId);
 		user.setUserId(oUserId);
-		userService.updateUser(user, userDto.getRole().getId());
-		return "redirect:/findAllUser";
+		try {
+			userService.registerUser(user, userDto.getRoles());
+			model.addAttribute("usrId", user.getId());
+			attributes.addFlashAttribute("updateSuccess", true);
+			return "redirect:/findAllUser";
+		} catch (DataIntegrityViolationException e) {
+			attributes.addFlashAttribute("emailDuplicate", true);
+			return "redirect:/userUpdate?id=" + oId;
+		}
+		
 	}
 
 	@GetMapping("/findAllUser")
+	@UserAdmin
+	@UserDelete
+	@UserUpdate
+	@UserRead
 	public String findAllAdmin(Model model) {
 
 		model.addAttribute("userList", userService.findAllUser());
@@ -179,12 +211,12 @@ public class UserController {
 	public String login() {
 		return "login";
 	}
-	
+
 	@GetMapping("/login-error")
 	public String loginError(RedirectAttributes attributes) {
-		
+
 		attributes.addFlashAttribute("loginError", true);
-	
+
 		return "redirect:/login";
 	}
 

@@ -5,38 +5,18 @@
 	<main role="main">
 		<div class="main_contents">
 			<div id="sub_content">
-				<!--  <form th:action="@{/searchUser}" method="get"
-					class="row g-3 mt-3 ms-2">
-
-					<div class="col-auto">
-						<label for="userId" class="visually-hidden">User ID</label> <input
-							type="text" id="userId" name="userId" th:value="${searchUserId}"
-							placeholder="User ID">
-					</div>
-
-					<div class="col-auto">
-						<label for="username" class="visually-hidden">Username:</label> <input
-							type="text" id="username" name="username"
-							th:value="${searchUsername}" placeholder="Username">
-					</div>
-
-					<div class="col-auto">
-						<button type="submit" class="btn btn-primary mb-3">Search</button>
-					</div>
-
-					<div class="col-auto">
-
-						<a th:href="@{/registerUser}" class="btn btn-secondary">Add</a>
-
-					</div>
-
-					<div class="col-auto">
-						<a th:href="@{/findAllUser}" class="btn btn-danger mb-3">Reset</a>
-					</div>
-				</form>  -->
 
 				<div th:if="${success}" class="alert alert-warning" role="alert">
+					<p th:text="${usrId}"></p>
 					<span>Successfully added.</span>
+				</div>
+				<div th:if="${updateSuccess}" class="alert alert-warning"
+					role="alert">
+					<p th:text="${usrId}"></p>
+					<span>Successfully updated.</span>
+				</div>
+				<div th:if="${deleteUser}" class="alert alert-warning" role="alert">
+					<span>Successfully deleted.</span>
 				</div>
 
 				<div class="table" style="width: 1100px">

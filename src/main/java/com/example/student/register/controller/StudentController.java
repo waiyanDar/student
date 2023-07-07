@@ -1,6 +1,7 @@
 package com.example.student.register.controller;
 
 import com.example.student.register.entity.Student;
+import com.example.student.register.security.annotation.Admin;
 import com.example.student.register.service.CourseService;
 import com.example.student.register.service.StudentService;
 import org.springframework.stereotype.Controller;
@@ -34,6 +35,7 @@ public class StudentController {
 	}
     
     @GetMapping("/registerStudent")
+    @Admin
     public String getStudentRegisterForm(Model model) {
     	model.addAttribute("student", new Student());
     	model.addAttribute("genders", Student.Gender.values());
@@ -43,6 +45,7 @@ public class StudentController {
     }
 
     @PostMapping("/registerStudent")
+    @Admin
     public String registerStudent(Student student, BindingResult result, Model model, RedirectAttributes attributes) {
     	String phoneRegex = "[0-9]*";
     	Pattern pattern = Pattern.compile(phoneRegex);
@@ -88,11 +91,13 @@ public class StudentController {
     }
 
     @GetMapping("/getStudent")
+    @Admin
     public String getStudent(@RequestParam("id") int id) {
         return studentService.findStudent(id).toString();
     }
 
     @GetMapping("/findAllStudent")
+    @Admin
     public String findAllStudent(Model model) {
     	
          model.addAttribute("students", studentService.findAllStudent());
@@ -101,6 +106,7 @@ public class StudentController {
     }
 
     @GetMapping("/deleteStudent")
+    @Admin
     public String deleteStudent(@RequestParam("id") int id) {
         System.out.println(id);
         studentService.deleteStudent(id);
@@ -111,6 +117,7 @@ public class StudentController {
     String oStudentId;
     
     @GetMapping("/seeMore")
+    @Admin
     public String studentInfo(@RequestParam("id") int id, Model model) {
     	Student oStudent = studentService.findStudent(id);
     	oId = oStudent.getId();
@@ -123,6 +130,7 @@ public class StudentController {
     }
     
     @PostMapping("/updateStudent")
+    @Admin
     public String updateStudent(Student student, BindingResult result,RedirectAttributes attributes) {
     	student.setId(oId);
     	student.setStudentId(oStudentId);
@@ -132,6 +140,7 @@ public class StudentController {
     }
     
     @GetMapping("/searchStudent")
+    @Admin
     public String searchStudent(@RequestParam("studentId") Optional<String> studentId,
     							@RequestParam("studentName") Optional<String> studentName,
     							@RequestParam("courseName") Optional<String> courseName, Model model) {

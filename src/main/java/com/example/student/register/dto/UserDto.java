@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 import javax.validation.constraints.*;
 
 @Data
@@ -32,7 +34,7 @@ public class UserDto {
     @NotBlank(message = "Confirm password cannot be empty")
     private String confirmPassword;
 
-    private Role role;
+    private List<Role> roles;
 
     public static UserDto form(User user) {
         UserDto userDto = new UserDto();
@@ -41,7 +43,10 @@ public class UserDto {
         userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());
         userDto.setConfirmPassword(user.getPassword());
-        userDto.setRole(user.getRole());
+        
+        userDto.setRoles(user.getRoles());
+        
+//        userDto.setRole(user.getRole());
 
         return userDto;
     }

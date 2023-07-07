@@ -31,10 +31,11 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registerUser(User user, int roleId) {
-        Role role = roleDao.findById(roleId).get();
-//		User user = User.form(userDto);
-        user.setRole(role);
+    public void registerUser(User user, List<Role> roles) {
+//        Role role = roleDao.findById(roleId).get();
+//		  User user = User.form(userDto);
+//        user.setRole(role);
+    	user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.save(user);
     }
@@ -52,13 +53,15 @@ public class UserService {
         userDao.delete(user);
     }
 
-    public User updateUser(User user, int roleId) {
+    public User updateUser(User user, List<Role> roles) {
 
         User oUser = findUserById(user.getId());
         oUser.setUsername(user.getUsername());
         oUser.setEmail(user.getEmail());
         oUser.setPassword(user.getPassword());
-        oUser.setRole(roleDao.findById(roleId).get());
+//        oUser.setRole(roleDao.findById(roleId).get());
+        oUser.deleteRole();
+        oUser.setRoles(roles);
         return userDao.saveAndFlush(oUser);
     }
 
