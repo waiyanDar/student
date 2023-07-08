@@ -5,6 +5,17 @@
 <main role="main">
     <div class="main_contents">
         <div id="sub_content">
+            <div style="width: 1100px;">
+                <div class="alert alert-success" th:if="${stuAdd}">
+                    <p><span th:text="${studentId}"></span> is successfully added</p>
+                </div>
+                <div class="alert alert-success" th:if="${stuUpdate}">
+                    <p><span th:text="${studentId}"></span> is successfully updated</p>
+                </div>
+                <div class="alert alert-success" th:if="${stuDelete}">
+                    <p><span th:text="${studentId}"></span> is successfully added</p>
+                </div>
+            </div>
             <div class="table" style="width : 1100px">
                 <table class="table table-striped" id="studentTable">
                     <thead>

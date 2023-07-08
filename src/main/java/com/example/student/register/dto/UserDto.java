@@ -6,8 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.*;
 import java.util.List;
+
+import javax.validation.constraints.*;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +19,7 @@ public class UserDto {
     @NotBlank(message = "Username cannot be blank")
     @NotNull(message = "Username cannot be empty")
     @Pattern(regexp = "[A-Z a-z]*", message = "Name cannot be illegal characters")
+    @NotEmpty(message = "Username cannot be empty")
     private String username;
 
     @Email(message = "Invalid Email format")

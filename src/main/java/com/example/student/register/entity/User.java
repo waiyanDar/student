@@ -43,7 +43,7 @@ public class User {
     @NotBlank(message = "password cannot be empty")
     private String password;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
 
     @PostPersist
@@ -71,6 +71,10 @@ public class User {
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
         return user;
+    }
+    
+    public void deleteRole() {
+    	this.roles= null;
     }
 
 }

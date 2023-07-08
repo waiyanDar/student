@@ -2,8 +2,13 @@ package com.example.student.register.controller;
 
 import com.example.student.register.dto.UserDto;
 import com.example.student.register.entity.User;
+
+import com.example.student.register.security.annotation.UserCreate;
+import com.example.student.register.security.annotation.UserDelete;
+import com.example.student.register.security.annotation.UserRead;
+import com.example.student.register.security.annotation.UserUpdate;
+
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,165 +32,128 @@ import javax.validation.Valid;
 @Controller
 public class UserController {
 
-	private UserService userService;
+    private UserService userService;
 
-	private RoleService roleService;
+    private RoleService roleService;
 
-	private Authentication authentication;
+    public UserController(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
+    }
 
-	public UserController(UserService userService, RoleService roleService) {
-		this.userService = userService;
-		this.roleService = roleService;
-	}
+    @ModelAttribute("loginDate")
+    public String loginDate() {
+        return LocalDate.now().toString();
+    }
 
-	/*
-	 * @ModelAttribute("usernameAndUserId") public String loginUser() { User user=
-	 * userService.findUserByUserId(authentication.getName()); return
-	 * user.getUserId() + " " + user.getUsername(); }
-	 */
+    @GetMapping("/registerUser")
+    @UserCreate
+    public String registerForm(Model model) {
+		model.addAttribute("oldUser", false);
+        model.addAttribute("user", new UserDto());
+        model.addAttribute("role", roleService.findAllRole());
+        model.addAttribute("actionUrlForU", "/registerUser");
+        return "userRegisterForm";
+    }
 
-	@ModelAttribute("loginDate")
-	public String loginDate() {
-		return LocalDate.now().toString();
-	}
+    @PostMapping("/registerUser")
+    @UserCreate
+    public String registerUser(@Valid UserDto userDto, BindingResult result, RedirectAttributes attributes,
+                               Model model) {
 
-	@GetMapping("/registerUser")
-	public String registerForm(Model model) {
-		model.addAttribute("user", new UserDto());
-		model.addAttribute("role", roleService.findAllRole());
-		return "userRegisterForm";
-	}
+        if (result.hasErrors()) {
+            return "redirect:/registerUser";
+        }
+        User user = User.form(userDto);
+        try {
+            userService.registerUser(user, userDto.getRoles());
+            attributes.addFlashAttribute("usrId", user.getUserId());
+            attributes.addFlashAttribute("success", true);
+            return "redirect:/findAllUser";
+        } catch (DataIntegrityViolationException e) {
+            attributes.addFlashAttribute("emailDuplicate", true);
+            return "redirect:/registerUser";
+        }
 
-	@PostMapping("/registerUser")
-	public String registerUser(@Valid UserDto userDto, BindingResult result, RedirectAttributes attributes,
-			Model model) {
+    }
 
-		String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-		Pattern pattern = Pattern.compile(emailRegex);
-		Matcher matcher = pattern.matcher(userDto.getEmail());
-		boolean isValidEmail = matcher.matches();
+    String oUserId;
+    int oId;
 
-		if (userDto.getUsername() == null || userDto.getUsername().isEmpty()) {
-			attributes.addFlashAttribute("usernameIsNull", true);
-			return "redirect:/registerUser";
-		}
-		if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
-			attributes.addFlashAttribute("passwordIsNull", true);
-			return "redirect:registerUser";
-		}
-		if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
-			attributes.addFlashAttribute("passwordNotMatch", true);
-			return "redirect:registerUser";
-		}
-		if (userDto.getEmail() == null || userDto.getEmail().isEmpty()) {
-			attributes.addFlashAttribute("emailIsNull", true);
-			return "redirect:/registerUser";
-		} else if (!isValidEmail) {
-			attributes.addFlashAttribute("emailPatternInvalid", true);
-			return "redirect:/registerUser";
-		}
+    @GetMapping("/userUpdate")
+    @UserUpdate
+    public String uiChange(@RequestParam("id") int id, Model model) {
+        User oUser = userService.findUserById(id);
+        oUserId = oUser.getUserId();
+        oId = oUser.getId();
+		model.addAttribute("oldUser", true);
+        model.addAttribute("user", UserDto.form(oUser));
+        model.addAttribute("role", roleService.findAllRole());
+        model.addAttribute("actionUrlForU", "/userUpdate");
+        return "userRegisterForm";
+    }
 
-		if (result.hasErrors()) {
+    @PostMapping("/userUpdate")
+    @UserUpdate
+    public String updateUser(@Valid UserDto userDto, RedirectAttributes attributes, BindingResult result, Model model) {
 
-			return "redirect:/registerUser";
-		}
-		User user = User.form(userDto);
-		try {
-			userService.registerUser(user, userDto.getRoles());
-		} catch (DataIntegrityViolationException e) {
-			attributes.addFlashAttribute("emailDuplicate", true);
-			return "redirect:/registerUser";
-		}
-		return "redirect:/findAllUser";
-	}
+        if (result.hasErrors()) {
+            return "redirect:/userUpdate?id=" + oId;
+        }
+        User user = User.form(userDto);
+        user.setId(oId);
+        user.setUserId(oUserId);
+        try {
+            userService.updateUser(user, userDto.getRoles());
+            model.addAttribute("usrId", user.getId());
+            attributes.addFlashAttribute("updateSuccess", true);
+            return "redirect:/findAllUser";
+        } catch (DataIntegrityViolationException e) {
+            attributes.addFlashAttribute("emailDuplicate", true);
+            return "redirect:/userUpdate?id=" + oId;
+        }
 
-	@GetMapping("/searchUser")
-	public String searchUser(@RequestParam("userId") Optional<String> userId,
-			@RequestParam("username") Optional<String> username, Model model) {
-		List<User> user = userService.searchUser(userId, username);
-		model.addAttribute("userList", user);
-		model.addAttribute("searchUserId", userId.orElse(""));
-		model.addAttribute("searchUsername", username.orElse(""));
-		return "userList";
-	}
+    }
 
-	@GetMapping("/deleteUser")
-	public String deleteUser(@RequestParam("id") int id, RedirectAttributes attributes) {
+    @GetMapping("/findAllUser")
+    @UserRead
+    public String findAllUser(Model model) {
 
-		userService.deleteUser(id);
-		attributes.addFlashAttribute("deleteUser", true);
-		return "redirect:/findAllUser";
-	}
+        model.addAttribute("userList", userService.findAllUser());
 
-	String oUserId;
-	int oId;
+        return "userList";
+    }
 
-	@GetMapping("/userUpdate")
-	public String uiChange(@RequestParam("id") int id, Model model) {
-		User oUser = userService.findUserById(id);
-		oUserId = oUser.getUserId();
-		oId = oUser.getId();
-		model.addAttribute("oUser", UserDto.form(oUser));
-		model.addAttribute("role", roleService.findAllRole());
-		return "userUpdateForm";
-	}
+    @GetMapping("/deleteUser")
+    @UserDelete
+    public String deleteUser(@RequestParam("id") int id, RedirectAttributes attributes) {
 
-	@PostMapping("/userUpdate")
-	public String updateAdmin(UserDto userDto, RedirectAttributes attributes, BindingResult result) {
-		String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-		Pattern pattern = Pattern.compile(emailRegex);
-		Matcher matcher = pattern.matcher(userDto.getEmail());
-		boolean isValidEmail = matcher.matches();
-		if (result.hasErrors()) {
-			return "redirect:/userUpdate?id=" + oId;
-		}
-		if (userDto.getUsername() == null || userDto.getUsername().isEmpty()) {
-			attributes.addFlashAttribute("usernameIsNull", true);
-			return "redirect:/userUpdate?id=" + oId;
-		}
-		if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
-			attributes.addFlashAttribute("passwordIsNull", true);
-			return "redirect:/userUpdate?id=" + oId;
-		}
-		if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
-			attributes.addFlashAttribute("passwordNotMatch", true);
-			return "redirect:/userUpdate?id=" + oId;
-		}
-		if (userDto.getEmail() == null || userDto.getEmail().isEmpty()) {
-			attributes.addFlashAttribute("emailIsNull", true);
-			return "redirect:/userUpdate?id=" + oId;
-		} else if (!isValidEmail) {
-			attributes.addFlashAttribute("emailPatternInvalid", true);
-			return "redirect:/userUpdate?id=" + oId;
-		}
+        userService.deleteUser(id);
+        attributes.addFlashAttribute("deleteUser", true);
+        return "redirect:/findAllUser";
+    }
 
-		User user = User.form(userDto);
-		user.setId(oId);
-		user.setUserId(oUserId);
-//		userService.updateUser(user, userDto.getRoles().getId());
-		userService.updateUser(user, userDto.getRoles());
-		return "redirect:/findAllUser";
-	}
+    @GetMapping("/searchUser")
+    public String searchUser(@RequestParam("userId") Optional<String> userId,
+                             @RequestParam("username") Optional<String> username, Model model) {
+        List<User> user = userService.searchUser(userId, username);
+        model.addAttribute("userList", user);
+        model.addAttribute("searchUserId", userId.orElse(""));
+        model.addAttribute("searchUsername", username.orElse(""));
+        return "userList";
+    }
 
-	@GetMapping("/findAllUser")
-	public String findAllAdmin(Model model) {
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
 
-		model.addAttribute("userList", userService.findAllUser());
+    @GetMapping("/login-error")
+    public String loginError(RedirectAttributes attributes) {
 
-		return "userList";
-	}
+        attributes.addFlashAttribute("loginError", true);
 
-	@GetMapping("/login")
-	public String login() {
-		return "login";
-	}
-	
-	@GetMapping("/login-error")
-	public String loginError(RedirectAttributes attributes) {
-		
-		attributes.addFlashAttribute("loginError", true);
-	
-		return "redirect:/login";
-	}
+        return "redirect:/login";
+    }
 
 }
