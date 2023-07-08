@@ -38,16 +38,14 @@ public class UserDto {
     private List<Role> roles;
 
     public static UserDto form(User user) {
+
         UserDto userDto = new UserDto();
         userDto.setUserId(user.getUserId());
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());
         userDto.setConfirmPassword(user.getPassword());
-        
         userDto.setRoles(user.getRoles());
-        
-//        userDto.setRole(user.getRole());
 
         return userDto;
     }

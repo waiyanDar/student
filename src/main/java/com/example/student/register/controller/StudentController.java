@@ -13,8 +13,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.validation.Valid;
 
@@ -35,59 +33,72 @@ public class StudentController {
 	public String loginDate() {
 		return LocalDate.now().toString();
 	}
-    
+
+    String studentId;
+    @ModelAttribute("studentId")
+    public String studentId(){
+        return studentId;
+    }
     @GetMapping("/registerStudent")
     @Admin
     public String getStudentRegisterForm(Model model) {
-    	model.addAttribute("student", new Student());
+
+        model.addAttribute("oldStu", false);
+        model.addAttribute("student", new Student());
     	model.addAttribute("genders", Student.Gender.values());
     	model.addAttribute("educations" , Student.Education.values());
     	model.addAttribute("courses", courseService.findAllCourse());
+        model.addAttribute("actionUrlForStu", "/registerStudent");
     	return "studentRegisterForm";
     }
 
     @PostMapping("/registerStudent")
     @Admin
     public String registerStudent(@Valid Student student, BindingResult result, Model model, RedirectAttributes attributes) {
-		/*
-		 * String phoneRegex = "[0-9]*"; Pattern pattern = Pattern.compile(phoneRegex);
-		 * Matcher matcher = pattern.matcher(student.getPhone()); boolean phoneIsValid =
-		 * matcher.matches(); if (student.getName() == null ||
-		 * student.getName().isEmpty()) { attributes.addFlashAttribute("nameIsNull",
-		 * true); return "redirect:/registerStudent"; } if (student.getPhone() == null
-		 * || student.getPhone().isEmpty()) {
-		 * attributes.addFlashAttribute("phoneIsNull", true); return
-		 * "redirect:/registerStudent"; } if (student.getDateOfBirth() == null ||
-		 * student.getDateOfBirth().isEmpty()) {
-		 * attributes.addFlashAttribute("dobIsNull", true); return
-		 * "redirect:/registerStudent"; } if (student.getGender() == null ||
-		 * student.getGender().name().isEmpty()) {
-		 * attributes.addFlashAttribute("genderIsNull", true); return
-		 * "redirect:/registerStudent"; } if (student.getEducation() == null ||
-		 * student.getEducation().name().isEmpty()) {
-		 * attributes.addFlashAttribute("eduIsNull", true); return
-		 * "redirect:/registerStudent"; } if(!phoneIsValid) {
-		 * attributes.addFlashAttribute("invalidPh", true); return
-		 * "redirect:/registerStudent"; } if (student.getCourses() == null ||
-		 * student.getCourses().isEmpty()) {
-		 * attributes.addFlashAttribute("courseIsNull", true); return
-		 * "redirect:/registerStudent"; }
-		 */
-        
+
         if (result.hasErrors()) {
+            model.addAttribute("oldStu", false);
         	model.addAttribute("genders", Student.Gender.values());
         	model.addAttribute("educations" , Student.Education.values());
         	model.addAttribute("courses", courseService.findAllCourse());
             return "studentRegisterForm";
         }
         studentService.registerStudent(student);
+        studentId = student.getStudentId();
+        attributes.addFlashAttribute("stuAdd", true);
         return "redirect:/findAllStudent";
     }
 
-    @GetMapping("/getStudent")
+    int oId;
+    String oStudentId;
+
+    @GetMapping("/seeMore")
     @Admin
-    public String getStudent(@RequestParam("id") int id) {
-        return studentService.findStudent(id).toString();
+    public String studentInfo(@RequestParam("id") int id, Model model) {
+        Student oStudent = studentService.findStudent(id);
+        oId = oStudent.getId();
+        oStudentId = oStudent.getStudentId();
+        model.addAttribute("oldStu", true);
+        model.addAttribute("student",oStudent);
+        model.addAttribute("genders", Student.Gender.values());
+        model.addAttribute("educations" , Student.Education.values());
+        model.addAttribute("courses", courseService.findAllCourse());
+        model.addAttribute("actionUrlForStu","/updateStudent" );
+        return "studentRegisterForm";
+    }
+
+    @PostMapping("/updateStudent")
+    @Admin
+    public String updateStudent(@Valid Student student, BindingResult result,RedirectAttributes attributes,Model model) {
+        if (result.hasErrors()){
+            return "redirect:/seeMore?id="+oId;
+        }
+        student.setId(oId);
+        student.setStudentId(oStudentId);
+        studentService.updateStudent(student);
+        studentId = student.getStudentId();
+        attributes.addFlashAttribute("stuUpdate", true);
+        return "redirect:/findAllStudent";
     }
 
     @GetMapping("/findAllStudent")
@@ -101,38 +112,13 @@ public class StudentController {
 
     @GetMapping("/deleteStudent")
     @Admin
-    public String deleteStudent(@RequestParam("id") int id) {
-        System.out.println(id);
-        studentService.deleteStudent(id);
+    public String deleteStudent(@RequestParam("id") int id, RedirectAttributes attributes) {
+
+        studentId = studentService.deleteStudent(id);
+        attributes.addFlashAttribute("stuDelete", true);
         return "redirect:/findAllStudent";
     }
 
-    int oId;
-    String oStudentId;
-    
-    @GetMapping("/seeMore")
-    @Admin
-    public String studentInfo(@RequestParam("id") int id, Model model) {
-    	Student oStudent = studentService.findStudent(id);
-    	oId = oStudent.getId();
-    	oStudentId = oStudent.getStudentId();
-    	model.addAttribute("oStudent",oStudent);
-    	model.addAttribute("genders", Student.Gender.values());
-    	model.addAttribute("educations" , Student.Education.values());
-    	model.addAttribute("courses", courseService.findAllCourse());
-    	return "studentInfo";
-    }
-    
-    @PostMapping("/updateStudent")
-    @Admin
-    public String updateStudent(Student student, BindingResult result,RedirectAttributes attributes) {
-    	student.setId(oId);
-    	student.setStudentId(oStudentId);
-    	studentService.updateStudent(student);
-    	
-    	return "redirect:/findAllStudent";
-    }
-    
     @GetMapping("/searchStudent")
     @Admin
     public String searchStudent(@RequestParam("studentId") Optional<String> studentId,
@@ -147,4 +133,9 @@ public class StudentController {
     	return "studentList";
     }
 
+    boolean oldStu;
+//    @ModelAttribute("oldStu")
+    public boolean isOldStu(){
+        return oldStu;
+    }
 }

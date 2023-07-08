@@ -1,7 +1,6 @@
 package com.example.student.register;
 
 import com.example.student.register.entity.Role;
-
 import com.example.student.register.entity.User;
 import com.example.student.register.service.UserService;
 
@@ -9,7 +8,6 @@ import java.util.Arrays;
 
 import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,12 +21,14 @@ import static com.example.student.register.util.RolesForSecurity.*;
 @SpringBootApplication
 public class StudentRegisterApplication {
 
-    @Autowired
-    private RoleDao roleDao;
+    private final RoleDao roleDao;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
-    
+    public StudentRegisterApplication(RoleDao roleDao, UserService userService) {
+        this.roleDao = roleDao;
+        this.userService = userService;
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(StudentRegisterApplication.class, args);
     }

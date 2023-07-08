@@ -7,15 +7,15 @@
 			<div id="sub_content">
 
 				<div th:if="${success}" class="alert alert-success" role="alert">
-					<span th:text="${usrId}"></span><span>Successfully register</span>
+					<p><span th:text="${usrId}"></span> is successfully registered</p>
 				</div>
 				<div th:if="${updateSuccess}" class="alert alert-success"
 					role="alert">
-					<p th:text="${usrId}"></p>
-					<span>Successfully updated.</span>
+					<p ><span th:text="${usrId}"></span> is successfully updated</p>
+
 				</div>
 				<div th:if="${deleteUser}" class="alert alert-danger" role="alert">
-					<span>Successfully deleted.</span>
+					<p><span th:text="${usrId}"></span> is successfully deleted</p>
 				</div>
 
 				<div class="table" style="width: 1100px">

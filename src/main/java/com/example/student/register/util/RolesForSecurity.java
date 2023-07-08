@@ -4,8 +4,6 @@ public interface RolesForSecurity {
 
 	String ROLES_PREFIX = "ROLE_";
 	String ROLES_ADMIN = "	ADMIN";
-	
-//	String USER = "USER";
 	String USER_ADMIN = "USER_ADMIN";
 	String USER_UPDATE = "USER_UPDATE";
 	String USER_READ = "USER_READ";

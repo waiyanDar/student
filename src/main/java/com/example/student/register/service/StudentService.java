@@ -32,9 +32,11 @@ public class StudentService {
         return studentDao.findAll();
     }
 
-    public void deleteStudent(int id) {
+    public String  deleteStudent(int id) {
         Student student = findStudent(id);
+        String studentId = student.getStudentId();
         studentDao.delete(student);
+        return studentId;
     }
 
     public Student updateStudent(Student student) {

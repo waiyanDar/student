@@ -38,12 +38,12 @@ public class Student {
     private String phone;
 
     @Enumerated(EnumType.STRING)
-//    @NotBlank(message = "Gender cannot be blank")
-//    @NotNull(message = "Gender cannot be empty")
+//    @NotBlank(message = "Gender cannot be blank"
+    @NotNull(message = "Gender cannot be empty")
     private Gender gender;
 
     @Enumerated(EnumType.STRING)
-//    @NotNull(message = "Education cannot be null")
+    @NotNull(message = "Education cannot be null")
     private Education education;
     
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
@@ -52,6 +52,7 @@ public class Student {
     	    joinColumns = @JoinColumn(name = "student_id"),
     	    inverseJoinColumns = @JoinColumn(name = "course_id")
     	)
+    @NotNull(message = "course cannot be empty")
     private List<Course> courses;
 
     public enum Gender {

@@ -18,7 +18,6 @@ import com.example.student.register.service.CourseService;
 @Controller
 public class CourseController {
 
-    
     private CourseService courseService;
     
     public CourseController(CourseService courseService) {
@@ -47,12 +46,6 @@ public class CourseController {
         attributes.addFlashAttribute("successAddCourse", true);
         return "redirect:/registerStudent";
     }
-
-	/*
-	 * @GetMapping("/findAllCourse") public String findAllCourse(Model model) {
-	 * model.addAttribute("courseList", courseService.findAllCourse()); return
-	 * "courseList"; }
-	 */
 
     @GetMapping("/")
     public String goHome() {

@@ -32,9 +32,6 @@ public class UserService {
     }
 
     public void registerUser(User user, List<Role> roles) {
-//        Role role = roleDao.findById(roleId).get();
-//		  User user = User.form(userDto);
-//        user.setRole(role);
     	user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.save(user);
@@ -59,7 +56,7 @@ public class UserService {
         oUser.setUsername(user.getUsername());
         oUser.setEmail(user.getEmail());
         oUser.setPassword(user.getPassword());
-//        oUser.setRole(roleDao.findById(roleId).get());
+
         oUser.deleteRole();
         oUser.setRoles(roles);
         return userDao.saveAndFlush(oUser);

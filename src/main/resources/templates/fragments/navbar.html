@@ -17,7 +17,7 @@
 			</div>
 			<div sec:authorize="isAuthenticated()">
 				<a href="javascript: document.logoutForm.submit()"
-					class="text-dark">Log Out</a>
+					class="text-dark nav-link">Log Out</a>
 				<form name="logoutForm" th:action="@{/logout}" method="post"
 					th:hidden="true">
 					<input type="submit" hidden value="SignOut">
