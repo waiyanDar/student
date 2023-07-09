@@ -33,14 +33,14 @@ public class CourseController {
     @Admin
     public String courseForm(Model model) {
         model.addAttribute("course", new Course());
-        return "courseForm";
+        return "course-form";
     }
 
     @PostMapping("/addCourse")
     @Admin
     public String addCourse(@Validated Course course, BindingResult result, RedirectAttributes attributes) {
         if (result.hasErrors()) {
-            return "courseForm";
+            return "course-form";
         }
         courseService.addCourse(course);
         attributes.addFlashAttribute("successAddCourse", true);
@@ -49,7 +49,7 @@ public class CourseController {
 
     @GetMapping("/")
     public String goHome() {
-        return "Home";
+        return "home";
     }
 
 }

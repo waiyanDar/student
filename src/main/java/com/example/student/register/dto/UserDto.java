@@ -25,16 +25,18 @@ public class UserDto {
     @Email(message = "Invalid Email format")
     @NotBlank(message = "Email cannot be blank")
     @NotEmpty(message = "Email cannot be empty")
+    @NotNull(message = "Email cannot be empty")
     private String email;
 
     @NotNull(message = "Password cannot be empty")
-    @NotBlank(message = "Password cannot be empty")
+    @NotBlank(message = "Password cannot be blank")
     private String password;
 
     @NotNull(message = "Confirm password cannot be empty")
-    @NotBlank(message = "Confirm password cannot be empty")
+    @NotBlank(message = "Confirm password cannot be blank")
     private String confirmPassword;
 
+    @NotEmpty(message = "role cannot be empty")
     private List<Role> roles;
 
     public static UserDto form(User user) {

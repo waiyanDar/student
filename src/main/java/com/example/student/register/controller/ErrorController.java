@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 public class ErrorController {
 
 	@ExceptionHandler(Throwable.class)
-	public String exception(Throwable throwable, HttpServletResponse response, RedirectAttributes attributes, Model model) {
+	public String exception(Throwable throwable, Model model) {
 		
 		String msg = throwable != null ? throwable.getMessage() : "Unknown Error";
 		int status = 0;

@@ -43,13 +43,8 @@ public class StudentController {
     @Admin
     public String getStudentRegisterForm(Model model) {
 
-        model.addAttribute("oldStu", false);
-        model.addAttribute("student", new Student());
-    	model.addAttribute("genders", Student.Gender.values());
-    	model.addAttribute("educations" , Student.Education.values());
-    	model.addAttribute("courses", courseService.findAllCourse());
-        model.addAttribute("actionUrlForStu", "/registerStudent");
-    	return "studentRegisterForm";
+    	modelForStu(model,new Student(), false, "/registerStudent", "");
+    	return "student-form";
     }
 
     @PostMapping("/registerStudent")
@@ -57,11 +52,8 @@ public class StudentController {
     public String registerStudent(@Valid Student student, BindingResult result, Model model, RedirectAttributes attributes) {
 
         if (result.hasErrors()) {
-            model.addAttribute("oldStu", false);
-        	model.addAttribute("genders", Student.Gender.values());
-        	model.addAttribute("educations" , Student.Education.values());
-        	model.addAttribute("courses", courseService.findAllCourse());
-            return "studentRegisterForm";
+            modelForStu(model,student,false, "", "");
+            return "student-form";
         }
         studentService.registerStudent(student);
         studentId = student.getStudentId();
@@ -78,20 +70,16 @@ public class StudentController {
         Student oStudent = studentService.findStudent(id);
         oId = oStudent.getId();
         oStudentId = oStudent.getStudentId();
-        model.addAttribute("oldStu", true);
-        model.addAttribute("student",oStudent);
-        model.addAttribute("genders", Student.Gender.values());
-        model.addAttribute("educations" , Student.Education.values());
-        model.addAttribute("courses", courseService.findAllCourse());
-        model.addAttribute("actionUrlForStu","/updateStudent" );
-        return "studentRegisterForm";
+        modelForStu(model, oStudent, true, "/updateStudent", oStudentId);
+        return "student-form";
     }
 
     @PostMapping("/updateStudent")
     @Admin
     public String updateStudent(@Valid Student student, BindingResult result,RedirectAttributes attributes,Model model) {
         if (result.hasErrors()){
-            return "redirect:/seeMore?id="+oId;
+            modelForStu(model, student, true, "/updateStudent", oStudentId);
+            return "student-form";
         }
         student.setId(oId);
         student.setStudentId(oStudentId);
@@ -101,13 +89,23 @@ public class StudentController {
         return "redirect:/findAllStudent";
     }
 
+    private void modelForStu(Model model, Student student, boolean oldStu, String link, String studentId) {
+        model.addAttribute("student", student);
+        model.addAttribute("oldStu", oldStu);
+        model.addAttribute("genders", Student.Gender.values());
+        model.addAttribute("educations" , Student.Education.values());
+        model.addAttribute("courses", courseService.findAllCourse());
+        model.addAttribute("actionUrlForStu",link );
+        model.addAttribute("studentId", studentId);
+    }
+
     @GetMapping("/findAllStudent")
     @Admin
     public String findAllStudent(Model model) {
     	
          model.addAttribute("students", studentService.findAllStudent());
          
-         return "studentList";
+         return "student-list";
     }
 
     @GetMapping("/deleteStudent")
@@ -130,7 +128,7 @@ public class StudentController {
     	model.addAttribute("studentId", studentId.orElse(""));
     	model.addAttribute("studentName", studentName.orElse(""));
     	model.addAttribute("courseName", courseName.orElse(""));
-    	return "studentList";
+    	return "student-list";
     }
 
     boolean oldStu;

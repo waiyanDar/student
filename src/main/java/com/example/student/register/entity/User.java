@@ -28,19 +28,19 @@ public class User {
     @Column(unique = true)
     private String userId;
 
-    @NotBlank(message = "Username cannot be blank")
-    @NotNull(message = "Username cannot be empty")
-    @Pattern(regexp = "[A-Z a-z]*", message = "Name cannot be illegal characters")
+//    @NotBlank(message = "Username cannot be blank")
+//    @NotNull(message = "Username cannot be empty")
+//    @Pattern(regexp = "[A-Z a-z]*", message = "Name cannot be illegal characters")
     private String username;
 
-    @Email(message = "Invalid Email format")
-    @NotBlank(message = "Email cannot be blank")
-    @NotEmpty(message = "Email cannot be empty")
+//    @Email(message = "Invalid Email format")
+//    @NotBlank(message = "Email cannot be blank")
+//    @NotNull(message = "Email cannot be empty")
     @Column(unique = true)
     private String email;
 
-    @NotNull(message = "password cannot be empty")
-    @NotBlank(message = "password cannot be empty")
+//    @NotNull(message = "password cannot be empty")
+//    @NotBlank(message = "password cannot be empty")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)

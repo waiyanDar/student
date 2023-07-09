@@ -1,23 +1,17 @@
 <!DOCTYPE html>
-<html th:replace="layout/masterLayout :: layout(~{::main})"
-	xmlns:th="http://www.thymeleaf.org">
+<html th:replace="layout/masterLayout :: layout(~{::main})" xmlns:th="http://www.thymeleaf.org">
 <body>
-	<main role="main">
-
-		<div class="row">
-			<div class="col-4"></div>
-			<div class="col">
-				<div class="alert alert-danger" role="alert">
-					<p class="text-dark" th:text="${statusCode}">
-						<span class="text-dark">hi</span>
-					</p>
+<main role="main" class="d-flex justify-content-center align-items-center min-vh-100">
+	<div class="container position-relative">
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<div class="alert alert-danger text-center" role="alert" style="position: relative; top: -70px; right: -100px;">
+					<p class="text-dark">We apologize for the inconvenience.</p>
 					<p class="text-dark" th:text="${msg}"></p>
 				</div>
 			</div>
-			<div class="col-4"></div>
 		</div>
-		<a th:href="@{/}" class="btn btn-primary">Home</a>
-
-	</main>
+	</div>
+</main>
 </body>
 </html>
