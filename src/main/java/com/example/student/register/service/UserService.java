@@ -35,6 +35,7 @@ public class UserService {
     	user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.save(user);
+
     }
 
     public User findUserById(int id) {
@@ -45,9 +46,11 @@ public class UserService {
     	return userDao.findUserByUserId(userId).get();
     }
 
-    public void deleteUser(int id) {
+    public String deleteUser(int id) {
         User user = findUserById(id);
+        String userId = user.getUserId();
         userDao.delete(user);
+        return userId;
     }
 
     public User updateUser(User user, List<Role> roles) {
@@ -55,7 +58,7 @@ public class UserService {
         User oUser = findUserById(user.getId());
         oUser.setUsername(user.getUsername());
         oUser.setEmail(user.getEmail());
-        oUser.setPassword(user.getPassword());
+        oUser.setPassword(passwordEncoder.encode(user.getPassword()));
 
         oUser.deleteRole();
         oUser.setRoles(roles);

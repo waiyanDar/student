@@ -5,7 +5,7 @@
 <main role="main">
     <div class="main_contents">
         <div id="sub_content" class="text-dark">
-            <form th:object="${student}" th:action="${actionUrl}" method="post">
+            <form th:object="${student}" th:action="${actionUrlForStu}" method="post">
 
                 <h2 th:if="${!oldStu}" class="col-md-6 offset-md-2 mb-5 mt-4">Student Registration</h2>
 
@@ -13,12 +13,12 @@
 
                 <div th:if="${oldStu}" class="row mb-4">
 
-                    <div class="col-md-2" th:if="${oldStu}"></div>
+                    <div class="col-md-2" ></div>
 
                     <label for="id" class="col-md-2 col-form-label">Student Id</label>
                     <div class="col-md-4">
                         <input type="text" id="id" class="form-control" disabled
-                               th:field="*{studentId}">
+                               th:value="${studentId}">
                     </div>
                 </div>
                 <div class="row mb-4">
@@ -59,7 +59,6 @@
                     <div class="col-md-4">
                         <div th:each="gender : ${genders}" th:classappend="${#fields.hasErrors('gender')} ? 'is-invalid'" class="form-check-inline">
                             <input class="form-check-input" th:field="*{gender}" id="gender" value="option1" checked
-
                                    th:value="${gender.name}" type="radio" name="gender">
                             <label class="form-check-label" for="gender" th:text="${gender.name}"> </label>
 

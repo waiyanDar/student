@@ -21,35 +21,34 @@
                     <label for="id" class="col-md-2 col-form-label">User Id</label>
                     <div class="col-md-4">
                         <input type="text" id="id" class="form-control"
-                               disabled th:field="*{userId}">
+                               disabled th:value="${userId}">
                     </div>
                 </div>
                 <div class="row mb-4">
                     <div class="col-md-2"></div>
                     <label for="username" class="col-md-2 col-form-label">Name</label>
                     <div class="col-md-4">
-                        <input type="text" id="username" class="form-control" placeholder="john"
-                               th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'"
-                               th:field="*{username}">
-                        <small class="invalid-feedback"
-                               th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></small>
-
+                        <input type="text" id="username" class="form-control" placeholder="username" th:field="*{username}">
+                        <small class="text-danger" th:if="${invalidName}" th:text="${invalidName}"></small>
                     </div>
                 </div>
+
                 <div class="row mb-4">
                     <div class="col-md-2"></div>
                     <label for="email" class="col-md-2 col-form-label">Email</label>
                     <div class="col-md-4">
-                        <input type="text" id="email" class="form-control" placeholder="john@gmail.com"
+                        <input type="text" id="email" class="form-control" placeholder="email"
                                th:field="*{email}">
+                        <small class="text-danger" th:if="${invalidEmail}" th:text="${invalidEmail}"></small>
                     </div>
                 </div>
                 <div class="row mb-4">
                     <div class="col-md-2"></div>
                     <label for="password" class="col-md-2 col-form-label">Password</label>
                     <div class="col-md-4">
-                        <input type="password" id="password" class="form-control" placeholder="123"
+                        <input type="password" id="password" class="form-control" placeholder="password"
                                th:field="*{password}">
+                        <small class="text-danger" th:if="${invalidPassword}" th:text="${invalidPassword}"></small>
                     </div>
                 </div>
                 <div class="row mb-4">
@@ -57,27 +56,25 @@
                     <label for="confirmPassword" class="col-md-2 col-form-label">Confirm
                         Password</label>
                     <div class="col-md-4">
-
-                        <input type="password" id="confirmPassword" class="form-control" placeholder="123"
+                        <input type="password" id="confirmPassword" class="form-control" placeholder="password"
                                th:field="*{confirmPassword}">
+                        <small class="text-danger" th:if="${invalidCPsw}" th:text="${invalidCPsw}"></small>
                     </div>
                 </div>
-
                 <div class="row mb-4">
-
                     <div class="col-md-2"></div>
-
                     <label for="userRole" class="col-md-2 col-form-label"> User Role </label>
                     <div class="col-md-4">
-                        <select id="userRole" class="js-states form-control"
-                                multiple="multiple" th:field="*{roles}" style="width : 100%;">
+                        <select id="userRole" class="js-states form-control" multiple="multiple" th:field="*{roles}" style="width : 100%;">
                             <optgroup class="text-dark">
-                                <option th:each="r :${role}" th:value="${r.id}"
-                                        th:text="${r.name}" style=" color : black !important"></option>
+                                <option th:each="r : ${role}" th:value="${r.id}" th:text="${r.name}" style="color: black !important"></option>
                             </optgroup>
                         </select>
+
+                        <small class="text-danger" th:if="${invalidRole}" th:text="${invalidRole}"></small>
                     </div>
                 </div>
+
                 <div class="row mb-4" th:if="${!oldUser}">
                     <div class="col-md-4"></div>
 
