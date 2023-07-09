@@ -6,7 +6,6 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import com.example.student.register.entity.Role;
-import com.example.student.register.util.UserNotFoundException;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;

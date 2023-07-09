@@ -38,13 +38,14 @@ public class CourseController {
 
     @PostMapping("/addCourse")
     @Admin
-    public String addCourse(@Validated Course course, BindingResult result, RedirectAttributes attributes) {
+    public String addCourse(@Validated Course course, BindingResult result, RedirectAttributes attributes, Model model) {
         if (result.hasErrors()) {
             return "course-form";
         }
         courseService.addCourse(course);
-        attributes.addFlashAttribute("successAddCourse", true);
-        return "redirect:/registerStudent";
+
+        model.addAttribute("course", new Course());
+        return "course-form";
     }
 
     @GetMapping("/")
