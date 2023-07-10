@@ -17,21 +17,21 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.example.student.register.dao.UserDao;
 import com.example.student.register.entity.User;
+import com.example.student.register.service.UserService;
 
 import static com.example.student.register.util.RolesForSecurity.*;
 
 @Component
 public class CustomAuthProvider implements AuthenticationProvider{
 
-	
-	private UserDao userDao;
+		
+	private UserService userService;
 	
 	private PasswordEncoder passwordEncoder;
 	
-	public CustomAuthProvider(UserDao userDao,@Lazy PasswordEncoder passwordEncoder) {
-		this.userDao = userDao;
+	public CustomAuthProvider(@Lazy UserService userService,@Lazy PasswordEncoder passwordEncoder) {
+		this.userService = userService;
 		this.passwordEncoder = passwordEncoder;
 	}
 	
@@ -44,7 +44,8 @@ public class CustomAuthProvider implements AuthenticationProvider{
 		List<Role> roles = new ArrayList<>();
 
 		try {
-			User user = userDao.findUserByUserId(inComeUserId).get();
+//			User user = userDao.findUserByUserId(inComeUserId).get();
+			User user = userService.findUserByUserId(inComeUserId);
 			userId = user.getUserId();
 			password = user.getPassword();
 			roles = user.getRoles();

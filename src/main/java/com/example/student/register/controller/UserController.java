@@ -1,6 +1,7 @@
 package com.example.student.register.controller;
 
-import com.example.student.register.dto.UserDto;
+import com.example.student.register.dto.UserRegisterDto;
+import com.example.student.register.dto.UserUpdateDto;
 import com.example.student.register.entity.User;
 
 import com.example.student.register.security.annotation.UserCreate;
@@ -51,13 +52,14 @@ public class UserController {
     @GetMapping("/registerUser")
     @UserCreate
     public String registerForm(Model model) {
-        modelForUser(model,new UserDto(), false, "/registerUser", "");
+        modelForUser(model, false, "/registerUser", "");
+        model.addAttribute("user", new UserRegisterDto());
         return "user-form";
     }
 
     @PostMapping("/registerUser")
     @UserCreate
-    public String registerUser(@Valid UserDto userDto, BindingResult result, RedirectAttributes attributes,
+    public String registerUser(@Valid UserRegisterDto userDto, BindingResult result, RedirectAttributes attributes,
                                Model model) {
 
         if (!userDto.getPassword().equals(userDto.getConfirmPassword())){
@@ -66,10 +68,11 @@ public class UserController {
 
         if (result.hasErrors()) {
             checkValidation(result,model);
-            modelForUser(model, userDto, false, "/registerUser", "");
+            modelForUser(model, false, "/registerUser", "");
+            model.addAttribute("user", userDto);
             return "user-form";
         }
-        User user = User.form(userDto);
+        User user = User.formForRegisteration(userDto);
         try {
             userService.registerUser(user, userDto.getRoles());
             oUserId = user.getUserId();
@@ -78,7 +81,8 @@ public class UserController {
         } catch (DataIntegrityViolationException e) {
             result.addError(new FieldError("userDto", "email", "Email is taken"));
             checkValidation(result,model);
-            modelForUser(model, userDto, false, "/registerUser", "");
+            modelForUser(model,  false, "/registerUser", "");
+            model.addAttribute("user", userDto);
             return "user-form";
         }
 
@@ -93,20 +97,22 @@ public class UserController {
         User oUser = userService.findUserById(id);
         oUserId = oUser.getUserId();
         oId = oUser.getId();
-        modelForUser(model, UserDto.form(oUser), true,"/userUpdate", oUserId);
+        modelForUser(model, true,"/userUpdate", oUserId);
+        model.addAttribute("user", UserUpdateDto.form(oUser));
         return "user-form";
     }
 
     @PostMapping("/userUpdate")
     @UserUpdate
-    public String updateUser(@Valid UserDto userDto,BindingResult result, RedirectAttributes attributes,  Model model) {
+    public String updateUser(@Valid UserUpdateDto userDto,BindingResult result, RedirectAttributes attributes,  Model model) {
 
         if (result.hasErrors()) {
             checkValidation(result, model);
-            modelForUser(model, userDto, true, "/userUpdate", oUserId);
+            modelForUser(model, true, "/userUpdate", oUserId);
+            model.addAttribute("user", userDto);
             return "user-form";
         }
-        User user = User.form(userDto);
+        User user = User.formForUpdate(userDto);
         user.setId(oId);
         user.setUserId(oUserId);
         try {
@@ -116,7 +122,8 @@ public class UserController {
         } catch (DataIntegrityViolationException e) {
             result.addError(new FieldError("userDto", "email", "Email is taken"));
             checkValidation(result, model);
-            modelForUser(model, userDto, true, "/userUpdate", oUserId);
+            modelForUser(model, true, "/userUpdate", oUserId);
+            model.addAttribute("user", userDto);
             return "user-form";
         }
 
@@ -139,6 +146,7 @@ public class UserController {
         attributes.addFlashAttribute("deleteUser", true);
         return "redirect:/findAllUser";
     }
+    
 
     @GetMapping("/searchUser")
     public String searchUser(@RequestParam("userId") Optional<String> userId,
@@ -147,6 +155,36 @@ public class UserController {
         model.addAttribute("userList", user);
         model.addAttribute("searchUsername", username.orElse(""));
         return "user-list";
+    }
+    
+    @GetMapping("/profile")
+    public String goProfile(Model model) {
+    	User user = UserService.loginUser;
+    	model.addAttribute("user",user );
+    	modelForUser(model, false, "/changePsw", "");
+    	return "profile";
+    }
+    
+    @GetMapping("/changePsw")
+    public String uiChange(Model model) {
+    	model.addAttribute("user", UserService.loginUser);
+    	modelForUser(model, true, "/changePsw", "");
+    	return "profile";
+    }
+    
+    @PostMapping("/changePsw")
+    public String updatePassword(@RequestParam("password") String password, 
+    							 @RequestParam("confirmPassword") String confirmPassword, BindingResult result, Model model) {
+    	
+    	if(result.hasErrors()) {
+    		model.addAttribute("user", UserService.loginUser);
+        	modelForUser(model, true, "/changePsw", "");
+    	}
+    	userService.changePassword(password, confirmPassword, result, model);
+    	model.addAttribute("user", UserService.loginUser);
+    	modelForUser(model, false, "/changePsw", "");
+    	
+    	return "profile";
     }
 
     @GetMapping("/login")
@@ -162,9 +200,9 @@ public class UserController {
         return "redirect:/login";
     }
 
-    private void modelForUser(Model model,@Valid UserDto userDto, boolean oldUser, String  link, String oUserId) {
+    private void modelForUser(Model model, boolean oldUser, String  link, String oUserId) {
         model.addAttribute("oldUser", oldUser);
-        model.addAttribute("user", userDto);
+//        model.addAttribute("user", userDto);
         model.addAttribute("role", roleService.findAllRole());
         model.addAttribute("actionUrlForU", link);
         model.addAttribute("userId", oUserId);

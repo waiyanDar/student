@@ -2,9 +2,13 @@ package com.example.student.register.controller;
 
 import java.time.LocalDate;
 
+import javax.validation.Valid;
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -38,14 +42,22 @@ public class CourseController {
 
     @PostMapping("/addCourse")
     @Admin
-    public String addCourse(@Validated Course course, BindingResult result, RedirectAttributes attributes, Model model) {
+    public String addCourse(@Valid Course course, BindingResult result, RedirectAttributes attributes, Model model) {
         if (result.hasErrors()) {
             return "course-form";
         }
-        courseService.addCourse(course);
-
-        model.addAttribute("course", new Course());
-        return "course-form";
+       
+        
+        try {
+        	courseService.addCourse(course);
+        	model.addAttribute("course", new Course());
+            return "course-form";
+		} catch (DataIntegrityViolationException e) {
+//			result.addError(new FieldError("course", "name", "Course is already exist"));
+			model.addAttribute("duplicateCourse", course.getName());
+			model.addAttribute("course", new Course());
+			return "course-form";
+		}
     }
 
     @GetMapping("/")

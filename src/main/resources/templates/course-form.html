@@ -17,6 +17,9 @@
                                th:field="*{name}">
                         <small class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
                                th:errors="*{name}"></small>
+                        <p class="text-danger" th:if="${duplicateCourse}">
+                        <span th:text="${duplicateCourse}"></span> is already exist.
+                        </p>
                     </div>
                 </div>
                 <div class="row mb-4">
@@ -52,6 +55,7 @@
 
                 </div>
             </form>
+     
 
         </div>
     </div>

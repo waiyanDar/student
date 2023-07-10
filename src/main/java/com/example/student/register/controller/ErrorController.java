@@ -1,5 +1,7 @@
 package com.example.student.register.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +23,7 @@ public class ErrorController {
 		
 		model.addAttribute("statusCode", status);
 		model.addAttribute("msg", msg);
+		model.addAttribute("loginDate", LocalDate.now().toString());
 
 		return "error";
 	}

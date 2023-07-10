@@ -7,7 +7,9 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import com.example.student.register.dto.UserDto;
+import com.example.student.register.dto.UserRegisterDto;
+import com.example.student.register.dto.UserUpdateDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -65,12 +67,21 @@ public class User {
         return Objects.hash(id, userId);
     }
 
-    public static User form(UserDto userDto) {
+    public static User formForRegisteration(UserRegisterDto userRegDto) {
         User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+        user.setUsername(userRegDto.getUsername());
+        user.setEmail(userRegDto.getEmail());
+        user.setPassword(userRegDto.getPassword());
+//        user.setRoles(userRegDto.getRoles());
         return user;
+    }
+    
+    public static User formForUpdate(UserUpdateDto updateDto) {
+    	User user = new User();
+    	user.setUsername(updateDto.getUsername());
+    	user.setEmail(updateDto.getEmail());
+//    	user.setRoles(updateDto.getRoles());
+    	return user;
     }
     
     public void deleteRole() {

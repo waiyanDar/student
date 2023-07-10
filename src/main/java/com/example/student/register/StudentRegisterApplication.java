@@ -35,7 +35,7 @@ public class StudentRegisterApplication {
     
     @Bean
     @Transactional
-    @Profile("Test")
+//    @Profile("Test")
     public CommandLineRunner runner () {
     	return arg -> {
     		Role role1 = new Role();
@@ -51,18 +51,32 @@ public class StudentRegisterApplication {
     		Role role6 = new Role();
     		role6.setName(USER_READ);
     		
-    		roleDao.save(role1);
-    		roleDao.save(role2);
-    		roleDao.save(role3);
-    		roleDao.save(role4);
-    		roleDao.save(role5);
-    		roleDao.save(role6);
+    		
+    		try {
+    			
+        		roleDao.save(role1);
+        		roleDao.save(role2);
+        		roleDao.save(role3);
+        		roleDao.save(role4);
+        		roleDao.save(role5);
+        		roleDao.save(role6);
 
-    		User user = new User();
-    		user.setUsername("wai yan");
-    		user.setPassword("12345");
-    		user.setEmail("waiyan@gmail.com");
-    		userService.registerUser(user, Arrays.asList(role1, role2));
+        		
+			} catch (Exception e) {
+				System.out.println("role done");
+			}
+    		
+    		try {
+    			User user = new User();
+        		user.setUsername("wai yan");
+        		user.setPassword("12345");
+        		user.setEmail("waiyan@gmail.com");
+        		userService.registerUser(user, Arrays.asList(role1, role2));
+			} catch (Exception e) {
+				System.out.println("user done");
+			}
+    		
+    		
     	};
     }
 
