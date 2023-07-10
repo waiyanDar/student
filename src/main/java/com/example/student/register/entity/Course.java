@@ -1,7 +1,5 @@
 package com.example.student.register.entity;
 
-import java.util.List;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -21,8 +19,10 @@ public class Course {
     private Integer id;
 
     private String courseId;
+    
     @NotNull(message = "Course name cannot be null")
     @NotBlank(message = "Course name cannot be blank")
+    @Column(unique = true)
     private String name;
 
 

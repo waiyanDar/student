@@ -11,11 +11,6 @@
 
                 <h2 th:if="${oldUser}" class="col-md-6 offset-md-2 mb-5 mt-4">User Update</h2>
 
-                <div th:if="${emailDuplicate}"
-                     class="alert alert-danger text-center" role="alert">
-                    <span>Email is taken</span>
-                </div>
-
                 <div class="row mb-4" th:if="${oldUser}">
                     <div class="col-md-2"></div>
                     <label for="id" class="col-md-2 col-form-label">User Id</label>
@@ -42,7 +37,7 @@
                         <small class="text-danger" th:if="${invalidEmail}" th:text="${invalidEmail}"></small>
                     </div>
                 </div>
-                <div class="row mb-4">
+                <div class="row mb-4"  th:if="${!oldUser}">
                     <div class="col-md-2"></div>
                     <label for="password" class="col-md-2 col-form-label">Password</label>
                     <div class="col-md-4">
@@ -51,7 +46,7 @@
                         <small class="text-danger" th:if="${invalidPassword}" th:text="${invalidPassword}"></small>
                     </div>
                 </div>
-                <div class="row mb-4">
+                <div class="row mb-4" th:if="${!oldUser}" >
                     <div class="col-md-2"></div>
                     <label for="confirmPassword" class="col-md-2 col-form-label">Confirm
                         Password</label>

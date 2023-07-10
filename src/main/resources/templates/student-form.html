@@ -40,7 +40,7 @@
 
                     <div class="col-md-2"></div>
 
-                    <label for="dob" class="col-md-2 col-form-label">DOB</label>
+                    <label for="dob" class="col-md-2 col-form-label">Date of Birth</label>
 
                     <div class="col-md-4">
                         <input type="date" id="dob" class="form-control" th:field="*{dateOfBirth}"
@@ -141,8 +141,9 @@
                                 <span>Update</span>
                             </button>
 
-                            <a th:href="@{'/deleteStudent?id='+${student.id}}"
-                               class="btn btn-danger">Delete</a>
+                            <!-- <a th:href="@{'/deleteStudent?id='+${student.id}}"
+                               class="btn btn-danger">Delete</a> -->
+                               <a th:href="@{findAllStudent}" class="btn btn-secondary">Back</a>
 
                         </div>
                     </div>

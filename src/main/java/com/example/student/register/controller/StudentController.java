@@ -1,9 +1,14 @@
 package com.example.student.register.controller;
 
+import com.example.student.register.entity.Role;
 import com.example.student.register.entity.Student;
+import com.example.student.register.entity.User;
 import com.example.student.register.security.annotation.Admin;
 import com.example.student.register.service.CourseService;
 import com.example.student.register.service.StudentService;
+import com.example.student.register.service.UserService;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,10 +28,13 @@ public class StudentController {
     private StudentService studentService;
     
     private CourseService courseService;
+        
+    private UserService userService;
     
-    public StudentController(StudentService studentService, CourseService courseService) {
+    public StudentController(StudentService studentService, CourseService courseService,UserService userService) {
     	this.studentService = studentService;
     	this.courseService = courseService;
+    	this.userService = userService;
     }
     
     @ModelAttribute("loginDate")
@@ -104,7 +112,6 @@ public class StudentController {
     public String findAllStudent(Model model) {
     	
          model.addAttribute("students", studentService.findAllStudent());
-         
          return "student-list";
     }
 
@@ -112,6 +119,7 @@ public class StudentController {
     @Admin
     public String deleteStudent(@RequestParam("id") int id, RedirectAttributes attributes) {
 
+    	System.out.println("Id : "+id);
         studentId = studentService.deleteStudent(id);
         attributes.addFlashAttribute("stuDelete", true);
         return "redirect:/findAllStudent";

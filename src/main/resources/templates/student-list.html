@@ -1,49 +1,83 @@
 <!DOCTYPE html>
 <html th:replace="layout/masterLayout :: layout(~{::main})"
-      xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org">
 <body>
-<main role="main">
-    <div class="main_contents">
-        <div id="sub_content">
-            <div style="width: 1100px;">
-                <div class="alert alert-success" th:if="${stuAdd}">
-                    <p><span th:text="${studentId}"></span> is successfully added</p>
-                </div>
-                <div class="alert alert-success" th:if="${stuUpdate}">
-                    <p><span th:text="${studentId}"></span> is successfully updated</p>
-                </div>
-                <div class="alert alert-success" th:if="${stuDelete}">
-                    <p><span th:text="${studentId}"></span> is successfully added</p>
-                </div>
-            </div>
-            <div class="table" style="width : 1100px">
-                <table class="table table-striped" id="studentTable">
-                    <thead>
-                    <tr>
-                        <th>Student ID</th>
-                        <th>Name</th>
-                        <th>Course Name</th>
-                        <th>Details</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="stu : ${students}">
-                        <td th:text="${stu.studentId}"></td>
-                        <td th:text="${stu.name}"></td>
-                        <td><span style="margin-right: 10px;"
-                                  th:each="c : ${stu.courses}" th:text="${c.name}"> </span></td>
-                        <td><a th:href="@{'/seeMore?id='+${stu.id}}">
-                            <button
-                                    type="submit" class="btn btn-secondary mb-2">See
-                                More
-                            </button>
-                        </a></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</main>
+	<main role="main">
+		<div class="main_contents">
+			<div id="sub_content">
+				<div style="width: 1100px;">
+					<div class="alert alert-success" th:if="${stuAdd}">
+						<p>
+							<span th:text="${studentId}"></span> is successfully added
+						</p>
+					</div>
+					<div class="alert alert-success" th:if="${stuUpdate}">
+						<p>
+							<span th:text="${studentId}"></span> is successfully updated
+						</p>
+					</div>
+					<div class="alert alert-danger" th:if="${stuDelete}">
+						<p>
+							<span th:text="${studentId}"></span> is successfully deleted
+						</p>
+					</div>
+				</div>
+				<div class="table" style="width: 1100px">
+					<table class="table table-striped" id="studentTable">
+						<thead>
+							<tr>
+								<th>Student ID</th>
+								<th>Name</th>
+								<th>Course Name</th>
+								<th>Details</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="stu : ${students}">
+								<td th:text="${stu.studentId}"></td>
+								<td th:text="${stu.name}"></td>
+								<td><span style="margin-right: 10px;"
+									th:each="c : ${stu.courses}" th:text="${c.name}"> </span></td>
+								<td><a th:href="@{'/seeMore?id='+${stu.id}}">
+										<button type="submit" class="btn btn-secondary mb-2">See
+											More</button>
+								</a>
+
+									<a th:href="@{'/deleteStudent?id='+${stu.id}}" data-bs-toggle="modal"
+										th:data-bs-target="'#exampleModal'+${stu.id}" class="btn btn-danger mb-2 ms-3">Delete</a>
+										<!-- <p th:text="${stu.name}"></p>
+ -->									<div class="modal" th:id="'exampleModal'+${stu.id}" tabindex="-1"
+										aria-labelledby="exampleModalLabel" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title text-dark" id="exampleModalLabel">Confirmation</h5>
+													<button type="button" class="btn-close"
+														data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<div class="modal-body">
+													<h5 class="text-danger">Are you sure to
+														delete <span th:text="${stu.name}"></span> ?</h5>
+												</div>
+												<div class="modal-footer">
+													<a th:href="@{'/deleteStudent?id='+${stu.id}}">
+														<button type="submit" class="btn btn-danger "
+															data-bs-dismiss="modal">Yes</button>
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+
+			</div>
+		</div>
+	</main>
+	
 </body>
 </html>
