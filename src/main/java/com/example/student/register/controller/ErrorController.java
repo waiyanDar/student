@@ -13,15 +13,15 @@ public class ErrorController {
 	public String exception(Throwable throwable, Model model) {
 		
 		String msg = throwable != null ? throwable.getMessage() : "Unknown Error";
-		int status = 0;
-		if (msg.equals("Access is denied")) {
-			status = 403;
-		} else {
-			status = 500;
-		}
+//		int status = 0;
+//		if (msg.equals("Access is denied")) {
+//			status = 403;
+//		} else {
+//			status = 500;
+//		}
 
 		
-		model.addAttribute("statusCode", status);
+//		model.addAttribute("statusCode", status);
 		model.addAttribute("msg", msg);
 		model.addAttribute("loginDate", LocalDate.now().toString());
 

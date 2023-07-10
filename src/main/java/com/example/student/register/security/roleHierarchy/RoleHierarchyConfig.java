@@ -1,12 +1,12 @@
-package com.example.student.register.security;
+package com.example.student.register.security.roleHierarchy;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 
-import com.example.student.register.util.RoleHierarchyBuilder;
-import static com.example.student.register.util.RolesForSecurity.*;
+import com.example.student.register.security.roleHierarchy.RoleHierarchyBuilder;
+import static com.example.student.register.security.roleHierarchy.RolesForSecurity.*;
 
 @Configuration
 public class RoleHierarchyConfig {

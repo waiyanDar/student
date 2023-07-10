@@ -1,14 +1,10 @@
 package com.example.student.register.controller;
 
-import com.example.student.register.entity.Role;
 import com.example.student.register.entity.Student;
-import com.example.student.register.entity.User;
 import com.example.student.register.security.annotation.Admin;
 import com.example.student.register.service.CourseService;
 import com.example.student.register.service.StudentService;
-import com.example.student.register.service.UserService;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,16 +21,14 @@ import javax.validation.Valid;
 @Controller
 public class StudentController {
 
-    private StudentService studentService;
+    private final StudentService studentService;
     
-    private CourseService courseService;
+    private final CourseService courseService;
         
-    private UserService userService;
-    
-    public StudentController(StudentService studentService, CourseService courseService,UserService userService) {
+
+    public StudentController(StudentService studentService, CourseService courseService) {
     	this.studentService = studentService;
     	this.courseService = courseService;
-    	this.userService = userService;
     }
     
     @ModelAttribute("loginDate")

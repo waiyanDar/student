@@ -1,10 +1,9 @@
 package com.example.student.register.service;
 
-import static com.example.student.register.util.SpecificationUtil.*;
+import static com.example.student.register.dao.SpecificationUtil.*;
 
 import com.example.student.register.dao.StudentDao;
 import com.example.student.register.entity.Student;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
