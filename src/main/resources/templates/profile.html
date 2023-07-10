@@ -1,128 +1,164 @@
 <!DOCTYPE html>
 <html th:replace="layout/masterLayout :: layout(~{::main})"
-	xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 <body>
-	<main role="main">
-		<div class="main_contents text-dark">
-			<div id="sub_content">
-				<div class="row">
-					<div class="col-8"></div>
-					<div class="col-2">
-						<a href="javascript: document.logoutForm.submit()"
-							class="text-dark nav-link btn btn-danger">Log Out</a>
-						<form name="logoutForm" th:action="@{/logout}" method="post"
-							th:hidden="true">
-							<input type="submit" hidden value="SignOut">
-						</form>
-					</div>
-					<div class="col-2"></div>
-				</div>
-				<form th:object="${user}" th:action="${actionUrlForU}" method="post">
+<main role="main">
+    <div class="main_contents text-dark">
+        <div id="sub_content">
+            <div class="row">
+                <div class="col-8"></div>
+                <div class="col-2">
+                    <a href="javascript: document.logoutForm.submit()"
+                       class="text-warning nav-link btn btn-outline-danger">Log Out</a>
+                    <form name="logoutForm" th:action="@{/logout}" method="post"
+                          th:hidden="true">
+                        <input type="submit" hidden value="SignOut">
+                    </form>
+                </div>
+                <div class="col-2"></div>
+            </div>
+            <form th:object="${user}" th:action="${actionUrlForU}" method="post">
 
-					<h2 th:if="${!oldUser}" class="col-md-6 offset-md-2 mb-5 mt-4">User
-						Detail</h2>
+                <h2 th:if="${!oldUser}" class="col-md-6 offset-md-2 mb-5 mt-4">User
+                    Detail</h2>
 
-					<h2 th:if="${oldUser}" class="col-md-6 offset-md-2 mb-5 mt-4">User
-						Update</h2>
+                <h2 th:if="${oldUser}" class="col-md-6 offset-md-2 mb-5 mt-4">User
+                    Update</h2>
+                <div th:if="${successChangePsw}">
+                    <p>Successfully changed password</p>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-2"></div>
+                    <label for="id" class="col-md-2 col-form-label">User Id</label>
+                    <div class="col-md-4">
+                        <input type="text" id="id" class="form-control" disabled
+                               th:field="*{userId}">
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-2"></div>
+                    <label for="username" class="col-md-2 col-form-label">Name</label>
+                    <div class="col-md-4">
+                        <input type="text" id="username" class="form-control" disabled
+                               th:field="*{username}">
 
-					<div class="row mb-4">
-						<div class="col-md-2"></div>
-						<label for="id" class="col-md-2 col-form-label">User Id</label>
-						<div class="col-md-4">
-							<input type="text" id="id" class="form-control" disabled
-								th:field="*{userId}">
-						</div>
-					</div>
-					<div class="row mb-4">
-						<div class="col-md-2"></div>
-						<label for="username" class="col-md-2 col-form-label">Name</label>
-						<div class="col-md-4">
-							<input type="text" id="username" class="form-control" disabled
-								th:field="*{username}">
+                    </div>
+                </div>
 
-						</div>
-					</div>
+                <div class="row mb-4">
+                    <div class="col-md-2"></div>
+                    <label for="email" class="col-md-2 col-form-label">Email</label>
+                    <div class="col-md-4">
+                        <input type="text" id="email" class="form-control" disabled
+                               th:field="*{email}">
+                    </div>
+                </div>
+                <div class="row mb-4" th:if="${!oldUser}">
+                    <div class="col-md-2"></div>
+                    <label for="password" class="col-md-2 col-form-label">Password</label>
+                    <div class="col-md-4">
+                        <input type="password" id="password" class="form-control"
+                               disabled value="*****">
+                    </div>
+                </div>
+                <div class="row mb-4" th:if="${oldUser}">
+                    <div class="col-md-2"></div>
+                    <label for="upPassword" class="col-md-2 col-form-label">Password</label>
+                    <div class="col-md-4">
+                        <input type="password" name="newPassword" id="upPassword" placeholder="password"
+                               class="form-control">
+                        <small class="text-danger" th:if="${pswBlank}" th:text="${pswBlank}"></small>
+                    </div>
+                </div>
+                <div class="row mb-4" th:if="${!oldUser}">
+                    <div class="col-md-2"></div>
+                    <label for="confirmPassword" class="col-md-2 col-form-label">Confirm
+                        Password</label>
+                    <div class="col-md-4">
+                        <input type="password" id="confirmPassword" class="form-control"
+                               disabled value="*****">
 
-					<div class="row mb-4">
-						<div class="col-md-2"></div>
-						<label for="email" class="col-md-2 col-form-label">Email</label>
-						<div class="col-md-4">
-							<input type="text" id="email" class="form-control" disabled
-								th:field="*{email}">
-						</div>
-					</div>
-					<div class="row mb-4" th:if="${!oldUser}">
-						<div class="col-md-2"></div>
-						<label for="password" class="col-md-2 col-form-label">Password</label>
-						<div class="col-md-4">
-							<input type="password" id="password" class="form-control"
-								disabled value="*****">
-						</div>
-					</div>
-					<div class="row mb-4" th:if="${oldUser}">
-						<div class="col-md-2"></div>
-						<label for="password" class="col-md-2 col-form-label">Password</label>
-						<div class="col-md-4">
-							<input type="password" id="password" class="form-control" >
-						</div>
-					</div>
-					<div class="row mb-4" th:if="${!oldUser}">
-						<div class="col-md-2"></div>
-						<label for="confirmPassword" class="col-md-2 col-form-label">Confirm
-							Password</label>
-						<div class="col-md-4">
-							<input type="password" id="confirmPassword" class="form-control"
-								disabled value="*****">
-						</div>
-					</div>
-					<div class="row mb-4" th:if="${oldUser}">
-						<div class="col-md-2"></div>
-						<label for="confirmPassword" class="col-md-2 col-form-label">Confirm
-							Password</label>
-						<div class="col-md-4">
-							<input type="password" id="confirmPassword" class="form-control">
-						</div>
-					</div>
-					<div class="row mb-4">
-						<div class="col-md-2"></div>
-						<label for="userRole" class="col-md-2 col-form-label">
-							User Role </label>
-						<div class="col-md-4">
-							<select disabled id="userRole" class="js-states form-control"
-								multiple="multiple" th:field="*{roles}" style="width: 100%;">
-								<optgroup class="text-dark">
-									<option th:each="r : ${role}" th:value="${r.id}"
-										th:text="${r.name}" style="color: black !important"></option>
-								</optgroup>
-							</select> <small class="text-danger" th:if="${invalidRole}"
-								th:text="${invalidRole}"></small>
-						</div>
-					</div>
+                    </div>
+                </div>
+                <div class="row mb-4" th:if="${oldUser}">
+                    <div class="col-md-2"></div>
+                    <label for="upConfirmPassword" class="col-md-2 col-form-label">Confirm
+                        Password</label>
+                    <div class="col-md-4">
+                        <input type="password" name="confirmPassword" id="upConfirmPassword" placeholder="password"
+                               class="form-control">
+                        <small class="text-danger" th:if="${pswBlank}" th:text="${pswBlank}"></small>
+                        <small class="text-danger" th:if="${pswNoMatch}" th:text="${pswNoMatch}"></small>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-2"></div>
+                    <label for="userRole" class="col-md-2 col-form-label">
+                        User Role </label>
+                    <div class="col-md-4">
+                        <select disabled id="userRole" class="js-states form-control"
+                                multiple="multiple" th:field="*{roles}" style="width: 100%;">
+                            <optgroup class="text-dark">
+                                <option th:each="r : ${role}" th:value="${r.id}"
+                                        th:text="${r.name}" style="color: black !important"></option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
 
 
-					<div class="row mb-4" th:if="${!oldUser}">
-						<div class="col-md-4"></div>
+                <div class="row mb-4" th:if="${!oldUser}">
+                    <div class="col-md-4"></div>
 
-						<div class="col-md-6">
-							<a th:href="@{/changePsw}">
-								<button type="button" class="btn btn-success col-md-2">change
-									password</button>
-							</a>
-						</div>
-					</div>
-					<div class="row mb-4" th:if="${oldUser}">
-						<div class="col-md-4"></div>
+                    <div class="col-md-6">
+                        <a th:href="@{/changePsw}">
+                            <button type="button" class="btn btn-success col-md-4">change
+                                password
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                <div class="row mb-4" th:if="${oldUser}">
+                    <div class="col-md-4"></div>
 
-						<div class="col-md-6">
+                    <div class="col-md-6">
 
-							<button type="submit" class="btn btn-success col-md-2">Update</button>
+                        <button type="button" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal" class="btn btn-success col-md-2">Update
+                        </button>
+                        <a th:href="@{/profile}" class="btn btn-secondary col-md-2 ms-3">Back</a>
 
-						</div>
-					</div>
-				</form>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-dark" id="exampleModalLabel">Confirmation</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h5 style="color: rgb(127, 209, 131);">Are you sure to change password?</h5>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-warning col-md-2" data-bs-dismiss="modal">
+                                            Yes
+                                        </button>
+                                        <button type="button" class="btn btn-secondary ms-2 col-md-2" data-bs-dismiss="modal">
+                                            No
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-			</div>
-		</div>
-	</main>
+
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</main>
 </body>
 </html>

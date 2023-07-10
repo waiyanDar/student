@@ -1,4 +1,4 @@
-package com.example.student.register.security;
+package com.example.student.register.security.roleHierarchy;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class GlobalMethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
-	private RoleHierarchy roleHierarchy;
+	private final RoleHierarchy roleHierarchy;
 	
 	public GlobalMethodSecurityConfig(RoleHierarchy roleHierarchy) {
 		this.roleHierarchy = roleHierarchy;
@@ -24,6 +24,5 @@ public class GlobalMethodSecurityConfig extends GlobalMethodSecurityConfiguratio
 		affirmativeBased.getDecisionVoters().add(new RoleHierarchyVoter(roleHierarchy));
 		return affirmativeBased;
 	}
-	
-	
+
 }

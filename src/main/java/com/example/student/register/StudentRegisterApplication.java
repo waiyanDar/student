@@ -1,10 +1,8 @@
 package com.example.student.register;
 
+import com.example.student.register.dao.UserDao;
 import com.example.student.register.entity.Role;
 import com.example.student.register.entity.User;
-import com.example.student.register.service.UserService;
-
-import java.util.Arrays;
 
 import javax.transaction.Transactional;
 
@@ -12,21 +10,25 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
 
 import com.example.student.register.dao.RoleDao;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static com.example.student.register.util.RolesForSecurity.*;
+import java.util.Arrays;
+
+import static com.example.student.register.security.roleHierarchy.RolesForSecurity.*;
 
 @SpringBootApplication
 public class StudentRegisterApplication {
 
     private final RoleDao roleDao;
-    private final UserService userService;
+    private final UserDao userDao;
+	private final PasswordEncoder passwordEncoder;
 
-    public StudentRegisterApplication(RoleDao roleDao, UserService userService) {
+    public StudentRegisterApplication(RoleDao roleDao, UserDao userDao, PasswordEncoder passwordEncoder ) {
         this.roleDao = roleDao;
-        this.userService = userService;
+        this.userDao = userDao;
+		this.passwordEncoder = passwordEncoder;
     }
 
     public static void main(String[] args) {
@@ -69,15 +71,15 @@ public class StudentRegisterApplication {
     		try {
     			User user = new User();
         		user.setUsername("wai yan");
-        		user.setPassword("12345");
+        		user.setPassword(passwordEncoder.encode("12345"));
         		user.setEmail("waiyan@gmail.com");
-        		userService.registerUser(user, Arrays.asList(role1, role2));
+				user.setRoles(Arrays.asList(role1));
+        		userDao.save(user);
 			} catch (Exception e) {
+//				e.printStackTrace();
 				System.out.println("user done");
 			}
-    		
-    		
+
     	};
     }
-
 }

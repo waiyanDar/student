@@ -28,8 +28,7 @@ public class Course {
 
     @PostPersist
     public void generateCourseId() {
-        String formattedId = String.format("COU%03d", id);
-        courseId = formattedId;
+        courseId = String.format("COU%03d", id);
     }
 
 }

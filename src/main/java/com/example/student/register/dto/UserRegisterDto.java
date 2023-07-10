@@ -36,7 +36,7 @@ public class UserRegisterDto {
     @NotBlank(message = "Confirm password cannot be blank")
     private String confirmPassword;
 
-    @NotEmpty(message = "role cannot be empty")
+    @NotEmpty(message = "Role cannot be empty")
     private List<Role> roles;
 
     public static UserRegisterDto form(User user) {

@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 import com.example.student.register.entity.User;
 import com.example.student.register.service.UserService;
 
-import static com.example.student.register.util.RolesForSecurity.*;
+import static com.example.student.register.security.roleHierarchy.RolesForSecurity.*;
 
 @Component
 public class CustomAuthProvider implements AuthenticationProvider{

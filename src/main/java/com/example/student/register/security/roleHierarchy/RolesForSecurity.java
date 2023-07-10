@@ -1,4 +1,4 @@
-package com.example.student.register.util;
+package com.example.student.register.security.roleHierarchy;
 
 public interface RolesForSecurity {
 

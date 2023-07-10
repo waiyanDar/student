@@ -1,4 +1,4 @@
-package com.example.student.register.util;
+package com.example.student.register.dao;
 
 import com.example.student.register.entity.Course;
 import com.example.student.register.entity.Student;

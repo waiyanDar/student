@@ -29,7 +29,7 @@ public class UserUpdateDto {
     private String email;
 
 
-    @NotEmpty(message = "role cannot be empty")
+    @NotEmpty(message = "Role cannot be empty")
     private List<Role> roles;
 
     public static UserRegisterDto form(User user) {

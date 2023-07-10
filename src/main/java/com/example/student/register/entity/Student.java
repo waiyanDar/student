@@ -68,7 +68,6 @@ public class Student {
 
     @PostPersist
     public void generateStudentId() {
-        String formattedId = String.format("STU%03d", id);
-        studentId = formattedId;
+      studentId = String.format("STU%03d", id);
     }
 }
