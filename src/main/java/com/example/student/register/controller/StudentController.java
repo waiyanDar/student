@@ -119,19 +119,6 @@ public class StudentController {
         return "redirect:/findAllStudent";
     }
 
-    @GetMapping("/searchStudent")
-    @Admin
-    public String searchStudent(@RequestParam("studentId") Optional<String> studentId,
-    							@RequestParam("studentName") Optional<String> studentName,
-    							@RequestParam("courseName") Optional<String> courseName, Model model) {
-    	
-    	List<Student> students = studentService.searchStudent(studentId, studentName, courseName);
-    	model.addAttribute("students", students);
-    	model.addAttribute("studentId", studentId.orElse(""));
-    	model.addAttribute("studentName", studentName.orElse(""));
-    	model.addAttribute("courseName", courseName.orElse(""));
-    	return "student-list";
-    }
 
     boolean oldStu;
 //    @ModelAttribute("oldStu")
