@@ -1,11 +1,14 @@
 package com.example.student.register.security;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import com.example.student.register.entity.Role;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -53,6 +56,8 @@ public class CustomAuthProvider implements AuthenticationProvider{
 			throw new BadCredentialsException("User id is wrong", e);
 		}
 
+		String jwt = generateJwtToken(userId);
+		System.out.println(jwt);
 		List<GrantedAuthority> grantedAuthority = roles.stream()
 				.map(r -> new SimpleGrantedAuthority(ROLES_PREFIX+r.getName())).collect(Collectors.toList());
 		
@@ -68,4 +73,20 @@ public class CustomAuthProvider implements AuthenticationProvider{
 		return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
 	}
 
+	private static final String secretKey = "T91HgwvdglSwVf7WK1xmL5C3HrWGwKmj+aLcRsbDN0Ou7TgsLXWAiMRMNwhweVX+";
+
+	private String generateJwtToken(String username){
+//		String secretKey = "secret";
+		int expirationInMs = 400000;
+
+		Date now = new Date();
+		Date expiryDate = new Date(now.getTime() + expirationInMs);
+
+		return Jwts.builder()
+				.setSubject(username)
+				.setIssuedAt(now)
+				.setExpiration(expiryDate)
+				.signWith(SignatureAlgorithm.HS256, secretKey)
+				.compact();
+	}
 }

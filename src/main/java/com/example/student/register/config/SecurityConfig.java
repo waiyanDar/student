@@ -1,5 +1,6 @@
-package com.example.student.register.security;
+package com.example.student.register.config;
 
+import com.example.student.register.security.CustomAuthProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class SecurityConfig {
 
 	@Autowired
-	private  CustomAuthProvider customAuthProvider;
+	private CustomAuthProvider customAuthProvider;
 	
 	@Autowired
 	private  RoleHierarchy roleHierarchy;
