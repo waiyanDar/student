@@ -1,12 +1,15 @@
 package com.example.student.register.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.example.student.register.dao.SpecificationUtil.*;
 
 import com.example.student.register.dto.UserRegisterDto;
 import com.example.student.register.dto.UserUpdateDto;
+import com.example.student.register.entity.Role;
 import com.example.student.register.entity.User;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -45,7 +48,6 @@ public class UserService {
         return userId;
     }
 
-    //    public void registerUser(User user, List<Role> roles) {
     public String registerUser(UserRegisterDto userRegisterDto, BindingResult result,
                              RedirectAttributes attributes, Model model) {
 
@@ -95,13 +97,14 @@ public class UserService {
         return "redirect:/findAllUser";
     }
 
-    public String updateUser(UserUpdateDto userUpdateDto, BindingResult result,
+    public String updateUser(UserUpdateDto userUpdateDto,String actionUrl, BindingResult result,
                              RedirectAttributes attributes, Model model) {
 
         if (result.hasErrors()) {
             checkValidation(result, model);
-            modelForUser(model, userUpdateDto,true, "/userUpdate", userId);
-//            model.addAttribute("user", userUpdateDto);
+//            modelForUser(model, userUpdateDto,true, "/userUpdate", userId);
+            modelForUser(model, userUpdateDto,true, actionUrl, userId);
+
             return "user-form";
         }
 
@@ -118,32 +121,47 @@ public class UserService {
         } catch (DataIntegrityViolationException e) {
             result.addError(new FieldError("userDto", "email", "Email is taken"));
             checkValidation(result, model);
-            modelForUser(model, userUpdateDto,true, "/userUpdate", userId);
-//            model.addAttribute("user", userUpdateDto);
+//            modelForUser(model, userUpdateDto,true, "/userUpdate", userId);
+            modelForUser(model, userUpdateDto, true, actionUrl, userId);
             return "user-form";
         }
     }
 
-    public String changePassword(String password, String confirmPassword, Model model, RedirectAttributes attributes) {
+    public String changePassword(String oldPassword, String password, String confirmPassword, Model model, RedirectAttributes attributes) {
 
-        if (password.isEmpty() || confirmPassword.isEmpty()) {
-            model.addAttribute("pswBlank", "Please fill in all the fields.");
-            modelForUser(model,UserService.loginUser, true, "/changePsw", "");
-            return "profile";
-        }
-
-        if (!password.equals(confirmPassword)) {
-            model.addAttribute("pswNoMatch", "Passwords do not match.");
-            modelForUser(model,UserService.loginUser, true, "/changePsw", "");
-            return "profile";
-        }
+    	if(pswCheckValidation(oldPassword, password, confirmPassword, model)) {
+    		modelForUser(model,UserService.loginUser, true, "/changePsw", "");
+          return "profile";
+    	}
+    	
         User oUser = findUserByUserId(loginUser.getUserId());
         oUser.setPassword(passwordEncoder.encode(password));
 
         userDao.saveAndFlush(oUser);
         modelForUser(model, UserService.loginUser,false, "/changePsw", "");
         attributes.addFlashAttribute("successChangePsw", true);
-        return "profile";
+        return "redirect:/";
+    }
+    
+    private boolean pswCheckValidation(String oldPassword, String password, String confirmPassword, Model model) {
+    	boolean valid=false;
+    	if(oldPassword.isEmpty()) {
+    		model.addAttribute("oldPswBlank", "Please fill in old password field");
+    		valid = true;
+    	}else if(!passwordEncoder.matches(oldPassword, loginUser.getPassword() )) {
+    		model.addAttribute("oldPswWrong", "Current password is wrong");
+    		valid = true;
+    	}
+        if (password.isEmpty() || confirmPassword.isEmpty()) {
+            model.addAttribute("pswBlank", "Please fill in all the fields.");
+            valid = true;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            model.addAttribute("pswNoMatch", "Passwords do not match.");
+            valid = true;
+        }
+        return valid;
     }
 
     public List<User> findAllUser() {
@@ -151,15 +169,23 @@ public class UserService {
     }
 
     public List<User> searchUser(Optional<String> userId, Optional<String> name) {
-        Specification<User> specification = withUserId(userId).and(withName(name));
-        return userDao.findAll(specification);
+        
+        return null;
     }
 
 
     private <T> void modelForUser(Model model, T userDto, boolean oldUser, String link, String oUserId) {
         model.addAttribute("oldUser", oldUser);
         model.addAttribute("user", userDto);
-        model.addAttribute("role", roleDao.findAll());
+//        model.addAttribute("role", roleDao.findAll());
+//        Role role = roleDao.findRoleByName("ROLES_ADMIN").get();
+        Role role = roleDao.findById(1).get();
+        if(loginUser.getRoles().contains(role)) {
+        	 model.addAttribute("role", roleDao.findAll());
+        }else {
+        	List<Role> roles = roleDao.findAll().stream().filter( r -> r.getId()!=1).collect(Collectors.toList());
+        	model.addAttribute("role", roles);
+        }
         model.addAttribute("actionUrlForU", link);
         model.addAttribute("userId", oUserId);
     }
@@ -184,28 +210,36 @@ public class UserService {
 
     public String getRegisterForm(Model model) {
         modelForUser(model, new UserRegisterDto(), false, "/registerUser", "");
-//        model.addAttribute("user", new UserRegisterDto());
         return "user-form";
     }
 
-    public String getUpdateForm(int id, Model model) {
-        User user = findUserById(id);
+    public String getUpdateForm(String userId,String actionUrl, Model model) {
+//        User user = findUserById(id);
+    	User user = findUserByUserId(userId);
         userId = user.getUserId();
         this.id = user.getId();
-        modelForUser(model,UserUpdateDto.form(user), true,"/userUpdate", userId);
-//        model.addAttribute("user", UserUpdateDto.form(oUser));
+//        modelForUser(model,UserUpdateDto.form(user), true,"/userUpdate", userId);
+        modelForUser(model,UserUpdateDto.form(user), true, actionUrl, userId);
         return "user-form";
     }
+    
+    public String getProfileUpdateForm(String actionUrl, Model model) {
+  	User user = loginUser;
+      userId = user.getUserId();
+      this.id = user.getId();
+      modelForUser(model,UserUpdateDto.form(user), true, actionUrl, userId);
+      return "user-form";
+  }
+    
+    
 
     public String getDataForProfile(Model model) {
-//        User user = UserService.loginUser;
-//        model.addAttribute("user",user );
+    	model.addAttribute("id", loginUser.getId());
         modelForUser(model, loginUser,false, "/changePsw", "");
         return "profile";
     }
 
     public String getPswForm(Model model) {
-//        model.addAttribute("user", UserService.loginUser);
         modelForUser(model, loginUser,true, "/changePsw", "");
         return "profile";
     }

@@ -9,6 +9,7 @@ import com.example.student.register.security.annotation.UserDelete;
 import com.example.student.register.security.annotation.UserRead;
 import com.example.student.register.security.annotation.UserUpdate;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,6 +34,8 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+    
+    private User loginUser = UserService.loginUser;
 
     @ModelAttribute("loginDate")
     public String loginDate() {
@@ -62,9 +65,9 @@ public class UserController {
 
     @GetMapping("/userUpdate")
     @UserUpdate
-    public String uiChange(@RequestParam("id") int id, Model model) {
+    public String uiChange(@RequestParam("userId") String userId, Model model) {
 
-       return userService.getUpdateForm(id, model);
+       return userService.getUpdateForm(userId,"/userUpdate", model);
 
     }
 
@@ -73,7 +76,7 @@ public class UserController {
     public String updateUser(@Valid UserUpdateDto userDto,BindingResult result,
                              RedirectAttributes attributes,  Model model) {
 
-           return userService.updateUser(userDto, result, attributes, model);
+           return userService.updateUser(userDto,"/userUpdate", result, attributes, model);
 
     }
 
@@ -103,12 +106,13 @@ public class UserController {
         return "user-list";
     }
     
-    @GetMapping("/profile")
-    public String goProfile(Model model) {
-
-        return userService.getDataForProfile(model);
-
-    }
+	/*
+	 * @GetMapping("/profile") public String goProfile(Model model) {
+	 * 
+	 * return userService.getDataForProfile(model);
+	 * 
+	 * }
+	 */
     
     @GetMapping("/changePsw")
     public String uiChange(Model model) {
@@ -118,13 +122,33 @@ public class UserController {
     }
     
     @PostMapping("/changePsw")
-    public String updatePassword(@RequestParam("newPassword") String password,
+    public String updatePassword(@RequestParam("oldPassword") String oldPassword,
+    							 @RequestParam("newPassword") String password,
     							 @RequestParam("confirmPassword") String confirmPassword,
                                  RedirectAttributes attributes, Model model) {
 
-    	return userService.changePassword(password, confirmPassword, model, attributes);
+    	return userService.changePassword(oldPassword,password, confirmPassword, model, attributes);
 
     }
+    
+	/*
+	 * @GetMapping("/updateProfile")
+	 * // @PreAuthorize("#userId == authentication.name") public String
+	 * getUpdateProfile(Model model) { return
+	 * userService.getProfileUpdateForm("/updateProfile", model); }
+	 */
+    
+	/*
+	 * @PostMapping("/updateProfile")
+	 * // @PreAuthorize("#userId == authentication.name") public String
+	 * updateprofile(@Valid UserUpdateDto userDto,BindingResult result,
+	 * RedirectAttributes attributes, Model model) {
+	 * 
+	 * return userService.updateUser(userDto, "/updateProfile",result, attributes,
+	 * model);
+	 * 
+	 * }
+	 */
 
     @GetMapping("/login")
     public String login() {

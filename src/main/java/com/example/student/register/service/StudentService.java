@@ -1,14 +1,11 @@
 package com.example.student.register.service;
 
-import static com.example.student.register.dao.SpecificationUtil.*;
 
 import com.example.student.register.dao.StudentDao;
 import com.example.student.register.entity.Student;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -48,9 +45,5 @@ public class StudentService {
         oStudent.setEducation(student.getEducation());
         return studentDao.saveAndFlush(oStudent);
     }
-    
-    public List<Student> searchStudent(Optional<String> studentId,Optional<String> name, Optional<String> courseName){
-    	Specification<Student> specification = withStudentId(studentId).and(withStudentName(name)).and(withCourse(courseName));
-    	return studentDao.findAll(specification);
-    }
+
 }
