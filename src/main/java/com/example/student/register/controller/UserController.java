@@ -3,13 +3,11 @@ package com.example.student.register.controller;
 import com.example.student.register.dto.UserRegisterDto;
 import com.example.student.register.dto.UserUpdateDto;
 import com.example.student.register.entity.User;
-
 import com.example.student.register.security.annotation.UserCreate;
 import com.example.student.register.security.annotation.UserDelete;
 import com.example.student.register.security.annotation.UserRead;
 import com.example.student.register.security.annotation.UserUpdate;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +22,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
@@ -35,7 +35,7 @@ public class UserController {
         this.userService = userService;
     }
     
-    private User loginUser = UserService.loginUser;
+//    private User loginUser = UserService.loginUser;
 
     @ModelAttribute("loginDate")
     public String loginDate() {
@@ -151,7 +151,7 @@ public class UserController {
 	 */
 
     @GetMapping("/login")
-    public String login() {
+    public String login(HttpServletResponse response) {
         return "login";
     }
 

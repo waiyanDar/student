@@ -42,6 +42,10 @@
 					</ul>
 				</div>
 			</div>
+			<div sec:authorize="!isAuthenticated()">
+               
+                <a th:href="@{/login}" class="btn-link text-dark">Log in</a>
+        </div>
 		</div>
 	</nav>
 </body>

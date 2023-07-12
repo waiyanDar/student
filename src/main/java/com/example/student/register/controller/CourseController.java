@@ -2,6 +2,9 @@ package com.example.student.register.controller;
 
 import java.time.LocalDate;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -61,7 +64,8 @@ public class CourseController {
     }
 
     @GetMapping("/")
-    public String goHome() {
+    public String goHome(HttpServletRequest request, HttpServletResponse response) {
+    	
         return "home";
     }
 
