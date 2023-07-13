@@ -37,12 +37,9 @@ public class Student {
     @Pattern(regexp = "[0-9]*", message = "Invalid phone number")
     private String phone;
     
-//    @NotBlank(message = "Photo cannot be blank")
-//    @NotNull(message = "Photo cannot be empty")
-    private Byte [] photo;
+    private byte [] photo;
 
     @Enumerated(EnumType.STRING)
-//    @NotBlank(message = "Gender cannot be blank"
     @NotNull(message = "Gender cannot be empty")
     private Gender gender;
 

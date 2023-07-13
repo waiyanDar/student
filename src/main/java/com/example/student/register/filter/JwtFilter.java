@@ -5,6 +5,7 @@ import static com.example.student.register.security.roleHierarchy.RolesForSecuri
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.DateTimeException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,10 +44,11 @@ public class JwtFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		
-		Cookie[] cookies = request.getCookies();
 
+		Cookie[] cookies = request.getCookies();
+		
 		String jwt = "";
+
 		try {
 			for (Cookie cookie : cookies) {
 				if (cookie.getName().equals("jwt")) {
@@ -53,25 +56,49 @@ public class JwtFilter extends OncePerRequestFilter {
 				}
 			}
 		} catch (Exception e) {
-			
+
 		}
+		
+//		HttpSession session = request.getSession();
+//		String jwt = (String) session.getAttribute("jwt");
+
 		SecretKey key = Keys.hmacShaKeyFor(signinKey.getBytes(StandardCharsets.UTF_8));
 
 		if (jwt != null && !jwt.isEmpty()) {
-			
+
 			Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
 
-			String userId = String.valueOf(claims.get("userId"));
-			
-			User user = userService.findUserByUserId(userId);
-			
-			List<GrantedAuthority> grantedAuthority = user.getRoles().stream()
-					.map(r -> new SimpleGrantedAuthority(ROLES_PREFIX + r.getName())).collect(Collectors.toList());
+			String userId = "";
+			try {
+				userId = String.valueOf(claims.get("userId"));
+			} catch (Exception e) {
+				throw new DateTimeException("Session");
+			}
 
-			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userId, null,grantedAuthority);
-			
-			SecurityContextHolder.getContext().setAuthentication(auth);
-			
+			try {
+				if (userId.equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+					User user = userService.findUserByUserId(userId);
+
+					List<GrantedAuthority> grantedAuthority = user.getRoles().stream()
+							.map(r -> new SimpleGrantedAuthority(ROLES_PREFIX + r.getName()))
+							.collect(Collectors.toList());
+
+					UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userId, null,
+							grantedAuthority);
+
+					SecurityContextHolder.getContext().setAuthentication(auth);
+				} else {
+					SecurityContextHolder.clearContext();
+				}
+
+			} catch (Exception e) {
+				SecurityContextHolder.clearContext();
+				Cookie cookie = new Cookie("jwt", "");
+				cookie.setMaxAge(0);
+				cookie.setPath("/");
+				response.addCookie(cookie);
+			}
+
 		} else {
 			SecurityContextHolder.clearContext();
 		}

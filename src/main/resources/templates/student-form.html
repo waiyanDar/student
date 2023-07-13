@@ -5,7 +5,7 @@
 	<main role="main">
 		<div class="main_contents">
 			<div id="sub_content" class="text-dark">
-				<form th:object="${student}" th:action="${actionUrlForStu}"
+				<form enctype="multipart/form-data" th:object="${student}" th:action="${actionUrlForStu}"
 					method="post">
 
 					<h2 th:if="${!oldStu}" class="col-md-6 offset-md-2 mb-5 mt-4">Student
@@ -133,14 +133,14 @@
 						</div>
 					</fieldset>
 					
-					<div class="row mb-4">
+					<div 	 class="row mb-4">
 					
 						<div class="col-md-2"></div>
 						
 						<label for="photo" class="col-md-2 col-form-label">Photo</label>
 						
 						<div class="col-md-4">
-							<!-- <input type="file" th:field="*{photo}" class="form-control" id="name"
+						<!-- 	<input type="file" th:field="*{photo}" class="form-control" id="name"
 							th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid'" placeholder=""> -->
 							 <input type="file" class="form-control" id="photo" name="photo" required>
 						</div>

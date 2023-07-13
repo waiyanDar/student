@@ -1,11 +1,8 @@
 package com.example.student.register.service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.example.student.register.dao.SpecificationUtil.*;
 
 import com.example.student.register.dto.UserRegisterDto;
 import com.example.student.register.dto.UserUpdateDto;
@@ -13,7 +10,6 @@ import com.example.student.register.entity.Role;
 import com.example.student.register.entity.User;
 
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -108,7 +104,7 @@ public class UserService {
             return "user-form";
         }
 
-        User oUser = findUserByUserId(userId);
+        User oUser = findUserByUserId(userUpdateDto.getUserId());
         oUser.setUsername(userUpdateDto.getUsername());
         oUser.setEmail(userUpdateDto.getEmail());
         oUser.deleteRole();

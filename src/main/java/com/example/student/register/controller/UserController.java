@@ -1,8 +1,11 @@
 package com.example.student.register.controller;
 
+import com.example.student.register.dao.InvalidJwtDao;
 import com.example.student.register.dto.UserRegisterDto;
 import com.example.student.register.dto.UserUpdateDto;
+import com.example.student.register.entity.InvalidJwt;
 import com.example.student.register.entity.User;
+import com.example.student.register.security.CustomAuthProvider;
 import com.example.student.register.security.annotation.UserCreate;
 import com.example.student.register.security.annotation.UserDelete;
 import com.example.student.register.security.annotation.UserRead;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.student.register.service.InvalidJwtService;
 import com.example.student.register.service.UserService;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -23,6 +27,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -31,8 +36,11 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    private final InvalidJwtService invalidJwtService;
+    
+    public UserController(UserService userService, InvalidJwtService invalidJwtService) {
         this.userService = userService;
+        this.invalidJwtService = invalidJwtService;
     }
     
 //    private User loginUser = UserService.loginUser;
@@ -67,15 +75,19 @@ public class UserController {
     @UserUpdate
     public String uiChange(@RequestParam("userId") String userId, Model model) {
 
+    	userUpdateId = userId;
        return userService.getUpdateForm(userId,"/userUpdate", model);
 
     }
+    
+    String userUpdateId;
 
     @PostMapping("/userUpdate")
     @UserUpdate
     public String updateUser(@Valid UserUpdateDto userDto,BindingResult result,
                              RedirectAttributes attributes,  Model model) {
 
+    	userDto.setUserId(userUpdateId);
            return userService.updateUser(userDto,"/userUpdate", result, attributes, model);
 
     }
@@ -106,14 +118,6 @@ public class UserController {
         return "user-list";
     }
     
-	/*
-	 * @GetMapping("/profile") public String goProfile(Model model) {
-	 * 
-	 * return userService.getDataForProfile(model);
-	 * 
-	 * }
-	 */
-    
     @GetMapping("/changePsw")
     public String uiChange(Model model) {
 
@@ -130,28 +134,11 @@ public class UserController {
     	return userService.changePassword(oldPassword,password, confirmPassword, model, attributes);
 
     }
-    
-	/*
-	 * @GetMapping("/updateProfile")
-	 * // @PreAuthorize("#userId == authentication.name") public String
-	 * getUpdateProfile(Model model) { return
-	 * userService.getProfileUpdateForm("/updateProfile", model); }
-	 */
-    
-	/*
-	 * @PostMapping("/updateProfile")
-	 * // @PreAuthorize("#userId == authentication.name") public String
-	 * updateprofile(@Valid UserUpdateDto userDto,BindingResult result,
-	 * RedirectAttributes attributes, Model model) {
-	 * 
-	 * return userService.updateUser(userDto, "/updateProfile",result, attributes,
-	 * model);
-	 * 
-	 * }
-	 */
 
     @GetMapping("/login")
-    public String login(HttpServletResponse response) {
+    public String login(HttpServletRequest req) {
+//    	String jwt =(String) req.getSession().getAttribute("jwt");
+//    	System.out.println(jwt);
         return "login";
     }
 
@@ -161,6 +148,12 @@ public class UserController {
         attributes.addFlashAttribute("loginError", true);
 
         return "redirect:/login";
+    }
+    
+    @GetMapping("/logout")
+    public String logout() {
+    	invalidJwtService.saveToken(CustomAuthProvider.jwt);
+    	return "redirect:/login";
     }
 
 }

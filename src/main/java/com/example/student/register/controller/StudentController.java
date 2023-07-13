@@ -51,20 +51,12 @@ public class StudentController {
 
     @PostMapping("/registerStudent")
     @Admin
-    public String registerStudent(@Valid Student student,@RequestParam("photo") MultipartFile photo, BindingResult result, Model model, RedirectAttributes attributes) throws IOException {
-
+    public String registerStudent(@Valid Student student,@RequestPart("photo") MultipartFile photo, BindingResult result, Model model, RedirectAttributes attributes) throws IOException {
+    	
+    	student.setPhoto(photo.getBytes());
         if (result.hasErrors()) {
             modelForStu(model,student,false, "", "");
             return "student-form";
-        }
-        System.out.println(photo.toString());
-        if (!photo.isEmpty()) {
-            byte[] photoBytes = photo.getBytes();
-            Byte[] byteObjects = new Byte[photoBytes.length];
-            for (int i = 0; i < photoBytes.length; i++) {
-                byteObjects[i] = photoBytes[i];
-            }
-            student.setPhoto(byteObjects);
         }
 
 //        student.setPhoto(ArrayUtils.toObject(photo.getBytes()));
@@ -86,7 +78,7 @@ public class StudentController {
         modelForStu(model, oStudent, true, "/updateStudent", oStudentId);
         return "student-form";
     }
-
+    
     @PostMapping("/updateStudent")
     @Admin
     public String updateStudent(@Valid Student student, BindingResult result,RedirectAttributes attributes,Model model) {
