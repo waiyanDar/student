@@ -1,9 +1,7 @@
 package com.example.student.register.config;
 
 import com.example.student.register.filter.JwtFilter;
-//import com.example.student.register.handler.CusLogoutHandler;
 import com.example.student.register.security.CustomAuthProvider;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
@@ -58,19 +55,13 @@ public class SecurityConfig {
 					.logout()
 					.logoutUrl("/logout")
 					.logoutSuccessUrl("/login")
-//					.addLogoutHandler(logoutHandler())
-//					.invalidateHttpSession(true)
 					.deleteCookies("jwt")
 					.permitAll();
 
 		httpSecurity.csrf().disable();
 		return httpSecurity.build();
 	}
-	
-//	@Bean
-//	public LogoutHandler logoutHandler() {
-//		return new CusLogoutHandler();
-//	}
+
 
 
 	@Bean

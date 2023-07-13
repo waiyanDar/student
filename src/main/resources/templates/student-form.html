@@ -1,182 +1,170 @@
 <!DOCTYPE html>
 <html th:replace="layout/masterLayout :: layout(~{::main})"
-	xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 <body>
-	<main role="main">
-		<div class="main_contents">
-			<div id="sub_content" class="text-dark">
-				<form enctype="multipart/form-data" th:object="${student}" th:action="${actionUrlForStu}"
-					method="post">
+<main role="main">
+    <div class="main_contents">
+        <div id="sub_content" class="text-dark">
+            <form enctype="multipart/form-data" th:object="${student}" th:action="${actionUrlForStu}"
+                  method="post">
 
-					<h2 th:if="${!oldStu}" class="col-md-6 offset-md-2 mb-5 mt-4">Student
-						Registration</h2>
+                <h2 th:if="${!oldStu}" class="col-md-6 offset-md-2 mb-5 mt-4">Student
+                    Registration</h2>
 
-					<h2 th:if="${oldStu}" class="col-md-6 offset-md-2 mb-5 mt-4">Student
-						Details</h2>
+                <h2 th:if="${oldStu}" class="col-md-6 offset-md-2 mb-5 mt-4">Student
+                    Details</h2>
 
-					<div th:if="${oldStu}" class="row mb-4">
+                <div th:if="${oldStu}" class="row mb-4">
 
-						<div class="col-md-2"></div>
+                    <div class="col-md-2"></div>
 
-						<label for="id" class="col-md-2 col-form-label">Student Id</label>
-						<div class="col-md-4">
-							<input type="text" id="id" class="form-control" disabled
-								th:value="${studentId}">
-						</div>
-					</div>
-					<div class="row mb-4">
+                    <label for="id" class="col-md-2 col-form-label">Student Id</label>
+                    <div class="col-md-4">
+                        <input type="text" id="id" class="form-control" disabled
+                               th:value="${studentId}">
+                    </div>
+                </div>
+                <div class="row mb-4">
 
-						<div class="col-md-2"></div>
+                    <div class="col-md-2"></div>
 
-						<label for="name" class="col-md-2 col-form-label">Name</label>
+                    <label for="name" class="col-md-2 col-form-label">Name</label>
 
-						<div class="col-md-4">
-							<input type="text" id="name" class="form-control"
-								placeholder="name" th:field="*{name}"
-								th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
-							<small class="invalid-feedback"
-								th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
-						</div>
+                    <div class="col-md-4">
+                        <input type="text" id="name" class="form-control"
+                               placeholder="name" th:field="*{name}">
+                        <small class="text-danger" th:if="${invalidName}" th:text="${invalidName}"></small>
+                    </div>
 
-					</div>
+                </div>
 
-					<div class="row mb-4">
+                <div class="row mb-4">
 
-						<div class="col-md-2"></div>
+                    <div class="col-md-2"></div>
 
-						<label for="dob" class="col-md-2 col-form-label">Date of
-							Birth</label>
+                    <label for="dob" class="col-md-2 col-form-label">Date of
+                        Birth</label>
 
-						<div class="col-md-4">
-							<input type="date" id="dob" class="form-control"
-								th:field="*{dateOfBirth}"
-								th:classappend="${#fields.hasErrors('dateOfBirth')} ? 'is-invalid'">
-							<small class="invalid-feedback"
-								th:if="${#fields.hasErrors('dateOfBirth')}"
-								th:errors="*{dateOfBirth}"></small>
-						</div>
+                    <div class="col-md-4">
+                        <input type="date" id="dob" class="form-control"
+                               th:field="*{dateOfBirth}">
+                        <small class="text-danger" th:if="${invalidDob}" th:text="${invalidDob}"></small>
+                    </div>
 
-					</div>
+                </div>
 
-					<fieldset class="row mb-4">
+                <fieldset class="row mb-4">
 
-						<div class="col-md-2"></div>
+                    <div class="col-md-2"></div>
 
-						<legend class="col-form-label col-md-2 pt-0">Gender</legend>
-						<div class="col-md-4">
-							<div th:each="gender : ${genders}"
-								th:classappend="${#fields.hasErrors('gender')} ? 'is-invalid'"
-								class="form-check-inline">
-								<input class="form-check-input" th:field="*{gender}" id="gender"
-									value="option1" checked th:value="${gender.name}" type="radio"
-									name="gender"> <label class="form-check-label"
-									for="gender" th:text="${gender.name}"> </label>
+                    <legend class="col-form-label col-md-2 pt-0">Gender</legend>
+                    <div class="col-md-4">
+                        <div th:each="gender : ${genders}" class="form-check-inline">
+                            <input class="form-check-input" th:field="*{gender}" id="gender"
+                                   value="option1" checked th:value="${gender.name}" type="radio"
+                                   name="gender">
+                            <label class="form-check-label"
+                                   for="gender" th:text="${gender.name}"> </label>
 
-							</div>
-							<small class="invalid-feedback"
-								th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></small>
-						</div>
+                        </div>
+                        <small class="text-danger" th:if="${invalidGender}" th:text="${invalidGender}"></small>
+                    </div>
 
-					</fieldset>
+                </fieldset>
 
-					<div class="row mb-4">
+                <div class="row mb-4">
 
-						<div class="col-md-2"></div>
+                    <div class="col-md-2"></div>
 
-						<label for="phone" class="col-md-2 col-form-label">Phone</label>
+                    <label for="phone" class="col-md-2 col-form-label">Phone</label>
 
-						<div class="col-md-4">
-							<input type="text" id="phone" class="form-control"
-								placeholder="0997069272"
-								th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid'"
-								th:field="*{phone}"> <small class="invalid-feedback"
-								th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></small>
-						</div>
+                    <div class="col-md-4">
+                        <input type="text" id="phone" class="form-control" placeholder="0997069272" th:field="*{phone}">
+						<small class="text-danger" th:if="${invalidPhone}" th:text="${invalidPhone}"></small>
+                    </div>
 
-					</div>
-					<div class="row mb-4">
+                </div>
+                <div class="row mb-4">
 
-						<div class="col-md-2"></div>
+                    <div class="col-md-2"></div>
 
-						<label for="education" class="col-md-2 col-form-label">Education</label>
+                    <label for="education" class="col-md-2 col-form-label">Education</label>
 
-						<div class="col-md-4">
+                    <div class="col-md-4">
 
-							<select class="form-select" th:field="*{education}"
-								aria-label="Education" id="education">
-								<option th:each="edu : ${educations}" th:text="${edu.name}"
-									th:value="${edu.name}" selected></option>
+                        <select class="form-select" th:field="*{education}"
+                                aria-label="Education" id="education">
+                            <option th:each="edu : ${educations}" th:text="${edu.name}"
+                                    th:value="${edu.name}" selected></option>
 
-							</select>
-						</div>
-					</div>
+                        </select>
+                    </div>
+                </div>
 
-					
 
-					<fieldset class="row mb-4">
+                <fieldset class="row mb-4">
 
-						<div class="col-md-2"></div>
+                    <div class="col-md-2"></div>
 
-						<legend class="col-form-label col-md-2 pt-0">Attend</legend>
+                    <legend class="col-form-label col-md-2 pt-0">Attend</legend>
 
-						<div class="row col-md-4">
-							<div class="col-2" th:each="course : ${courses}">
-								<div class="form-check-inline col-md-2">
-									<input class="form-check-input" type="checkbox"
-										th:field="*{courses}" th:value="${course.id}"
-										th:classappend="${#fields.hasErrors('courses')} ? 'is-invalid'"
-										id="course-${course.name}"> <label
-										class="form-check-label" th:text="${course.name}"
-										for="course-${course.name}"> </label>
-								</div>
-							</div>
-						</div>
-					</fieldset>
-					
-					<div 	 class="row mb-4">
-					
-						<div class="col-md-2"></div>
-						
-						<label for="photo" class="col-md-2 col-form-label">Photo</label>
-						
-						<div class="col-md-4">
-						<!-- 	<input type="file" th:field="*{photo}" class="form-control" id="name"
-							th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid'" placeholder=""> -->
-							 <input type="file" class="form-control" id="photo" name="photo" required>
-						</div>
-					</div>
+                    <div class="row col-md-4">
+                        <div class="col-2" th:each="course : ${courses}">
+                            <div class="form-check-inline col-md-2">
+                                <input class="form-check-input" type="checkbox"
+                                       th:field="*{courses}" th:value="${course.id}"
+                                       th:classappend="${#fields.hasErrors('courses')} ? 'is-invalid'"
+                                       id="course-${course.name}"> <label
+                                    class="form-check-label" th:text="${course.name}"
+                                    for="course-${course.name}"> </label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
 
-					<div class="row mb-4">
-						<div class="col-md-4"></div>
+                <div class="row mb-4">
 
-						<div class="col-md-4" th:if="${!oldStu}">
+                    <div class="col-md-2"></div>
 
-							<a th:href="@{/registerStudent}" type="button"
-								class="btn btn-danger ">Reset</a>
+                    <label for="photo" class="col-md-2 col-form-label">Photo</label>
 
-							<button type="submit" class="btn btn-secondary col-md-2"
-								data-bs-toggle="modal" data-bs-target="#exampleModal">
-								Add</button>
-						</div>
-						<div class="row mb-4" th:if="${oldStu}">
-							<div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <input type="file" th:field="*{photo}" class="form-control" id="photo">
+                    </div>
+                </div>
 
-							<div class="col-md-4">
+                <div class="row mb-4">
+                    <div class="col-md-4"></div>
 
-								<button type="submit" class="btn btn-secondary">
-									<span>Update</span>
-								</button>
+                    <div class="col-md-4" th:if="${!oldStu}">
 
-								<!-- <a th:href="@{'/deleteStudent?id='+${student.id}}"
-                               class="btn btn-danger">Delete</a> -->
-								<a th:href="@{findAllStudent}" class="btn btn-secondary">Back</a>
+                        <a th:href="@{/registerStudent}" type="button"
+                           class="btn btn-danger ">Reset</a>
 
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</main>
+                        <button type="submit" class="btn btn-secondary col-md-2"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Add
+                        </button>
+                    </div>
+                    <div class="row mb-4" th:if="${oldStu}">
+                        <div class="col-md-4"></div>
+
+                        <div class="col-md-4">
+
+                            <button type="submit" class="btn btn-secondary">
+                                <span>Update</span>
+                            </button>
+
+                            <!-- <a th:href="@{'/deleteStudent?id='+${student.id}}"
+                           class="btn btn-danger">Delete</a> -->
+                            <a th:href="@{findAllStudent}" class="btn btn-secondary">Back</a>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
 </body>
 </html>

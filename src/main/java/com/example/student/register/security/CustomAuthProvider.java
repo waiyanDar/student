@@ -1,13 +1,12 @@
 package com.example.student.register.security;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +15,10 @@ import javax.servlet.http.HttpSession;
 
 import com.example.student.register.entity.Role;
 
+import com.example.student.register.holder.SecretKeyHolder;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,8 @@ public class CustomAuthProvider implements AuthenticationProvider {
 	private HttpServletResponse response;
 
 	@Autowired
-	private HttpServletRequest request;
-	
+	private SecretKeyHolder keyHolder;
+
 	@Autowired
 	private UserService userService;
 
@@ -54,13 +55,6 @@ public class CustomAuthProvider implements AuthenticationProvider {
 	private PasswordEncoder passwordEncoder;
 
 	public static String jwt;
-
-	/*
-	 * public CustomAuthProvider(@Lazy UserService userService, @Lazy
-	 * PasswordEncoder passwordEncoder, HttpServletResponse response) {
-	 * this.userService = userService; this.passwordEncoder = passwordEncoder;
-	 * this.response = response; }
-	 */
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -71,7 +65,6 @@ public class CustomAuthProvider implements AuthenticationProvider {
 		List<Role> roles = new ArrayList<>();
 
 		try {
-//			User user = userDao.findUserByUserId(inComeUserId).get();
 			User user = userService.findUserByUserId(inComeUserId);
 			userId = user.getUserId();
 			password = user.getPassword();
@@ -85,13 +78,16 @@ public class CustomAuthProvider implements AuthenticationProvider {
 
 		if (userId.equals(inComeUserId) && passwordEncoder.matches(inComePassword, password)) {
 			jwt = generateJwtToken(userId);
-//			HttpSession session = request.getSession();
-//			session.setAttribute("jwt", jwt);
+
 			Cookie jwtCookie = new Cookie("jwt", jwt);
 			jwtCookie.setMaxAge(1800);
 			jwtCookie.setPath("/");
 			response.addCookie(jwtCookie);
+
+			keyHolder.setSecretKey(encodedKey);
+
 			return new UsernamePasswordAuthenticationToken(inComeUserId, inComePassword, grantedAuthority);
+
 		} else {
 			throw new BadCredentialsException("Something's wrong");
 		}
@@ -102,21 +98,33 @@ public class CustomAuthProvider implements AuthenticationProvider {
 		return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
 	}
 
-	@Value("${jwt.signing.key}")
-	private String signinKey;
-
+	public static String encodedKey;
 	private String generateJwtToken(String userId) {
+		try {
+			generateSecretKey();
+		}catch (NoSuchAlgorithmException e){
+
+		}
 		int expirationInSec = 1800;
+
+		SecretKey key = Keys.hmacShaKeyFor(encodedKey.getBytes(StandardCharsets.UTF_8));
 
 		Date now = new Date();
 		Date expiryDate = new Date(now.getTime() + (expirationInSec*1000));
 
-		SecretKey key = Keys.hmacShaKeyFor(signinKey.getBytes(StandardCharsets.UTF_8));
-
-		String jwt = Jwts.builder().setClaims(Collections.singletonMap("userId", userId)).setIssuedAt(now)
-				.setExpiration(expiryDate).signWith(key).compact();
-		System.out.println("from auth provider : " + jwt);
+		String jwt = Jwts.builder()
+						 .setClaims(Collections.singletonMap("userId", userId))
+						 .setIssuedAt(now)
+						 .setExpiration(expiryDate)
+				 		 .signWith(key).compact();
 		return jwt;
+	}
+
+	private void generateSecretKey() throws NoSuchAlgorithmException{
+
+		KeyGenerator keyGenerator = KeyGenerator.getInstance("HMACSHA512");
+		SecretKey secretKey = keyGenerator.generateKey();
+		encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
 	}
 
 }

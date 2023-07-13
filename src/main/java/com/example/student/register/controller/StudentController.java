@@ -1,5 +1,6 @@
 package com.example.student.register.controller;
 
+import com.example.student.register.dto.StudentDto;
 import com.example.student.register.entity.Student;
 import com.example.student.register.security.annotation.Admin;
 import com.example.student.register.service.CourseService;
@@ -45,22 +46,23 @@ public class StudentController {
     @Admin
     public String getStudentRegisterForm(Model model) {
 
-    	modelForStu(model,new Student(), false, "/registerStudent", "");
+    	modelForStu(model,new StudentDto(), false, "/registerStudent", "");
     	return "student-form";
     }
 
     @PostMapping("/registerStudent")
     @Admin
-    public String registerStudent(@Valid Student student,@RequestPart("photo") MultipartFile photo, BindingResult result, Model model, RedirectAttributes attributes) throws IOException {
+    public String registerStudent(@Valid StudentDto studentDto, BindingResult result, Model model, RedirectAttributes attributes) throws IOException {
     	
-    	student.setPhoto(photo.getBytes());
+
         if (result.hasErrors()) {
-            modelForStu(model,student,false, "", "");
+            checkValidationForStu(result, model);
+            modelForStu(model,studentDto,false, "", "");
             return "student-form";
         }
 
 //        student.setPhoto(ArrayUtils.toObject(photo.getBytes()));
-        studentService.registerStudent(student);
+        Student student =  studentService.registerStudent(studentDto);
         studentId = student.getStudentId();
         attributes.addFlashAttribute("stuAdd", true);
         return "redirect:/findAllStudent";
@@ -73,35 +75,30 @@ public class StudentController {
     @Admin
     public String studentInfo(@RequestParam("id") int id, Model model) {
         Student oStudent = studentService.findStudent(id);
+        StudentDto studentDto = StudentDto.form(oStudent);
         oId = oStudent.getId();
         oStudentId = oStudent.getStudentId();
-        modelForStu(model, oStudent, true, "/updateStudent", oStudentId);
+        modelForStu(model, studentDto, true, "/updateStudent", oStudentId);
         return "student-form";
     }
     
     @PostMapping("/updateStudent")
     @Admin
-    public String updateStudent(@Valid Student student, BindingResult result,RedirectAttributes attributes,Model model) {
+    public String updateStudent(@Valid StudentDto studentDto, BindingResult result,RedirectAttributes attributes,Model model) {
         if (result.hasErrors()){
-            modelForStu(model, student, true, "/updateStudent", oStudentId);
+            checkValidationForStu(result, model);
+            modelForStu(model, studentDto, true, "/updateStudent", oStudentId);
             return "student-form";
         }
-        student.setId(oId);
-        student.setStudentId(oStudentId);
-        studentService.updateStudent(student);
-        studentId = student.getStudentId();
-        attributes.addFlashAttribute("stuUpdate", true);
-        return "redirect:/findAllStudent";
-    }
 
-    private void modelForStu(Model model, Student student, boolean oldStu, String link, String studentId) {
-        model.addAttribute("student", student);
-        model.addAttribute("oldStu", oldStu);
-        model.addAttribute("genders", Student.Gender.values());
-        model.addAttribute("educations" , Student.Education.values());
-        model.addAttribute("courses", courseService.findAllCourse());
-        model.addAttribute("actionUrlForStu",link );
-        model.addAttribute("studentId", studentId);
+       try {
+           Student student = studentService.updateStudent(studentDto, oId, oStudentId);
+           studentId = student.getStudentId();
+           attributes.addFlashAttribute("stuUpdate", true);
+       }catch (IOException e){
+           modelForStu(model, studentDto, true, "/updateStudent", oStudentId);
+       }
+        return "redirect:/findAllStudent";
     }
 
     @GetMapping("/findAllStudent")
@@ -116,7 +113,6 @@ public class StudentController {
     @Admin
     public String deleteStudent(@RequestParam("id") int id, RedirectAttributes attributes) {
 
-    	System.out.println("Id : "+id);
         studentId = studentService.deleteStudent(id);
         attributes.addFlashAttribute("stuDelete", true);
         return "redirect:/findAllStudent";
@@ -127,5 +123,33 @@ public class StudentController {
 //    @ModelAttribute("oldStu")
     public boolean isOldStu(){
         return oldStu;
+    }
+
+    private <T> void modelForStu(Model model, T student, boolean oldStu, String link, String studentId) {
+        model.addAttribute("student", student);
+        model.addAttribute("oldStu", oldStu);
+        model.addAttribute("genders", Student.Gender.values());
+        model.addAttribute("educations" , Student.Education.values());
+        model.addAttribute("courses", courseService.findAllCourse());
+        model.addAttribute("actionUrlForStu",link );
+        model.addAttribute("studentId", studentId);
+    }
+
+    private void checkValidationForStu(BindingResult result, Model model) {
+        if (result.hasFieldErrors("name")) {
+            model.addAttribute("invalidName", result.getFieldError("name").getDefaultMessage());
+        }
+        if (result.hasFieldErrors("dateOfBirth")) {
+            model.addAttribute("invalidDob", result.getFieldError("dateOfBirth").getDefaultMessage());
+        }
+        if (result.hasFieldErrors("phone")) {
+            model.addAttribute("invalidPhone", result.getFieldError("phone").getDefaultMessage());
+        }
+        if (result.hasFieldErrors("gender")) {
+            model.addAttribute("invalidGender", result.getFieldError("gender").getDefaultMessage());
+        }
+        if (result.hasFieldErrors("education")) {
+            model.addAttribute("invalidEducation", result.getFieldError("education").getDefaultMessage());
+        }
     }
 }

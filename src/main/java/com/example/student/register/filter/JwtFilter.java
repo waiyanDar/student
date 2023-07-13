@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.example.student.register.holder.SecretKeyHolder;
+import com.example.student.register.security.CustomAuthProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,15 +40,17 @@ public class JwtFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private UserService userService;
-	@Value("${jwt.signing.key}")
-	private String signinKey;
+	@Autowired
+	private SecretKeyHolder keyHolder;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
+		String encodedKey = keyHolder.getSecretKey();
+
 		Cookie[] cookies = request.getCookies();
-		
+
 		String jwt = "";
 
 		try {
@@ -58,21 +62,16 @@ public class JwtFilter extends OncePerRequestFilter {
 		} catch (Exception e) {
 
 		}
-		
-//		HttpSession session = request.getSession();
-//		String jwt = (String) session.getAttribute("jwt");
-
-		SecretKey key = Keys.hmacShaKeyFor(signinKey.getBytes(StandardCharsets.UTF_8));
 
 		if (jwt != null && !jwt.isEmpty()) {
 
-			Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
-
 			String userId = "";
 			try {
+				SecretKey key = Keys.hmacShaKeyFor(encodedKey.getBytes(StandardCharsets.UTF_8));
+				Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
 				userId = String.valueOf(claims.get("userId"));
 			} catch (Exception e) {
-				throw new DateTimeException("Session");
+				System.out.println(e.getMessage());
 			}
 
 			try {

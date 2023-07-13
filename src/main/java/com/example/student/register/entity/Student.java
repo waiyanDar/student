@@ -1,5 +1,6 @@
 package com.example.student.register.entity;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.persistence.*;
@@ -7,9 +8,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import com.example.student.register.dto.StudentDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.ArrayUtils;
 
 @Entity
 @Data
@@ -36,8 +39,9 @@ public class Student {
     @NotNull(message = "Phone number cannot be null")
     @Pattern(regexp = "[0-9]*", message = "Invalid phone number")
     private String phone;
-    
-    private byte [] photo;
+
+    @Column(name = "photo", columnDefinition = "BLOB")
+    private Byte[] photo;
 
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Gender cannot be empty")
@@ -65,10 +69,22 @@ public class Student {
         DIPLOMA,
         BACHELOR
     }
-    
 
     @PostPersist
     public void generateStudentId() {
       studentId = String.format("STU%03d", id);
+    }
+
+    public static Student form (StudentDto studentDto) throws IOException {
+        Student student = new Student();
+        student.setName(studentDto.getName());
+        student.setDateOfBirth(studentDto.getDateOfBirth());
+        student.setPhone(studentDto.getPhone());
+        student.setPhoto(ArrayUtils.toObject(studentDto.getPhoto().getBytes()));
+        student.setGender(studentDto.getGender());
+        student.setEducation(studentDto.getEducation());
+        student.setCourses(studentDto.getCourses());
+
+        return student;
     }
 }

@@ -1,11 +1,9 @@
 package com.example.student.register.controller;
 
-import com.example.student.register.dao.InvalidJwtDao;
 import com.example.student.register.dto.UserRegisterDto;
 import com.example.student.register.dto.UserUpdateDto;
-import com.example.student.register.entity.InvalidJwt;
 import com.example.student.register.entity.User;
-import com.example.student.register.security.CustomAuthProvider;
+
 import com.example.student.register.security.annotation.UserCreate;
 import com.example.student.register.security.annotation.UserDelete;
 import com.example.student.register.security.annotation.UserRead;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.student.register.service.InvalidJwtService;
 import com.example.student.register.service.UserService;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,7 +25,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
@@ -36,11 +32,10 @@ public class UserController {
 
     private final UserService userService;
 
-    private final InvalidJwtService invalidJwtService;
-    
-    public UserController(UserService userService, InvalidJwtService invalidJwtService) {
+
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.invalidJwtService = invalidJwtService;
+
     }
     
 //    private User loginUser = UserService.loginUser;
@@ -152,7 +147,6 @@ public class UserController {
     
     @GetMapping("/logout")
     public String logout() {
-    	invalidJwtService.saveToken(CustomAuthProvider.jwt);
     	return "redirect:/login";
     }
 

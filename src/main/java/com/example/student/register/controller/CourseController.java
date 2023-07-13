@@ -1,7 +1,10 @@
 package com.example.student.register.controller;
 
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -63,8 +66,6 @@ public class CourseController {
 
     @GetMapping("/")
     public String goHome(HttpServletRequest req) {
-//    	String jwt =(String) req.getSession().getAttribute("jwt");
-//    	System.out.println("from home : " + jwt);
         return "home";
     }
 
