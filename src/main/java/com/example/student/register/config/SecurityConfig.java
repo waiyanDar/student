@@ -56,12 +56,6 @@ public class SecurityConfig {
 					.logout()
 					.logoutUrl("/logout")
 					.logoutSuccessUrl("/login")
-				/*
-				 * .addLogoutHandler((request, response, authentication)-> { Cookie jwtCookie =
-				 * new Cookie("jwt", null); jwtCookie.setMaxAge(0); jwtCookie.setPath("/");
-				 * response.addCookie(jwtCookie); })
-				 */
-//					.invalidateHttpSession(true)
 					.deleteCookies("jwt")
 					.permitAll();
 

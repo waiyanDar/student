@@ -5,15 +5,16 @@ import com.example.student.register.security.annotation.Admin;
 import com.example.student.register.service.CourseService;
 import com.example.student.register.service.StudentService;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -24,7 +25,6 @@ public class StudentController {
     private final StudentService studentService;
     
     private final CourseService courseService;
-        
 
     public StudentController(StudentService studentService, CourseService courseService) {
     	this.studentService = studentService;
@@ -51,12 +51,23 @@ public class StudentController {
 
     @PostMapping("/registerStudent")
     @Admin
-    public String registerStudent(@Valid Student student, BindingResult result, Model model, RedirectAttributes attributes) {
+    public String registerStudent(@Valid Student student,@RequestParam("photo") MultipartFile photo, BindingResult result, Model model, RedirectAttributes attributes) throws IOException {
 
         if (result.hasErrors()) {
             modelForStu(model,student,false, "", "");
             return "student-form";
         }
+        System.out.println(photo.toString());
+        if (!photo.isEmpty()) {
+            byte[] photoBytes = photo.getBytes();
+            Byte[] byteObjects = new Byte[photoBytes.length];
+            for (int i = 0; i < photoBytes.length; i++) {
+                byteObjects[i] = photoBytes[i];
+            }
+            student.setPhoto(byteObjects);
+        }
+
+//        student.setPhoto(ArrayUtils.toObject(photo.getBytes()));
         studentService.registerStudent(student);
         studentId = student.getStudentId();
         attributes.addFlashAttribute("stuAdd", true);
