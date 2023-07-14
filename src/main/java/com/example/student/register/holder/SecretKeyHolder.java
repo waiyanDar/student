@@ -1,6 +1,5 @@
 package com.example.student.register.holder;
 
-import lombok.Data;
 import org.springframework.stereotype.Component;
 
 @Component

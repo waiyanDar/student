@@ -3,27 +3,20 @@ package com.example.student.register.security;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.example.student.register.entity.Role;
 
 import com.example.student.register.holder.SecretKeyHolder;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -80,7 +73,7 @@ public class CustomAuthProvider implements AuthenticationProvider {
 			jwt = generateJwtToken(userId);
 
 			Cookie jwtCookie = new Cookie("jwt", jwt);
-			jwtCookie.setMaxAge(1800);
+			jwtCookie.setMaxAge(18000);
 			jwtCookie.setPath("/");
 			response.addCookie(jwtCookie);
 

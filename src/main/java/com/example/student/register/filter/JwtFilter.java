@@ -5,7 +5,6 @@ import static com.example.student.register.security.roleHierarchy.RolesForSecuri
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.DateTimeException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,12 +14,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.example.student.register.holder.SecretKeyHolder;
-import com.example.student.register.security.CustomAuthProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,6 +28,7 @@ import com.example.student.register.entity.User;
 import com.example.student.register.service.UserService;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -70,8 +67,10 @@ public class JwtFilter extends OncePerRequestFilter {
 				SecretKey key = Keys.hmacShaKeyFor(encodedKey.getBytes(StandardCharsets.UTF_8));
 				Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
 				userId = String.valueOf(claims.get("userId"));
-			} catch (Exception e) {
+			} catch (ExpiredJwtException e) {
+				
 				System.out.println(e.getMessage());
+//				throw new JwtCusException(e.getMessage(), e);
 			}
 
 			try {

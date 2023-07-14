@@ -1,12 +1,10 @@
 package com.example.student.register.controller;
 
 import java.nio.file.AccessDeniedException;
-import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -34,26 +32,43 @@ public class ErrorController {
 
 		logger.log(Level.SEVERE, ex.getMessage());
 
+		System.out.println("access denied");
+		
 		model.addAttribute("msg", "Access Denied: " + ex.getMessage());
 
 		return "error";
 	}
 
-	@ExceptionHandler(NullPointerException.class)
-	public String handleNullPointerException(HttpServletRequest request, AccessDeniedException ex, Model model) {
+//	@ExceptionHandler(NullPointerException.class)
+//	public String handleNullPointerException(HttpServletRequest request, AccessDeniedException ex, Model model) {
+//
+//		logger.log(Level.SEVERE, ex.getMessage());
+//		
+//		System.out.println("null pointer");
+//
+//		model.addAttribute("msg", "No value present: " + ex.getMessage());
+//
+//		return "error";
+//	}
+	
+	@ExceptionHandler(NoSuchElementException.class)
+	public String handleNoSuchElementException(NoSuchElementException ex, Model model) {
+	    logger.log(Level.SEVERE, ex.getMessage());
+	    System.out.println("no such element");
 
-		logger.log(Level.SEVERE, ex.getMessage());
+	    model.addAttribute("msg", "No Such Element Exception : " + ex.getMessage());
 
-		model.addAttribute("msg", "No value present: " + ex.getMessage());
-
-		return "error";
+	    return "error";
 	}
+
 
 	@ExceptionHandler(Throwable.class)
 	public String exception(Throwable throwable, Model model) {
 
 		String msg = throwable != null ? throwable.getMessage() : "Unknown Error";
 		model.addAttribute("msg", msg);
+		
+		System.out.println("throwable");
 //		model.addAttribute("loginDate", LocalDate.now().toString());
 		logger.log(Level.SEVERE, msg);
 		return "error";

@@ -54,11 +54,19 @@
 
     /* for data table */
     $(document).ready(function () {
-        $('#userTable').DataTable();
+        $('#userTable').DataTable({
+        	 "columnDefs": [
+        		    { "searchable": false, "targets": 2 }
+        		  ]
+            });
     });
 
     $(document).ready(function () {
-        $('#studentTable').DataTable();
+        $('#studentTable').DataTable({
+       	 "columnDefs": [
+ 		    { "searchable": false, "targets": 3 }
+ 		  ]
+     });
     });
 
     /* select 2 */

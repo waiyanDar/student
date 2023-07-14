@@ -6,12 +6,10 @@ import com.example.student.register.security.annotation.Admin;
 import com.example.student.register.service.CourseService;
 import com.example.student.register.service.StudentService;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;

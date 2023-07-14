@@ -1,12 +1,8 @@
 package com.example.student.register.controller;
 
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.student.register.entity.Course;
-import com.example.student.register.security.CustomAuthProvider;
 import com.example.student.register.security.annotation.Admin;
 import com.example.student.register.service.CourseService;
 
@@ -57,7 +52,6 @@ public class CourseController {
         	model.addAttribute("course", new Course());
             return "course-form";
 		} catch (DataIntegrityViolationException e) {
-//			result.addError(new FieldError("course", "name", "Course is already exist"));
 			model.addAttribute("duplicateCourse", course.getName());
 			model.addAttribute("course", new Course());
 			return "course-form";
