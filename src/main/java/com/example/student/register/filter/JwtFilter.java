@@ -67,7 +67,7 @@ public class JwtFilter extends OncePerRequestFilter {
 				SecretKey key = Keys.hmacShaKeyFor(encodedKey.getBytes(StandardCharsets.UTF_8));
 				Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
 				userId = String.valueOf(claims.get("userId"));
-			} catch (ExpiredJwtException e) {
+			} catch (Exception e) {
 				
 				System.out.println(e.getMessage());
 //				throw new JwtCusException(e.getMessage(), e);

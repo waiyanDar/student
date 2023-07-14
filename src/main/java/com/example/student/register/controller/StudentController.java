@@ -2,6 +2,7 @@ package com.example.student.register.controller;
 
 import com.example.student.register.dto.StudentDto;
 import com.example.student.register.entity.Student;
+import com.example.student.register.explorter.StudentExplorter;
 import com.example.student.register.security.annotation.Admin;
 import com.example.student.register.service.CourseService;
 import com.example.student.register.service.StudentService;
@@ -25,9 +26,12 @@ public class StudentController {
     
     private final CourseService courseService;
 
-    public StudentController(StudentService studentService, CourseService courseService) {
+    private final StudentExplorter studentExplorter;
+    
+    public StudentController(StudentService studentService, CourseService courseService , StudentExplorter studentExplorter) {
     	this.studentService = studentService;
     	this.courseService = courseService;
+    	this.studentExplorter = studentExplorter;
     }
     
     @ModelAttribute("loginDate")
@@ -116,6 +120,13 @@ public class StudentController {
         return "redirect:/findAllStudent";
     }
 
+    @GetMapping("/exportToExcel")
+    @Admin
+    public String exportStudentToExcel(RedirectAttributes attributes) {
+    	studentExplorter.explortStudentToExcel();
+    	attributes.addFlashAttribute("exportExcel", true);
+    	return "redirect:/findAllStudent";
+    }
 
     boolean oldStu;
 //    @ModelAttribute("oldStu")

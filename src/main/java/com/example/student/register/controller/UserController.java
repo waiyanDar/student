@@ -3,7 +3,8 @@ package com.example.student.register.controller;
 import com.example.student.register.dto.UserRegisterDto;
 import com.example.student.register.dto.UserUpdateDto;
 import com.example.student.register.entity.User;
-
+import com.example.student.register.explorter.UserExplorter;
+import com.example.student.register.security.annotation.Admin;
 import com.example.student.register.security.annotation.UserCreate;
 import com.example.student.register.security.annotation.UserDelete;
 import com.example.student.register.security.annotation.UserRead;
@@ -32,9 +33,11 @@ public class UserController {
 
     private final UserService userService;
 
-
-    public UserController(UserService userService) {
+    private final UserExplorter userExplorter;
+    
+    public UserController(UserService userService, UserExplorter userExplorter) {
         this.userService = userService;
+        this.userExplorter = userExplorter;
 
     }
     
@@ -148,6 +151,14 @@ public class UserController {
     @GetMapping("/logout")
     public String logout() {
     	return "redirect:/login";
+    }
+    
+    @GetMapping("/exportUserToExcel")
+    @Admin
+    public String exportStudentToExcel(RedirectAttributes attributes) {
+    	userExplorter.exportUserToExcel();
+    	attributes.addFlashAttribute("exportExcel", true);
+    	return "redirect:/findAllUser";
     }
 
 }
