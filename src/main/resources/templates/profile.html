@@ -24,14 +24,23 @@
 						<label for="oldPassword" class="col-md-2 col-form-label">Old
 							Password</label>
 						<div class="col-md-4">
-							<input type="password" name="oldPassword" id="oldPassword"
-								placeholder="old password" class="form-control"> <small
+							<div class="input-group">
+							<input type="password" name="oldPassword" id="oldPassword" style="height: 38px;"
+								placeholder="old password" class="form-control">
+							<div class="input-group-append" >
+								<p class="input-group-text">
+									<i id="oldPasswordToggleIcon" class="fa fa-eye-slash"
+									   style="line-height: 1.5" onclick="toggleOldPasswordVisibility()"></i>
+								</p>
+							</div>
+							</div>
+							<small
 								class="text-danger" th:if="${oldPswWrong}" th:text="${oldPswWrong}"></small>
 								 <small
 								class="text-danger" th:if="${oldPswBlank}" th:text="${oldPswBlank}"></small>
 						</div>
 					</div>
-					<div class="row mb-4" th:if="${oldUser}">
+					<!--<div class="row mb-4" th:if="${oldUser}">
 						<div class="col-md-2"></div>
 						<label for="upPassword" class="col-md-2 col-form-label">Password</label>
 						<div class="col-md-4">
@@ -52,6 +61,42 @@
 								th:if="${pswBlank}" th:text="${pswBlank}"></small> <small
 								class="text-danger" th:if="${pswNoMatch}"
 								th:text="${pswNoMatch}"></small>
+						</div>
+					</div>-->
+
+					<div class="row mb-4" th:if="${oldUser}">
+						<div class="col-md-2"></div>
+						<label for="password" class="col-md-2 col-form-label">Password</label>
+						<div class="col-md-4">
+							<div class="input-group">
+								<input type="password" name="newPassword" id="password" class="form-control" placeholder="password"
+									   onkeyup="checkPasswordStrength()" required style="height: 38px">
+								<div class="input-group-append" >
+									<p class="input-group-text">
+										<i id="passwordToggleIcon" class="fa fa-eye-slash"
+										   style="line-height: 1.5" onclick="togglePasswordVisibility()"></i>
+									</p>
+								</div>
+							</div>
+							<span id="passwordStrengthLabel"></span>
+						</div>
+					</div>
+
+					<div class="row mb-4" th:if="${oldUser}">
+						<div class="col-md-2"></div>
+						<label for="confirmPassword" class="col-md-2 col-form-label">Confirm Password</label>
+						<div class="col-md-4">
+							<div class="input-group">
+								<input type="password" name="confirmPassword" id="confirmPassword" class="form-control" placeholder="password"
+									   onkeyup="checkPasswordStrength()" required style="height: 38px">
+								<div class="input-group-append" >
+									<p class="input-group-text">
+										<i id="confirmPasswordToggleIcon" class="fa fa-eye-slash"
+										   style="line-height: 1.5" onclick="toggleConfirmPasswordVisibility()"></i>
+									</p>
+								</div>
+							</div>
+							<span id="matchLabel"></span>
 						</div>
 					</div>
 					

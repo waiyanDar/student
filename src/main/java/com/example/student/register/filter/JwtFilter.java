@@ -69,7 +69,6 @@ public class JwtFilter extends OncePerRequestFilter {
 				userId = String.valueOf(claims.get("userId"));
 			} catch (Exception e) {
 				
-				System.out.println(e.getMessage());
 //				throw new JwtCusException(e.getMessage(), e);
 			}
 

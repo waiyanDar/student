@@ -1,7 +1,10 @@
 package com.example.student.register.explorter;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -20,8 +23,9 @@ import lombok.Data;
 
 @Component
 @Data
-public class StudentExplorter {
-	
+public class StudentExplorer {
+	static final Logger logger = Logger.getLogger(StudentExplorer.class.getName());
+
 	@Autowired
 	private StudentService studentService;
 	
@@ -70,9 +74,20 @@ public class StudentExplorter {
 				sheet.autoSizeColumn(i);
 			}
 			
-			String fileName = "student_data.xlsx";
-			
+			String fileName = "src/main/resources/static/excel/student_data.xlsx";
+
+			File file = new File(fileName);
+			if (file.exists()) {
+				if (file.delete()) {
+					logger.info("File successfully deleted");
+				} else {
+					logger.warning("Failed to delete the file.");
+				}
+			} else {
+				logger.warning("File does not exist.");
+			}
 			try(FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
+				logger.log(Level.FINE,"File saved");
 				workbook.write(fileOutputStream);
 			} catch (Exception e) {
 				

@@ -1,90 +1,100 @@
 <!DOCTYPE html>
 <html th:replace="layout/masterLayout :: layout(~{::main})"
-	xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 <body>
-	<main role="main">
-		<div class="main_contents">
-			<div id="sub_content">
+<main role="main">
+    <div class="main_contents">
+        <div id="sub_content">
 
-				<div th:if="${success}" class="alert alert-success" role="alert">
-					<p><span th:text="${userId}"></span> is successfully registered</p>
-				</div>
-				<div th:if="${updateSuccess}" class="alert alert-success"
-					role="alert">
-					<p ><span th:text="${userId}"></span> is successfully updated</p>
+            <div th:if="${success}" class="alert alert-success" role="alert">
+                <p><span th:text="${userId}"></span> is successfully registered</p>
+            </div>
+            <div class="alert alert-success" th:if="${exportExcel}">
+                <p>
+                    Successfully exported to excel!
+                </p>
+            </div>
+            <div th:if="${updateSuccess}" class="alert alert-success"
+                 role="alert">
+                <p><span th:text="${userId}"></span> is successfully updated</p>
 
-				</div>
-				<div th:if="${deleteUser}" class="alert alert-danger" role="alert">
-					<p><span th:text="${userId}"></span> is successfully deleted</p>
-				</div>
+            </div>
+            <div th:if="${deleteUser}" class="alert alert-danger" role="alert">
+                <p><span th:text="${userId}"></span> is successfully deleted</p>
+            </div>
 
-				<div class="table" style="width: 1100px">
-					<table class="table table-striped" id="userTable">
-						<thead>
-							<tr>
+            <div class="table" style="width: 1100px">
+                <table class="table table-striped" id="userTable">
+                    <thead>
+                    <tr>
 
-								<th scope="col">User ID</th>
-								<th scope="col">User Name</th>
-								<th scope="col">Details</th>
+                        <th scope="col">User ID</th>
+                        <th scope="col">User Name</th>
+                        <th scope="col">Details</th>
 
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="user : ${userList}">
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${userList}">
 
-								<td th:text="${user.getUserId}"></td>
-								<td th:text="${user.username}"></td>
+                        <td th:text="${user.getUserId}"></td>
+                        <td th:text="${user.username}"></td>
 
-								<td><a th:href="@{'/userUpdate?userId='+${user.getUserId}}"
-									class="btn btn-success me-3" type="button">Update</a>
-									 
-									 <button data-bs-toggle="modal"
-										th:data-bs-target="'#exampleModal'+${user.id}" type="button" 
-										class="btn btn-danger">Delete</button>
-									
-									<div class="modal" th:id="'exampleModal'+${user.id}" tabindex="-1"
-										aria-labelledby="exampleModalLabel" aria-hidden="true">
-										<div class="modal-dialog modal-dialog-centered">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h5 class="modal-title text-dark" id="exampleModalLabel">Confirmation</h5>
-													<button type="button" class="btn-close"
-														data-bs-dismiss="modal" aria-label="Close"></button>
-												</div>
-												<div class="modal-body">
-													<h5 class="text-danger">Are you sure to
-														delete <span th:text="${user.username}"></span> ?</h5>
-												</div>
-												<div class="modal-footer">
-													<a th:href="@{'/deleteUser?id='+${user.id}}">
-														<button type="submit" class="btn btn-danger "
-															data-bs-dismiss="modal">Yes</button>
-													</a>
-													<button type="button" class="btn btn-warning "
-															data-bs-dismiss="modal">No</button>
-												</div>
-											</div>
-										</div>
-									</div>
-									
-									</td>
-							</tr>
+                        <td><a th:href="@{'/userUpdate?userId='+${user.getUserId}}"
+                               class="btn btn-success me-3" type="button">Update</a>
 
-						</tbody>
-					</table>
-					<div class="col-auto">
+                            <button data-bs-toggle="modal"
+                                    th:data-bs-target="'#exampleModal'+${user.id}" type="button"
+                                    class="btn btn-danger">Delete
+                            </button>
 
-						<a th:href="@{/registerUser}" class="btn btn-secondary">Add</a>
+                            <div class="modal" th:id="'exampleModal'+${user.id}" tabindex="-1"
+                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-dark" id="exampleModalLabel">Confirmation</h5>
+                                            <button type="button" class="btn-close"
+                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5 class="text-danger">Are you sure to
+                                                delete <span th:text="${user.username}"></span> ?</h5>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a th:href="@{'/deleteUser?id='+${user.id}}">
+                                                <button type="submit" class="btn btn-danger "
+                                                        data-bs-dismiss="modal">Yes
+                                                </button>
+                                            </a>
+                                            <button type="button" class="btn btn-warning "
+                                                    data-bs-dismiss="modal">No
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-					</div>
-					<div class="col-auto">
+                        </td>
+                    </tr>
 
-						<a th:href="@{/exportToExcel}" class="btn btn-secondary">Export To Excel</a>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-auto">
 
-					</div>
-				</div>
-			</div>
-		</div>
-	</main>
+                        <a th:href="@{/registerUser}" class="btn text-dark btn-secondary">Add</a>
+
+                    </div>
+                    <div class="col-auto">
+
+                        <a th:href="@{/exportUserToExcel}" class="btn text-dark btn-secondary">Export To Excel</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 </body>
 </html>

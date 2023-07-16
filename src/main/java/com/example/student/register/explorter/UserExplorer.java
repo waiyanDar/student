@@ -20,7 +20,7 @@ import lombok.Data;
 
 @Component
 @Data
-public class UserExplorter {
+public class UserExplorer {
 
 	@Autowired
 	private UserService userService;
@@ -68,7 +68,7 @@ public class UserExplorter {
 				sheet.autoSizeColumn(i);
 			}
 			
-			String fileName = "user_data.xlsx";
+			String fileName = "src/main/resources/static/excel/user_data.xlsx";
 			
 			try(FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
 				workbook.write(fileOutputStream);
