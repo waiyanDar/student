@@ -10,6 +10,8 @@ import java.util.List;
 
 import javax.validation.constraints.*;
 
+import org.springframework.web.multipart.MultipartFile;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,6 +37,8 @@ public class UserRegisterDto {
     @NotNull(message = "Confirm password cannot be empty")
     @NotBlank(message = "Confirm password cannot be blank")
     private String confirmPassword;
+    
+    private MultipartFile photo;
 
     @NotEmpty(message = "Role cannot be empty")
     private List<Role> roles;

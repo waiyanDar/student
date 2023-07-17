@@ -31,9 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
-/.gitignore
-/.mvn/
-/mvnw
-/mvnw.cmd
-/pom.xml
 /src/
+/student_data.xlsx

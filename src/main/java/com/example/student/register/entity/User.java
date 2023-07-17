@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
 import java.util.List;
 
 @Entity
@@ -27,6 +28,10 @@ public class User {
 
     @Column(unique = true)
     private String email;
+    
+    @Column(name = "photo")
+    @Lob
+    private byte [] photo;
 
     private String password;
 
@@ -38,16 +43,21 @@ public class User {
         userId  = String.format("USR%03d", id);
     }
 
-    public static User formForRegistration(UserRegisterDto userRegDto) {
+    public static User formForRegistration(UserRegisterDto userRegDto) throws IOException {
         User user = new User();
         user.setUsername(userRegDto.getUsername());
         user.setEmail(userRegDto.getEmail());
-        user.setPassword(userRegDto.getPassword());
+//        user.setPhoto(ArrayUtils.toObject(userRegDto.getPhoto().getBytes()));
+        user.setPhoto(userRegDto.getPhoto().getBytes());
         return user;
     }
 
     public void deleteRole() {
     	this.roles= null;
+    }
+    
+    public void deletePhoto() {
+    	this.photo = null;
     }
 
 }

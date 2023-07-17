@@ -10,6 +10,8 @@ import java.util.List;
 
 import javax.validation.constraints.*;
 
+import org.springframework.web.multipart.MultipartFile;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,7 +30,8 @@ public class UserUpdateDto {
     @NotNull(message = "Email cannot be empty")
     private String email;
 
-
+    private MultipartFile photo;
+    
     @NotEmpty(message = "Role cannot be empty")
     private List<Role> roles;
 
@@ -37,6 +40,7 @@ public class UserUpdateDto {
         UserRegisterDto userDto = new UserRegisterDto();
         userDto.setUserId(user.getUserId());
         userDto.setUsername(user.getUsername());
+//        user.deletePhoto();
         userDto.setEmail(user.getEmail());
         userDto.setRoles(user.getRoles());
 

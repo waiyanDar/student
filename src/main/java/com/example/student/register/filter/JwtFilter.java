@@ -6,6 +6,8 @@ import static com.example.student.register.security.roleHierarchy.RolesForSecuri
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
@@ -28,13 +30,13 @@ import com.example.student.register.entity.User;
 import com.example.student.register.service.UserService;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
+	private static final Logger logger = Logger.getLogger(JwtFilter.class.getName());
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -44,7 +46,17 @@ public class JwtFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
-		String encodedKey = keyHolder.getSecretKey();
+		String userIdForKey = "";
+
+		try {
+			userIdForKey = SecurityContextHolder.getContext().getAuthentication().getName();
+
+//			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		} catch (NullPointerException e) {
+			logger.log(Level.INFO, e.getCause() + e.getMessage());
+		}
+		String encodedKey = keyHolder.userSecretKey.get(userIdForKey);
 
 		Cookie[] cookies = request.getCookies();
 
@@ -57,7 +69,7 @@ public class JwtFilter extends OncePerRequestFilter {
 				}
 			}
 		} catch (Exception e) {
-
+			logger.log(Level.INFO, e.getCause() + e.getMessage());
 		}
 
 		if (jwt != null && !jwt.isEmpty()) {
@@ -68,12 +80,11 @@ public class JwtFilter extends OncePerRequestFilter {
 				Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
 				userId = String.valueOf(claims.get("userId"));
 			} catch (Exception e) {
-				
-//				throw new JwtCusException(e.getMessage(), e);
+				logger.log(Level.SEVERE, e.getCause() + e.getMessage());
 			}
 
 			try {
-				if (userId.equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+				if (userId.equals(userIdForKey)) {
 					User user = userService.findUserByUserId(userId);
 
 					List<GrantedAuthority> grantedAuthority = user.getRoles().stream()
@@ -86,6 +97,7 @@ public class JwtFilter extends OncePerRequestFilter {
 					SecurityContextHolder.getContext().setAuthentication(auth);
 				} else {
 					SecurityContextHolder.clearContext();
+
 				}
 
 			} catch (Exception e) {
@@ -94,6 +106,7 @@ public class JwtFilter extends OncePerRequestFilter {
 				cookie.setMaxAge(0);
 				cookie.setPath("/");
 				response.addCookie(cookie);
+				logger.log(Level.SEVERE, e.getCause() + e.getMessage());
 			}
 
 		} else {

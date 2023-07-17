@@ -12,7 +12,6 @@ import com.example.student.register.dto.StudentDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.ArrayUtils;
 
 @Entity
 @Data
@@ -40,8 +39,9 @@ public class Student {
     @Pattern(regexp = "[0-9]*", message = "Invalid phone number")
     private String phone;
 
-    @Column(name = "photo", columnDefinition = "BLOB")
-    private Byte[] photo;
+    @Column(name = "photo")
+    @Lob
+    private byte[] photo;
 
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Gender cannot be empty")
@@ -80,7 +80,7 @@ public class Student {
         student.setName(studentDto.getName());
         student.setDateOfBirth(studentDto.getDateOfBirth());
         student.setPhone(studentDto.getPhone());
-        student.setPhoto(ArrayUtils.toObject(studentDto.getPhoto().getBytes()));
+        student.setPhoto(studentDto.getPhoto().getBytes());
         student.setGender(studentDto.getGender());
         student.setEducation(studentDto.getEducation());
         student.setCourses(studentDto.getCourses());

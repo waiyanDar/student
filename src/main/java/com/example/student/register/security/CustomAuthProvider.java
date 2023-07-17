@@ -77,7 +77,8 @@ public class CustomAuthProvider implements AuthenticationProvider {
 			jwtCookie.setPath("/");
 			response.addCookie(jwtCookie);
 
-			keyHolder.setSecretKey(encodedKey);
+			keyHolder.userSecretKey.put(userId, encodedKey);
+//			keyHolder.setSecretKey(encodedKey);
 
 			return new UsernamePasswordAuthenticationToken(inComeUserId, inComePassword, grantedAuthority);
 

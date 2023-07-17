@@ -1,8 +1,6 @@
 package com.example.student.register.controller;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
-import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,8 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
-
-import io.jsonwebtoken.ExpiredJwtException;
 
 @ControllerAdvice
 public class ErrorController {

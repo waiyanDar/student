@@ -1,5 +1,7 @@
 package com.example.student.register.service;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,7 +32,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     private String userId;
-    private int id;
+//    private int id;
 
     public static User loginUser;
 
@@ -55,7 +57,12 @@ public class UserService {
             modelForUser(model,userRegisterDto, false, "/registerUser", "");
             return "user-form";
         }
-        User user = User.formForRegistration(userRegisterDto);
+        User user = null;
+		try {
+			user = User.formForRegistration(userRegisterDto);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
         user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
         user.setRoles(userRegisterDto.getRoles());
         try {
@@ -64,6 +71,7 @@ public class UserService {
             userId = user.getUserId();
             return "redirect:/findAllUser";
         }catch (DataIntegrityViolationException e){
+        	System.out.println(e.getMessage());
             result.addError(new FieldError("userDto", "email", "Email is taken"));
             checkValidation(result,model);
             modelForUser(model,userRegisterDto,  false, "/registerUser", "");
@@ -73,7 +81,7 @@ public class UserService {
     }
 
     public User findUserById(int id) {
-        this.id = id;
+//        this.id = id;
         User user = userDao.findById(id).get();
         userId = user.getUserId();
         return user;
@@ -107,8 +115,15 @@ public class UserService {
         User oUser = findUserByUserId(userUpdateDto.getUserId());
         oUser.setUsername(userUpdateDto.getUsername());
         oUser.setEmail(userUpdateDto.getEmail());
+        
         oUser.deleteRole();
         oUser.setRoles(userUpdateDto.getRoles());
+        oUser.deletePhoto();
+        try {
+			oUser.setPhoto(userUpdateDto.getPhoto().getBytes());
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
         try {
             userDao.saveAndFlush(oUser);
@@ -213,8 +228,12 @@ public class UserService {
 //        User user = findUserById(id);
     	User user = findUserByUserId(userId);
         userId = user.getUserId();
-        this.id = user.getId();
+//        this.id = user.getId();
 //        modelForUser(model,UserUpdateDto.form(user), true,"/userUpdate", userId);
+        if (user.getPhoto() != null && user.getPhoto().length > 1) {
+			String photo = Base64.getEncoder().encodeToString(user.getPhoto());
+			model.addAttribute("dPhoto", photo);
+		}
         modelForUser(model,UserUpdateDto.form(user), true, actionUrl, userId);
         return "user-form";
     }
@@ -222,7 +241,7 @@ public class UserService {
     public String getProfileUpdateForm(String actionUrl, Model model) {
   	User user = loginUser;
       userId = user.getUserId();
-      this.id = user.getId();
+//      this.id = user.getId();
       modelForUser(model,UserUpdateDto.form(user), true, actionUrl, userId);
       return "user-form";
   }

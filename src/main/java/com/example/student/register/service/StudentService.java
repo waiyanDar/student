@@ -4,7 +4,6 @@ package com.example.student.register.service;
 import com.example.student.register.dao.StudentDao;
 import com.example.student.register.dto.StudentDto;
 import com.example.student.register.entity.Student;
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -49,7 +48,7 @@ public class StudentService {
         oStudent.setName(student.getName());
         oStudent.setPhone(student.getPhone());
         oStudent.setPhoto(null);
-        oStudent.setPhoto(ArrayUtils.toObject(student.getPhoto().getBytes()));
+        oStudent.setPhoto(student.getPhoto().getBytes());
         oStudent.setDateOfBirth(student.getDateOfBirth());
         oStudent.setCourses(student.getCourses());
         oStudent.setGender(student.getGender());
