@@ -1,4 +1,5 @@
 
+<!-- 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -13,13 +14,58 @@
 				</div>
 				<p th:if="${loginError}">Invalid user id or password</p>
 			</div>
-			<form class="login-form" th:action="@{/login}" method="post">
-				<input type="text" placeholder="User ID" name="username" /> 
-				<input type="password" placeholder="Password" name="password" />
-				<button type="submit">Login</button>
+			<form id="loginForm" class="login-form" th:action="@{/login}" method="post">
+				<input type="text" placeholder="User ID" id="username" name="username" /> 
+				<input type="password" placeholder="Password" id="password" name="password" />
+				<button type="submit" onclick="encrypt()">Login</button>
 			</form>
 		</div>
 	</div>
 </body>
 
+</html> -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" href="test.css">
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script th:inline="javascript">
+
+    	function encrypt(){
+    		var publicKey = document.getElementById("key");
+    		
+        	const password = document.getElementById("password").value;
+        	const encrypted = CryptoJS.AES.encrypt(password, publicKey.value);
+        	const decrypted = CryptoJS.AES.decrypt(encrypted, publicKey.value)
+        	document.getElementById("password").value = encrypted.toString();
+        	console.log(encrypted.toString());
+        	console.log(decrypted.toString());
+        	}
+    	
+    </script>
+</head>
+<body class="login-page-body">
+	<div class="login-page">
+		<div class="form">
+			<div class="login">
+				<div class="login-header">
+					<h1>Welcome!</h1>
+				</div>
+				<p th:if="${loginError}">Invalid user id or password</p>
+			</div>
+			<form id="loginForm" class="login-form" th:action="@{/login}"
+				method="post">
+				<input type="text" placeholder="User ID" id="username"
+					name="username" /> <input type="password" placeholder="Password"
+					id="password" name="password" />
+				<button type="submit" th:onclick='encrypt()'>Login</button>
+			</form>
+			<input hidden th:id="key" class="text-dark" th:value="${publicKey}" />
+		</div>
+	</div>
+
+
+</body>
 </html>

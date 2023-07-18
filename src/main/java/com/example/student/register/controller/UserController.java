@@ -134,10 +134,9 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String login(HttpServletRequest req) {
-//    	String jwt =(String) req.getSession().getAttribute("jwt");
-//    	System.out.println(jwt);
-        return "login";
+    public String login(Model model) {
+
+        return userService.login(model);
     }
 
     @GetMapping("/login-error")

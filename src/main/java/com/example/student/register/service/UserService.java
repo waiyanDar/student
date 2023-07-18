@@ -1,6 +1,7 @@
 package com.example.student.register.service;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import com.example.student.register.dto.UserRegisterDto;
 import com.example.student.register.dto.UserUpdateDto;
 import com.example.student.register.entity.Role;
 import com.example.student.register.entity.User;
+import com.example.student.register.generator.PublicPrivateKeyGenerator;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,17 +31,20 @@ public class UserService {
 
     private final RoleDao roleDao;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    
+    private final PublicPrivateKeyGenerator keyGenerator;
 
     private String userId;
 //    private int id;
 
     public static User loginUser;
 
-    public UserService(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
+    public UserService(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder, PublicPrivateKeyGenerator keyGenerator) {
         this.userDao = userDao;
         this.roleDao = roleDao;
         this.passwordEncoder = passwordEncoder;
+        this.keyGenerator = keyGenerator;
     }
 
     public String getUserId() {
@@ -257,5 +262,18 @@ public class UserService {
     public String getPswForm(Model model) {
         modelForUser(model, loginUser,true, "/changePsw", "");
         return "profile";
+    }
+    
+    public String login(Model model) {
+    	
+    	try {
+			keyGenerator.generateKey();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+    	
+    	model.addAttribute("publicKey", keyGenerator.getPublicKey());
+    	
+    	return "login";
     }
 }
