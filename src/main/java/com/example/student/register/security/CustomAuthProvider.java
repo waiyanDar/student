@@ -1,20 +1,12 @@
 package com.example.student.register.security;
 
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.KeySpec;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,7 +28,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.example.student.register.entity.User;
-import com.example.student.register.generator.PublicPrivateKeyGenerator;
 import com.example.student.register.service.UserService;
 
 import static com.example.student.register.security.roleHierarchy.RolesForSecurity.*;
@@ -53,8 +44,6 @@ public class CustomAuthProvider implements AuthenticationProvider {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private PublicPrivateKeyGenerator publicPrivateKeyGenerator;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -101,7 +90,6 @@ public class CustomAuthProvider implements AuthenticationProvider {
 
 			keyHolder.userSecretKey.put(userId, encodedKey);
 			keyHolder.setPrivateKey(null);
-//			keyHolder.setSecretKey(encodedKey);
 
 			return new UsernamePasswordAuthenticationToken(inComeUserId, inComePassword, grantedAuthority);
 

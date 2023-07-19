@@ -1,7 +1,5 @@
 package com.example.student.register.security;
 
-import com.example.student.register.generator.PublicPrivateKeyGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
@@ -14,13 +12,11 @@ import java.util.Base64;
 @Component
 public class DecryptPassword {
 
-    @Autowired
-    private PublicPrivateKeyGenerator generator;
     public String decryptPassword(String encryptedPsw, String generatePK){
 
         try{
-            System.out.println("private key : " + generatePK);
-            System.out.println("public k: " + generator.getPublicKey());
+//            System.out.println("private key : " + generatePK);
+
             byte [] privateKeyByte = Base64.getDecoder().decode(generatePK);
             PKCS8EncodedKeySpec keySpec =new PKCS8EncodedKeySpec(privateKeyByte);
 
@@ -32,14 +28,10 @@ public class DecryptPassword {
 
             byte [] decryptedPswByte =cipher.doFinal(Base64.getDecoder().decode(encryptedPsw));
 
-//            int paddingLength = decryptedPswByte[decryptedPswByte.length - 1];
-//            byte [] decryptedPswNoPadding = new byte[decryptedPswByte.length - paddingLength];
-//
-//            String decryptedPsw =new String(decryptedPswNoPadding, StandardCharsets.UTF_8);
             String decryptedPsw =new String(decryptedPswByte, StandardCharsets.UTF_8);
             return decryptedPsw;
         }catch (Exception e){
-            e.printStackTrace();
+            System.out.println(e.getCause());
             return "fail";
         }
 
