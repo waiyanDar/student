@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +16,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.example.student.register.entity.Course;
 import com.example.student.register.security.annotation.Admin;
 import com.example.student.register.service.CourseService;
+import com.example.student.register.service.UserService;
+
+import lombok.Data;
 
 @Controller
+@Data
 public class CourseController {
 
     private final CourseService courseService;
 
+    @Autowired
+    private UserService userService;
+    
     public CourseController(CourseService courseService ) {
     	this.courseService = courseService;
     }
@@ -57,7 +65,8 @@ public class CourseController {
     }
 
     @GetMapping("/")
-    public String goHome() {
+    public String goHome(Model model) {
+    	userService.paginationUser(1, 5);
         return "home";
     }
 

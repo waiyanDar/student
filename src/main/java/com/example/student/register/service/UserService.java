@@ -1,7 +1,7 @@
 package com.example.student.register.service;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -11,9 +11,9 @@ import com.example.student.register.dto.UserRegisterDto;
 import com.example.student.register.dto.UserUpdateDto;
 import com.example.student.register.entity.Role;
 import com.example.student.register.entity.User;
-import com.example.student.register.generator.PublicPrivateKeyGenerator;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -33,18 +33,17 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     
-    private final PublicPrivateKeyGenerator keyGenerator;
+//    private final PublicPrivateKeyGenerator keyGenerator;
 
     private String userId;
 //    private int id;
 
     public static User loginUser;
 
-    public UserService(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder, PublicPrivateKeyGenerator keyGenerator) {
+    public UserService(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.roleDao = roleDao;
         this.passwordEncoder = passwordEncoder;
-        this.keyGenerator = keyGenerator;
     }
 
     public String getUserId() {
@@ -266,14 +265,19 @@ public class UserService {
     
     public String login(Model model) {
     	
-    	try {
-			keyGenerator.generateKey();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-    	
-    	model.addAttribute("publicKey", keyGenerator.getPublicKey());
+		/*
+		 * try { keyGenerator.generateKey(); } catch (NoSuchAlgorithmException e) {
+		 * e.printStackTrace(); }
+		 * 
+		 * model.addAttribute("publicKey", keyGenerator.getPublicKey());
+		 */
     	
     	return "login";
+    }
+    
+    public List<User> paginationUser(int current, int size) {
+    	
+ 		List<User> listUser =  userDao.findAll(PageRequest.of(current-1, size)).getContent();
+    	return listUser;
     }
 }

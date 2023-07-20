@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -25,7 +26,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
@@ -90,7 +90,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/findAllUser")
+//    @GetMapping("/findAllUser")
     @UserRead
     public String findAllUser(Model model) {
 
@@ -158,6 +158,38 @@ public class UserController {
     	userExplorer.exportUserToExcel();
     	attributes.addFlashAttribute("exportExcel", true);
     	return "redirect:/findAllUser";
+    }
+    
+	/*
+	 * @GetMapping("/findAllUser")
+	 * 
+	 * @UserRead public String paginationUser (@RequestParam("current")
+	 * Optional<Integer> current,
+	 * 
+	 * @RequestParam("size") Optional<Integer> size, Model model){
+	 * 
+	 * int currentPage = current.orElse(1); int pageSize = size.orElse(5);
+	 * List<User> listUser = userService.paginationUser(currentPage, pageSize);
+	 * 
+	 * model.addAttribute("userList", listUser);
+	 * 
+	 * return "user-list"; }
+	 */
+    
+    @GetMapping("/findAllUser")
+    @UserRead
+    public String paginationUser (@RequestParam("order") Optional<String> order,
+    							  @RequestParam("start") Optional<Integer> current,
+    							  @RequestParam("length") Optional<Integer> size,
+    							  Model model){
+    	
+    	int currentPage = current.orElse(1);
+    	int pageSize = size.orElse(5);
+    	List<User> listUser =  userService.paginationUser(currentPage, pageSize);
+    	
+    	 model.addAttribute("userList", listUser);
+
+         return "user-list";
     }
 
 }

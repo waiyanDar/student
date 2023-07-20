@@ -20,7 +20,7 @@
             <input type="password" placeholder="Password" id="password" name="password" />
             <button  type="submit">Login</button>
         </form>
-        <input hidden th:id="key" class="text-dark" th:value="${publicKey}" />
+       <!--  <input hidden th:id="key" class="text-dark" th:value="${publicKey}" /> -->
     </div>
 </div>
 
@@ -28,7 +28,8 @@
     function encrypt(event) {
         event.preventDefault();
 
-        var publicKey = document.getElementById("key").value;
+        //var publicKey = document.getElementById("key").value;
+        var publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvzhfSPMMTIdXZD8n41yAAFcAgM1xDBQ0zHDR/TiewuqUEc6wFB6YLNZ84NmiV9eU/i0DFyXofq/bQ06cK+ath+ipf+uaNFGUHi9BqGZRRReuaQIGZJntEuJx9nAV+E02TJwemchHRlo/kiXwYnjbulcNnSPLDubSfS0628IP42l11KqJopRUXHUCCQZDwZXn/sbj8NVD+hhbFE/W/RXnPVVHjMcFiJUvbMDQOy2TgeQfOxiGmiNLcqG4Uq9z/tMTaHD7vMUqtTIcCO/57kcMr97VEGYf6kLS12VBTw1TwVQ2pbqIaMHyYk0BH1emmS5br+zX0RBoFYfyGcgW8YTE9wIDAQAB";
         var password = document.getElementById("password").value;
         console.log(password);
 

@@ -57,13 +57,13 @@ public class CustomAuthProvider implements AuthenticationProvider {
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
 		String test1 = authentication.getCredentials().toString();
-		String test =decryptPassword.decryptPassword(test1, keyHolder.privateKey);
-
-		System.out.println("encrypt : "+test1);
-		System.out.println("decrypt : "+test);
 
 		String inComeUserId = authentication.getName();
-		String inComePassword =test;
+		String inComePassword =decryptPassword.decryptPassword(test1);;
+		
+
+		System.out.println("decrypt : "+inComePassword);
+		
 		String userId = "";
 		String password = "";
 		List<Role> roles = new ArrayList<>();
