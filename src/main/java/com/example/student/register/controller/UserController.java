@@ -10,19 +10,16 @@ import com.example.student.register.security.annotation.UserDelete;
 import com.example.student.register.security.annotation.UserRead;
 import com.example.student.register.security.annotation.UserUpdate;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.student.register.service.UserService;
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -93,7 +90,7 @@ public class UserController {
 
     }
 
-    //    @GetMapping("/findAllUser")
+//        @GetMapping("/findAllUser")
     @UserRead
     public String findAllUser(Model model) {
 
@@ -162,52 +159,21 @@ public class UserController {
         attributes.addFlashAttribute("exportExcel", true);
         return "redirect:/findAllUser";
     }
-
-    /*
-     * @GetMapping("/findAllUser")
-     *
-     * @UserRead public String paginationUser (@RequestParam("current")
-     * Optional<Integer> current,
-     *
-     * @RequestParam("size") Optional<Integer> size, Model model){
-     *
-     * int currentPage = current.orElse(1); int pageSize = size.orElse(5);
-     * List<User> listUser = userService.paginationUser(currentPage, pageSize);
-     *
-     * model.addAttribute("userList", listUser);
-     *
-     * return "user-list"; }
-     */
-
-    /*@GetMapping("/findAllUser")
-    @UserRead
-    public String paginationUser(
-            @RequestParam("start") Optional<Integer> current,
-            @RequestParam("length") Optional<Integer> size,
-            Model model) {
-
-        int currentPage = current.orElse(1);
-        int pageSize = size.orElse(5);
-        List<User> listUser = userService.paginationUser(currentPage, pageSize);
-
-        model.addAttribute("userList", listUser);
-        model.addAttribute("currentPage", currentPage);
-        model.addAttribute("pageSize", pageSize);
-        return "user-list";
-    }*/
-
+    
     @GetMapping("/findAllUser")
     @UserRead
-    public ResponseEntity<List<User>> paginationUser(@RequestParam("order") Optional<String> order,
-                                                     @RequestParam("start") Optional<Integer> current,
-                                                     @RequestParam("length") Optional<Integer> size,
+    public String paginationUser(@RequestParam("start") Optional<Integer> current,
+                                 @RequestParam("length") Optional<Integer> size,
                                                      Model model) {
 
-        int currentPage = current.orElse(1);
-        int pageSize = size.orElse(5);
-        List<User> listUser = userService.paginationUser(currentPage, pageSize);
-
-        return ResponseEntity.ok(listUser);
+//        int currentPage = current.orElse(1);
+//        int pageSize = size.orElse(5);
+//        List<User> listUser = userService.paginationUser(currentPage, pageSize);
+//
+//        model.addAttribute("userList", listUser);
+        
+        return "user-list";
     }
+    
 
 }

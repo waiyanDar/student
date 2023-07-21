@@ -277,7 +277,7 @@ public class UserService {
     
     public List<User> paginationUser(int current, int size) {
     	
- 		List<User> listUser =  userDao.findAll(PageRequest.of(current-1, size)).getContent();
+ 		List<User> listUser =  userDao.findAll(PageRequest.of(current, size)).getContent();
     	return listUser;
     }
 }

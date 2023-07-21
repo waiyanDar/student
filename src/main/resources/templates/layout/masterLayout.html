@@ -45,8 +45,10 @@
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script
 		src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>	 -->
 	<script
 		src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 	<script>
     /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
     var dropdown = document.getElementsByClassName("dropdown-btn");
@@ -64,43 +66,35 @@
         });
     }
 
-    /* for data table */
+    
+
+     /* for data table */
     $(document).ready(function () {
-	
+		
  	      $('#userTable').DataTable({
-            pagingType: "simple_numbers",
-            "columnDefs": [
-                {"searchable": false, "targets": 2}
-            ],
-        	 serverSide : true,
-        	 ajax : {
-            	 url : '/findAllUser',
-            	 type : 'GET',
-				 data : function (params){
-					 var page = (params.start / params.length) + 1;
-					 return {
-						 current: page,
-						 size: params.length,
-						 // order: params.order[0].dir
-					 };
-				 }
-            	 }
-	    	
+				 "processing": true,
+			        "serverSide": true,
+			        "ajax": { url: "serverSideProcessing" },
+			        "lengthMenu":[5,10,25],
+			        "columns": [
+			            { "data": "userId" },
+			            { "data": "username" },
+			            { "data": ""}
+			        ]
+              	
         });
 
-    });
-   
 
-    $(document).ready(function () {
+
         $('#studentTable').DataTable({
             "columnDefs": [
                 {"searchable": false, "targets": 3}
             ]
     });
-    });
+  
 
     /* select 2 */
-    $(document).ready(function () {
+    
         $('#userRole').select2({
             placeholder: 'Select roles'
         });
