@@ -10,6 +10,9 @@ import com.example.student.register.security.annotation.UserDelete;
 import com.example.student.register.security.annotation.UserRead;
 import com.example.student.register.security.annotation.UserUpdate;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,13 +37,13 @@ public class UserController {
     private final UserService userService;
 
     private final UserExplorer userExplorer;
-    
+
     public UserController(UserService userService, UserExplorer userExplorer) {
         this.userService = userService;
         this.userExplorer = userExplorer;
 
     }
-    
+
 //    private User loginUser = UserService.loginUser;
 
     @ModelAttribute("loginDate")
@@ -49,7 +52,7 @@ public class UserController {
     }
 
     @ModelAttribute("userId")
-    public String userId(){
+    public String userId() {
         return userService.getUserId();
     }
 
@@ -64,33 +67,33 @@ public class UserController {
     @PostMapping("/registerUser")
     @UserCreate
     public String registerUser(@Valid UserRegisterDto userDto, BindingResult result,
-                               RedirectAttributes attributes,Model model) {
+                               RedirectAttributes attributes, Model model) {
 
-           return userService.registerUser(userDto, result, attributes, model);
+        return userService.registerUser(userDto, result, attributes, model);
     }
 
     @GetMapping("/userUpdate")
     @UserUpdate
     public String uiChange(@RequestParam("userId") String userId, Model model) {
 
-    	userUpdateId = userId;
-       return userService.getUpdateForm(userId,"/userUpdate", model);
+        userUpdateId = userId;
+        return userService.getUpdateForm(userId, "/userUpdate", model);
 
     }
-    
+
     String userUpdateId;
 
     @PostMapping("/userUpdate")
     @UserUpdate
-    public String updateUser(@Valid UserUpdateDto userDto,BindingResult result,
-                             RedirectAttributes attributes,  Model model) {
+    public String updateUser(@Valid UserUpdateDto userDto, BindingResult result,
+                             RedirectAttributes attributes, Model model) {
 
-    	userDto.setUserId(userUpdateId);
-           return userService.updateUser(userDto,"/userUpdate", result, attributes, model);
+        userDto.setUserId(userUpdateId);
+        return userService.updateUser(userDto, "/userUpdate", result, attributes, model);
 
     }
 
-//    @GetMapping("/findAllUser")
+    //    @GetMapping("/findAllUser")
     @UserRead
     public String findAllUser(Model model) {
 
@@ -103,9 +106,9 @@ public class UserController {
     @UserDelete
     public String deleteUser(@RequestParam("id") int id, RedirectAttributes attributes) {
 
-       return userService.deleteUser(id, attributes);
+        return userService.deleteUser(id, attributes);
     }
-    
+
 
     @GetMapping("/searchUser")
     public String searchUser(@RequestParam("userId") Optional<String> userId,
@@ -115,21 +118,21 @@ public class UserController {
         model.addAttribute("searchUsername", username.orElse(""));
         return "user-list";
     }
-    
+
     @GetMapping("/changePsw")
     public String uiChange(Model model) {
 
         return userService.getPswForm(model);
 
     }
-    
+
     @PostMapping("/changePsw")
     public String updatePassword(@RequestParam("oldPassword") String oldPassword,
-    							 @RequestParam("newPassword") String password,
-    							 @RequestParam("confirmPassword") String confirmPassword,
+                                 @RequestParam("newPassword") String password,
+                                 @RequestParam("confirmPassword") String confirmPassword,
                                  RedirectAttributes attributes, Model model) {
 
-    	return userService.changePassword(oldPassword,password, confirmPassword, model, attributes);
+        return userService.changePassword(oldPassword, password, confirmPassword, model, attributes);
 
     }
 
@@ -146,50 +149,65 @@ public class UserController {
 
         return "redirect:/login";
     }
-    
+
     @GetMapping("/logout")
     public String logout() {
-    	return "redirect:/login";
+        return "redirect:/login";
     }
-    
+
     @GetMapping("/exportUserToExcel")
     @Admin
     public String exportStudentToExcel(RedirectAttributes attributes) {
-    	userExplorer.exportUserToExcel();
-    	attributes.addFlashAttribute("exportExcel", true);
-    	return "redirect:/findAllUser";
+        userExplorer.exportUserToExcel();
+        attributes.addFlashAttribute("exportExcel", true);
+        return "redirect:/findAllUser";
     }
-    
-	/*
-	 * @GetMapping("/findAllUser")
-	 * 
-	 * @UserRead public String paginationUser (@RequestParam("current")
-	 * Optional<Integer> current,
-	 * 
-	 * @RequestParam("size") Optional<Integer> size, Model model){
-	 * 
-	 * int currentPage = current.orElse(1); int pageSize = size.orElse(5);
-	 * List<User> listUser = userService.paginationUser(currentPage, pageSize);
-	 * 
-	 * model.addAttribute("userList", listUser);
-	 * 
-	 * return "user-list"; }
-	 */
-    
+
+    /*
+     * @GetMapping("/findAllUser")
+     *
+     * @UserRead public String paginationUser (@RequestParam("current")
+     * Optional<Integer> current,
+     *
+     * @RequestParam("size") Optional<Integer> size, Model model){
+     *
+     * int currentPage = current.orElse(1); int pageSize = size.orElse(5);
+     * List<User> listUser = userService.paginationUser(currentPage, pageSize);
+     *
+     * model.addAttribute("userList", listUser);
+     *
+     * return "user-list"; }
+     */
+
+    /*@GetMapping("/findAllUser")
+    @UserRead
+    public String paginationUser(
+            @RequestParam("start") Optional<Integer> current,
+            @RequestParam("length") Optional<Integer> size,
+            Model model) {
+
+        int currentPage = current.orElse(1);
+        int pageSize = size.orElse(5);
+        List<User> listUser = userService.paginationUser(currentPage, pageSize);
+
+        model.addAttribute("userList", listUser);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("pageSize", pageSize);
+        return "user-list";
+    }*/
+
     @GetMapping("/findAllUser")
     @UserRead
-    public String paginationUser (@RequestParam("order") Optional<String> order,
-    							  @RequestParam("start") Optional<Integer> current,
-    							  @RequestParam("length") Optional<Integer> size,
-    							  Model model){
-    	
-    	int currentPage = current.orElse(1);
-    	int pageSize = size.orElse(5);
-    	List<User> listUser =  userService.paginationUser(currentPage, pageSize);
-    	
-    	 model.addAttribute("userList", listUser);
+    public ResponseEntity<List<User>> paginationUser(@RequestParam("order") Optional<String> order,
+                                                     @RequestParam("start") Optional<Integer> current,
+                                                     @RequestParam("length") Optional<Integer> size,
+                                                     Model model) {
 
-         return "user-list";
+        int currentPage = current.orElse(1);
+        int pageSize = size.orElse(5);
+        List<User> listUser = userService.paginationUser(currentPage, pageSize);
+
+        return ResponseEntity.ok(listUser);
     }
 
 }

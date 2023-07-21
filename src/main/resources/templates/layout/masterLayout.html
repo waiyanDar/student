@@ -75,12 +75,18 @@
         	 serverSide : true,
         	 ajax : {
             	 url : '/findAllUser',
-            	 type : 'GET'
+            	 type : 'GET',
+				 data : function (params){
+					 var page = (params.start / params.length) + 1;
+					 return {
+						 current: page,
+						 size: params.length,
+						 // order: params.order[0].dir
+					 };
+				 }
             	 }
 	    	
         });
-
- 	 
 
     });
    
