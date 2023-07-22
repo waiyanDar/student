@@ -45,14 +45,14 @@ public class UserUpdateDto {
 //        user.deletePhoto();
         userDto.setEmail(user.getEmail());
         userDto.setRoles(user.getRoles());
-        userDto.setButton("<a th:href=\"@{'/userUpdate?userId='+${user.getUserId}}\"\r\n" + 
+       /* userDto.setButton("<a th:href=\"@{'/userUpdate?userId='"+userDto.userId+ "}\"\r\n" +
         		"									class=\"btn btn-success me-3\" type=\"button\">Update</a>\r\n" + 
         		"\r\n" + 
         		"									<button data-bs-toggle=\"modal\"\r\n" + 
-        		"										th:data-bs-target=\"'#exampleModal'+${user.id}\" type=\"button\"\r\n" + 
+        		"										th:data-bs-target=\"'#exampleModal'\" "+ userDto.userId+ " type=\"button\"\r\n" +
         		"										class=\"btn btn-danger\">Delete</button>\r\n" + 
         		"\r\n" + 
-        		"									<div class=\"modal\" th:id=\"'exampleModal'+${user.id}\"\r\n" + 
+        		"									<div class=\"modal\" th:id=\"'exampleModal'"+userDto.userId+ "\"\r\n" +
         		"										tabindex=\"-1\" aria-labelledby=\"exampleModalLabel\"\r\n" + 
         		"										aria-hidden=\"true\">\r\n" + 
         		"										<div class=\"modal-dialog modal-dialog-centered\">\r\n" + 
@@ -64,12 +64,12 @@ public class UserUpdateDto {
         		"												</div>\r\n" + 
         		"												<div class=\"modal-body\">\r\n" + 
         		"													<h5 class=\"text-danger\">\r\n" + 
-        		"														Are you sure to delete <span th:text=\"${user.username}\"></span>\r\n" + 
+        		"														Are you sure to delete <span th:text=\""+userDto.username+"\"></span>\r\n" +
         		"														?\r\n" + 
         		"													</h5>\r\n" + 
         		"												</div>\r\n" + 
         		"												<div class=\"modal-footer\">\r\n" + 
-        		"													<a th:href=\"@{'/deleteUser?id='+${user.id}}\">\r\n" + 
+        		"													<a th:href=\"@{'/deleteUser?id='"+user.getId()+"}\">\r\n" +
         		"														<button type=\"submit\" class=\"btn btn-danger \"\r\n" + 
         		"															data-bs-dismiss=\"modal\">Yes</button>\r\n" + 
         		"													</a>\r\n" + 
@@ -78,7 +78,8 @@ public class UserUpdateDto {
         		"												</div>\r\n" + 
         		"											</div>\r\n" + 
         		"										</div>\r\n" + 
-        		"									</div>");
+        		"									</div>");*/
+//		userDto.setButton("<a href=\"/\" class=\"text-success\">hello " + userDto.userId+"</span>");
         return userDto;
     }
 }

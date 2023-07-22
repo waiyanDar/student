@@ -101,9 +101,9 @@ public class UserController {
 
     @GetMapping("/deleteUser")
     @UserDelete
-    public String deleteUser(@RequestParam("id") int id, RedirectAttributes attributes) {
+    public String deleteUser(@RequestParam("userId") String userId, RedirectAttributes attributes) {
 
-        return userService.deleteUser(id, attributes);
+        return userService.deleteUser(userId, attributes);
     }
 
 

@@ -1,55 +1,55 @@
 <!DOCTYPE html>
 <html th:fragment="layout(main)" lang="en"
-	xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Student Registration</title>
-<link rel="stylesheet"
-	href="../../static/bootstrap-5.0.2/css/bootstrap.min.css"
-	th:href="@{bootstrap-5.0.2/css/bootstrap.min.css}">
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-	crossorigin="anonymous"></script>
-<link th:href="@{test.css}" rel="stylesheet" />
-<link rel="stylesheet"
-	href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
-<link
-	href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
-	rel="stylesheet" />
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css"
-	integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e"
-	crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Student Registration</title>
+    <link rel="stylesheet"
+          href="../../static/bootstrap-5.0.2/css/bootstrap.min.css"
+          th:href="@{bootstrap-5.0.2/css/bootstrap.min.css}">
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
+    <link th:href="@{test.css}" rel="stylesheet"/>
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+    <link
+            href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+            rel="stylesheet"/>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css"
+          integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e"
+          crossorigin="anonymous">
 
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
 </head>
 <body>
-	<div th:replace="fragments/navbar.html :: navbar"></div>
-	<div class="col" th:replace="fragments/sidebar.html :: sidenav"></div>
-	<div class="row">
+<div th:replace="fragments/navbar.html :: navbar"></div>
+<div class="col" th:replace="fragments/sidebar.html :: sidenav"></div>
+<div class="row">
 
-		<div class="col" th:replace="${main}"></div>
-	</div>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js">
-	</script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.0.2/sha.js"></script>
+    <div class="col" th:replace="${main}"></div>
+</div>
+<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.0.2/sha.js"></script>
 
-	<!--  <script src="login.js"></script> -->
+<!--  <script src="login.js"></script> -->
 
-	<!-- for data table -->
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script
-		src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>	 -->
-	<script
-		src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<!-- for data table -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script
+        src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>	 -->
+<script
+        src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-	<script>
+<script>
     /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
     var dropdown = document.getElementsByClassName("dropdown-btn");
     var i;
@@ -66,35 +66,60 @@
         });
     }
 
-    
 
-     /* for data table */
+    /* for data table */
     $(document).ready(function () {
-		
- 	      $('#userTable').DataTable({
-				 "processing": true,
-			        "serverSide": true,
-			        "ajax": { url: "serverSideProcessing" },
-			        "lengthMenu":[5,10,25],
-			        "columns": [
-			            { "data": "userId" },
-			            { "data": "username" },
-			            { "data": ""}
-			        ]
-              	
-        });
 
+        $('#userTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {url: "serverSideProcessing"},
+            "lengthMenu": [5, 10, 25],
+            "columns": [
+                {"data": "userId"},
+                {"data": "username"},
+                {
+                    "data": "button",
+                    "render": function (data, type, row) {
+                        var userUpdateURL = "/userUpdate?userId=" + row.userId;
+                        var userDeleteURL = "/deleteUser?userId=" + row.userId;
+
+                        return '<a href="' + userUpdateURL + '" class="btn btn-success me-3" type="button">Update</a>' +
+                            '<button data-bs-toggle="modal" data-bs-target="#confirmationModal' + row.userId + '" type="button" class="btn btn-danger">Delete</button>' +
+                            '<div class="modal fade" id="confirmationModal' + row.userId + '" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">' +
+                            '<div class="modal-dialog modal-dialog-centered">' +
+                            '<div class="modal-content">' +
+                            '<div class="modal-header">' +
+                            '<h5 class="modal-title text-dark" id="exampleModalLabel">Confirmation</h5>' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                            '</div>' +
+                            '<div class="modal-body">' +
+                            '<h5 class="text-danger">Are you sure to delete (' + row.username + ')?</h5>' +
+                            '</div>' +
+                            '<div class="modal-footer">' +
+                            '<a href="' + userDeleteURL + '" class="btn btn-danger" type="button">Yes</a>' +
+                            '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+
+                    }
+                }
+            ]
+
+        });
 
 
         $('#studentTable').DataTable({
             "columnDefs": [
                 {"searchable": false, "targets": 3}
             ]
-    });
-  
+        });
 
-    /* select 2 */
-    
+
+        /* select 2 */
+
         $('#userRole').select2({
             placeholder: 'Select roles'
         });
@@ -133,15 +158,15 @@
         }
     }
 
-        function validateForm(event) {
-            var password = document.getElementById("password").value;
-            var confirmPassword = document.getElementById("confirmPassword").value;
-            var passwordStrengthLabel = document.getElementById("passwordStrengthLabel");
-/* 
-            if (password.length < 6 || password.length > 9 || passwordStrengthLabel.textContent !== "Strong" || password !== confirmPassword) {
-               event.preventDefault();
-            } */
-        }
+    function validateForm(event) {
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirmPassword").value;
+        var passwordStrengthLabel = document.getElementById("passwordStrengthLabel");
+        /*
+                    if (password.length < 6 || password.length > 9 || passwordStrengthLabel.textContent !== "Strong" || password !== confirmPassword) {
+                       event.preventDefault();
+                    } */
+    }
 
     function toggleOldPasswordVisibility() {
         var passwordInput = document.getElementById("oldPassword");
@@ -188,11 +213,10 @@
         }
     }
 
-        var form = document.getElementById("userForm");
-        form.addEventListener("submit", validateForm);
+    var form = document.getElementById("userForm");
+    form.addEventListener("submit", validateForm);
 
-		
-        
+
 </script>
 </body>
 </html>

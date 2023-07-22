@@ -1,7 +1,6 @@
 package com.example.student.register.dto;
 
 import java.util.List;
-import com.example.student.register.entity.User;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,5 +13,5 @@ public class UserPaginationDto {
 	public int recordTotal;
 	public int recordsFiltered;
 	
-	public List<User> data;
+	public List<UserUpdateDto> data;
 }

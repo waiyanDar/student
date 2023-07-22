@@ -1,12 +1,12 @@
 package com.example.student.register.service;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.example.student.register.dao.SpecificationUtil;
 import com.example.student.register.dto.UserRegisterDto;
 import com.example.student.register.dto.UserUpdateDto;
 import com.example.student.register.entity.Role;
@@ -14,6 +14,7 @@ import com.example.student.register.entity.User;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -32,7 +33,7 @@ public class UserService {
     private final RoleDao roleDao;
 
     private final PasswordEncoder passwordEncoder;
-    
+
 //    private final PublicPrivateKeyGenerator keyGenerator;
 
     private String userId;
@@ -97,8 +98,9 @@ public class UserService {
         return loginUser;
     }
 
-    public String deleteUser(int id, RedirectAttributes attributes) {
-        User user = findUserById(id);
+    public String deleteUser(String id, RedirectAttributes attributes) {
+//        User user = findUserById(id);
+        User user = findUserByUserId(id);
         userId = user.getUserId();
         userDao.delete(user);
         attributes.addFlashAttribute("deleteUser", true);
@@ -279,5 +281,27 @@ public class UserService {
     	
  		List<User> listUser =  userDao.findAll(PageRequest.of(current, size)).getContent();
     	return listUser;
+    }
+
+    public List<User> paginationUserAscSorting(int page , int size, String column){
+        List<User> listUser = userDao.findAll(PageRequest.of(page, size, Sort.by(column).ascending())).getContent();
+        return listUser;
+    }
+
+    public List<User> paginationUserDescSorting(int page, int size, String column) {
+        List<User> listUser = userDao.findAll(PageRequest.of(page, size, Sort.by(column).descending())).getContent();
+        return listUser;
+    }
+
+    public List<User> searchUserAscSorting(String searchTerm, int page, int size, String column){
+
+        List<User> userList = userDao.findAll(SpecificationUtil.withSearchTerm(searchTerm), PageRequest.of(page, size,Sort.by(column).ascending())).getContent();
+        return userList;
+    }
+
+    public List<User> searchUserDescSorting(String searchTerm, int page, int size, String column){
+
+        List<User> userList = userDao.findAll(SpecificationUtil.withSearchTerm(searchTerm), PageRequest.of(page, size,Sort.by(column).descending())).getContent();
+        return userList;
     }
 }
