@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Base64;
 
 import javax.validation.Valid;
 
@@ -78,6 +79,10 @@ public class StudentController {
     public String studentInfo(@RequestParam("id") int id, Model model) {
         Student oStudent = studentService.findStudent(id);
         StudentDto studentDto = StudentDto.form(oStudent);
+        if(oStudent.getPhoto() != null && oStudent.getPhoto().length >1){
+            String photo = Base64.getEncoder().encodeToString(oStudent.getPhoto());
+            model.addAttribute("sPhoto", photo);
+        }
         oId = oStudent.getId();
         oStudentId = oStudent.getStudentId();
         modelForStu(model, studentDto, true, "/updateStudent", oStudentId);
