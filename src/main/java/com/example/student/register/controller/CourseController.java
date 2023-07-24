@@ -66,7 +66,6 @@ public class CourseController {
 
     @GetMapping("/")
     public String goHome(Model model) {
-    	userService.paginationUser(1, 5);
         return "home";
     }
 

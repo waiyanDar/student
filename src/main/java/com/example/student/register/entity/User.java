@@ -35,6 +35,8 @@ public class User {
 
     private String password;
 
+    private String otp;
+    
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
 

@@ -11,6 +11,7 @@ import com.example.student.register.dto.UserRegisterDto;
 import com.example.student.register.dto.UserUpdateDto;
 import com.example.student.register.entity.Role;
 import com.example.student.register.entity.User;
+import com.example.student.register.generator.OtpGenerator;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +34,7 @@ public class UserService {
     private final RoleDao roleDao;
 
     private final PasswordEncoder passwordEncoder;
+    private final OtpGenerator otpGenerator;
 
 //    private final PublicPrivateKeyGenerator keyGenerator;
 
@@ -41,10 +43,11 @@ public class UserService {
 
     public static User loginUser;
 
-    public UserService(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
+    public UserService(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder, OtpGenerator otpGenerator) {
         this.userDao = userDao;
         this.roleDao = roleDao;
         this.passwordEncoder = passwordEncoder;
+        this.otpGenerator = otpGenerator;
     }
 
     public String getUserId() {
@@ -277,31 +280,51 @@ public class UserService {
     	return "login";
     }
     
-    public List<User> paginationUser(int current, int size) {
-    	
- 		List<User> listUser =  userDao.findAll(PageRequest.of(current, size)).getContent();
-    	return listUser;
-    }
-
-    public List<User> paginationUserAscSorting(int page , int size, String column){
-        List<User> listUser = userDao.findAll(PageRequest.of(page, size, Sort.by(column).ascending())).getContent();
-        return listUser;
-    }
-
-    public List<User> paginationUserDescSorting(int page, int size, String column) {
-        List<User> listUser = userDao.findAll(PageRequest.of(page, size, Sort.by(column).descending())).getContent();
-        return listUser;
-    }
+//    public List<User> paginationUser(int current, int size) {
+//    	
+// 		List<User> listUser =  userDao.findAll(PageRequest.of(current, size)).getContent();
+//    	return listUser;
+//    }
+//
+//    public List<User> paginationUserAscSorting(int page , int size, String column){
+//        List<User> listUser = userDao.findAll(PageRequest.of(page, size, Sort.by(column).ascending())).getContent();
+//        return listUser;
+//    }
+//
+//    public List<User> paginationUserDescSorting(int page, int size, String column) {
+//        List<User> listUser = userDao.findAll(PageRequest.of(page, size, Sort.by(column).descending())).getContent();
+//        return listUser;
+//    }
 
     public List<User> searchUserAscSorting(String searchTerm, int page, int size, String column){
 
-        List<User> userList = userDao.findAll(SpecificationUtil.withSearchTerm(searchTerm), PageRequest.of(page, size,Sort.by(column).ascending())).getContent();
+        List<User> userList = userDao.findAll(SpecificationUtil.userWithSearchTerm(searchTerm), PageRequest.of(page, size,Sort.by(column).ascending())).getContent();
         return userList;
     }
 
     public List<User> searchUserDescSorting(String searchTerm, int page, int size, String column){
 
-        List<User> userList = userDao.findAll(SpecificationUtil.withSearchTerm(searchTerm), PageRequest.of(page, size,Sort.by(column).descending())).getContent();
+        List<User> userList = userDao.findAll(SpecificationUtil.userWithSearchTerm(searchTerm), PageRequest.of(page, size,Sort.by(column).descending())).getContent();
         return userList;
     }
+    
+    public void searchUserWithEmail(String email, Model model, RedirectAttributes attributes) {
+    	
+		/*
+		 * User user = userDao.findUserByEmail(email).get(); if(user!=null) {
+		 * user.setOtp(otpGenerator.generateOtp()); model.addAttribute("user", user);
+		 * System.out.println(user.getOtp()); }else {
+		 * attributes.addFlashAttribute("noUser", true); }
+		 */
+    	
+    	try {
+			User user = userDao.findUserByEmail(email).get();
+			user.setOtp(otpGenerator.generateOtp());
+			model.addAttribute("user", user);
+		} catch (Exception e) {
+			attributes.addFlashAttribute("noUser", true);
+		}
+    	
+    }
+
 }

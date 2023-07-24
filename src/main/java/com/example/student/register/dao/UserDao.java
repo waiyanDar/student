@@ -11,4 +11,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface UserDao extends JpaRepositoryImplementation<User, Integer>, PagingAndSortingRepository<User, Integer> {
 
 	Optional<User> findUserByUserId(String userId);
+	Optional<User> findUserByEmail(String email);
 }

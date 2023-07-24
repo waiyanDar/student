@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="test.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.0.0/jsencrypt.min.js"></script>
+</head>
+<body class="login-page-body">
+<div class="login-page">
+    <div class="form">
+        <div class="login">
+            <div class="login-header">
+                <h1>Forgot Password</h1>
+            </div>
+            <p th:if="${noUser}">User not found</p>
+        </div>
+        <form id="forgotPswForm" class="login-form" th:action="@{/emailForForgotPsw}" method="post">
+            <input type="text" placeholder="Email" name="email" />         
+            <button class="mb-3" type="submit">submit</button>         
+        </form>
+        <div th:if="${user}">
+        <p class="text-success">We send otp to <span th:text="${user.email}"></span> and check your email.</p>
+        </div>
+        <form id="otpForm" class="login-form" th:action="@{/otpForForgotPsw}" method="post">
+            <input type="text" placeholder="Otp" name="otp" />         
+            <button  type="submit">submit</button>         
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

@@ -76,8 +76,8 @@ public class StudentController {
 
     @GetMapping("/seeMore")
     @Admin
-    public String studentInfo(@RequestParam("id") int id, Model model) {
-        Student oStudent = studentService.findStudent(id);
+    public String studentInfo(@RequestParam("studentId") String studentId, Model model) {
+        Student oStudent = studentService.findStudentByStudentId(studentId);
         StudentDto studentDto = StudentDto.form(oStudent);
         if(oStudent.getPhoto() != null && oStudent.getPhoto().length >1){
             String photo = Base64.getEncoder().encodeToString(oStudent.getPhoto());
@@ -108,19 +108,26 @@ public class StudentController {
         return "redirect:/findAllStudent";
     }
 
-    @GetMapping("/findAllStudent")
-    @Admin
+//    @GetMapping("/findAllStudent")
+//    @Admin
     public String findAllStudent(Model model) {
     	
          model.addAttribute("students", studentService.findAllStudent());
          return "student-list";
     }
+    
+    @GetMapping("/findAllStudent")
+    @Admin
+    public String paginationStudent() {
+    	
+         return "student-list";
+    }
 
     @GetMapping("/deleteStudent")
     @Admin
-    public String deleteStudent(@RequestParam("id") int id, RedirectAttributes attributes) {
+    public String deleteStudent(@RequestParam("studentId") String studentId, RedirectAttributes attributes) {
 
-        studentId = studentService.deleteStudent(id);
+        studentId = studentService.deleteStudent(studentId);
         attributes.addFlashAttribute("stuDelete", true);
         return "redirect:/findAllStudent";
     }
@@ -132,6 +139,7 @@ public class StudentController {
     	attributes.addFlashAttribute("exportExcel", true);
     	return "redirect:/findAllStudent";
     }
+    
 
     boolean oldStu;
 //    @ModelAttribute("oldStu")

@@ -162,18 +162,27 @@ public class UserController {
     
     @GetMapping("/findAllUser")
     @UserRead
-    public String paginationUser(@RequestParam("start") Optional<Integer> current,
-                                 @RequestParam("length") Optional<Integer> size,
-                                                     Model model) {
+    public String paginationUser() {
 
-//        int currentPage = current.orElse(1);
-//        int pageSize = size.orElse(5);
-//        List<User> listUser = userService.paginationUser(currentPage, pageSize);
-//
-//        model.addAttribute("userList", listUser);
-        
         return "user-list";
     }
     
+   @GetMapping("/forgotPsw")
+   public String forgotPsw() {
+	   
+	   return "forgot-Psw";
+   }
+   
+   @PostMapping("/otpForForgotPsw")
+   public String otpForForgotPsw() {
+	   
+	   return "forgot-Psw";
+   }
+   
+   @PostMapping("/emailForForgotPsw")
+   public String emailForForgotPsw(@RequestParam("email") String email, Model model, RedirectAttributes attributes){
+	   userService.searchUserWithEmail(email, model, attributes);
+	   return "redirect:/forgotPsw";
+   }
 
 }
