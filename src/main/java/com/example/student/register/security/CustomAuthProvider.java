@@ -60,7 +60,6 @@ public class CustomAuthProvider implements AuthenticationProvider {
 
 		String inComeUserId = authentication.getName();
 		String inComePassword =decryptPassword.decryptPassword(test1);;
-		
 
 		System.out.println("decrypt : "+inComePassword);
 		

@@ -39,7 +39,6 @@ public class DecryptPassword {
             String decryptedPsw =new String(decryptedPswByte, StandardCharsets.UTF_8);
             return decryptedPsw;
         }catch (Exception e){
-//            System.out.println(e.getCause());
         	e.printStackTrace();
             return "fail";
         }

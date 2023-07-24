@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 
 import com.example.student.register.dao.SpecificationUtil;
@@ -15,6 +16,8 @@ import com.example.student.register.entity.Role;
 import com.example.student.register.entity.User;
 import com.example.student.register.generator.OtpGenerator;
 
+import com.example.student.register.security.DecryptPassword;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,6 +25,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -44,22 +49,29 @@ public class UserService {
 
 //    private final PublicPrivateKeyGenerator keyGenerator;
 
+    private final DecryptPassword decryptPassword;
+
+    private final JavaMailSender javaMailSender;
+
     private String userId;
 //    private int id;
     
     @Value("${spring.mail.username}")
     private String sender;
 
-    @Autowired
-    private JavaMailSender javaMailSender;
+
     
     public static User loginUser;
 
-    public UserService(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder, OtpGenerator otpGenerator) {
+    public UserService(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder,
+                       OtpGenerator otpGenerator, JavaMailSender javaMailSender,
+                       DecryptPassword decryptPassword) {
         this.userDao = userDao;
         this.roleDao = roleDao;
         this.passwordEncoder = passwordEncoder;
         this.otpGenerator = otpGenerator;
+        this.javaMailSender = javaMailSender;
+        this.decryptPassword = decryptPassword;
     }
 
     public String getUserId() {
@@ -327,13 +339,22 @@ public class UserService {
     
     public void sendOtp(String otp, String email) {
     	try {
-    		String message = "Your otp code is " + otp + " . Please don't share with anyone!";
-    		SimpleMailMessage mailMessage = new SimpleMailMessage();
-    		mailMessage.setFrom(sender);
-    		mailMessage.setTo(email);
-    		mailMessage.setText(message);
-    		mailMessage.setSubject("Forgot Password");
-    		
+            User user = userDao.findUserByEmail(email).get();
+            String message = "Dear "+ user.getUsername()+",\n"
+                    + "We have received a request to reset your account password."
+                    + "Your One-Time Passcode (OTP) is: " + otp + ".\n"
+                    + "Please use this code to reset your password. Do not share this code with anyone, as it provides access to your account."
+                    +"This code is valid during 3minutes"
+                    + "If you did not request a password reset, please ignore this email.\n\n"
+                    + "Thank you";
+//            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            MimeMessage mailMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mailMessage, true, "UTF-8" );
+    		helper.setFrom(sender);
+    		helper.setTo(email);
+    		helper.setText(message);
+    		helper.setSubject("Forgot Password");
+
     		javaMailSender.send(mailMessage);
     		
     	}catch (Exception e) {
@@ -354,5 +375,18 @@ public class UserService {
     
     public User findUserByEmail(String email) {
     	return userDao.findUserByEmail(email).get();
+    }
+
+    public void forgotPasswordChange(String password,String email, boolean validOtp, RedirectAttributes attributes) throws Exception {
+        if (!validOtp){
+            throw new Exception("Something's wrong");
+        }
+        User user = findUserByEmail(email);
+        String dePassword = decryptPassword.decryptPassword(password);
+        user.setPassword(passwordEncoder.encode(dePassword));
+        user.setOtp(null);
+        userDao.saveAndFlush(user);
+//        System.out.println("decrypted new password : " + dePassword);
+        attributes.addFlashAttribute("forgotPswSuccess", true);
     }
 }

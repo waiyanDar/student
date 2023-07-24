@@ -17,12 +17,11 @@
         </div>
         <form onsubmit="encrypt(event)" id="loginForm" class="login-form" th:action="@{/login}" method="post">
             <input type="text" placeholder="User ID" id="username" name="username" />
-            <input type="password" placeholder="Password" id="password" name="password" />
+            <input type="password" placeholder="Password" id="password"  />
             <button  type="submit">Login</button>
             
         </form>
         <p class="message"><a th:href="@{/forgotPsw}">Forgot password?</a></p>
-       <!--  <input hidden th:id="key" class="text-dark" th:value="${publicKey}" /> -->
     </div>
 </div>
 
@@ -33,16 +32,18 @@
         //var publicKey = document.getElementById("key").value;
         var publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvzhfSPMMTIdXZD8n41yAAFcAgM1xDBQ0zHDR/TiewuqUEc6wFB6YLNZ84NmiV9eU/i0DFyXofq/bQ06cK+ath+ipf+uaNFGUHi9BqGZRRReuaQIGZJntEuJx9nAV+E02TJwemchHRlo/kiXwYnjbulcNnSPLDubSfS0628IP42l11KqJopRUXHUCCQZDwZXn/sbj8NVD+hhbFE/W/RXnPVVHjMcFiJUvbMDQOy2TgeQfOxiGmiNLcqG4Uq9z/tMTaHD7vMUqtTIcCO/57kcMr97VEGYf6kLS12VBTw1TwVQ2pbqIaMHyYk0BH1emmS5br+zX0RBoFYfyGcgW8YTE9wIDAQAB";
         var password = document.getElementById("password").value;
-        console.log(password);
 
         var encryptor = new JSEncrypt();
         encryptor.setPublicKey(publicKey);
 
         var encryptedPassword = encryptor.encrypt(password);
-        console.log(encryptedPassword);
 
-        document.getElementById("password").value = encryptedPassword;
+        var tempInput = document.createElement("input");
+        tempInput.type = "hidden";
+        tempInput.name = "password";
+        tempInput.value = encryptedPassword;
 
+        event.target.appendChild(tempInput);
         event.target.submit();
     }
 </script>

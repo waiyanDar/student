@@ -166,8 +166,28 @@ public class UserController {
 	}
 
 	@GetMapping("/forgotPsw")
-	public String forgotPsw(Model model) {
+	public String forgotPswForm(Model model) {
 		model.addAttribute("validOtp", false);
+		return "forgot-Psw";
+	}
+
+	@PostMapping("/emailForForgotPsw")
+	public String emailForForgotPsw(@RequestParam("email") String email, Model model, RedirectAttributes attributes) {
+		emailForForgotPsw = email;
+		model.addAttribute("validOtp", false);
+		if (userService.searchUserWithEmail(email, model, attributes)) {
+
+			return "redirect:/foundUser";
+		} else {
+			return "redirect:/forgotPsw";
+		}
+	}
+
+	String emailForForgotPsw;
+	@GetMapping("/foundUser")
+	public String foundUser(Model model) {
+		model.addAttribute("validOtp", false);
+		model.addAttribute("user", userService.findUserByEmail(emailForForgotPsw));
 		return "forgot-Psw";
 	}
 
@@ -175,8 +195,9 @@ public class UserController {
 	public String checkOtp(@RequestParam("otp") String otp, @RequestParam("email") String email,
 			RedirectAttributes attributes, Model model) {
 		if (userService.checkOtp(email, otp)) {
-			model.addAttribute("validOtp", true);
-			return "forgot-Psw";
+			validOtp = true;
+//			model.addAttribute("validOtp", true);
+			return "redirect:/changePassword";
 		} else {
 
 			attributes.addFlashAttribute("invalidOtp", true);
@@ -185,8 +206,7 @@ public class UserController {
 		}
 
 	}
-
-	String emailForForgotPsw;
+	boolean validOtp;
 
 	@GetMapping("/invalidOtp")
 	public String invalidOtp(Model model) {
@@ -195,25 +215,20 @@ public class UserController {
 		return "forgot-Psw";
 	}
 
-	@PostMapping("/emailForForgotPsw")
-	public String emailForForgotPsw(@RequestParam("email") String email, Model model, RedirectAttributes attributes) {
-		emailForForgotPsw = email;
-		model.addAttribute("validOtp", false);
-		validOtp = userService.searchUserWithEmail(email, model, attributes);
-		if (validOtp) {
-			return "redirect:/foundUser";
-		} else {
-			return "redirect:/forgotPsw";
+	@GetMapping("/changePassword")
+	public String getChangePasswordForm(Model model) throws Exception {
+		if (!validOtp){
+			throw new Exception("Something's wrong");
 		}
-	}
-
-	boolean validOtp;
-	@GetMapping("/foundUser")
-	public String foundUser(Model model) {
-		model.addAttribute("validOtp", false);
-		model.addAttribute("user", userService.findUserByEmail(emailForForgotPsw));
+		model.addAttribute("validOtp", true);
 		return "forgot-Psw";
 	}
-	
+	@PostMapping("/forgotPasswordChange")
+	public String forgotPasswordChange(@RequestParam("password") String password,
+									   RedirectAttributes attributes) throws Exception {
 
+		userService.forgotPasswordChange(password, emailForForgotPsw,validOtp, attributes);
+		validOtp = false;
+		return "redirect:/login";
+	}
 }
