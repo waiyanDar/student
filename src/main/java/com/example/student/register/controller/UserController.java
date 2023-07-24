@@ -214,5 +214,6 @@ public class UserController {
 		model.addAttribute("user", userService.findUserByEmail(emailForForgotPsw));
 		return "forgot-Psw";
 	}
+	
 
 }
