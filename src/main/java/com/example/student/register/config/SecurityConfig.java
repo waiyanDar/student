@@ -43,7 +43,8 @@ public class SecurityConfig {
 		httpSecurity.authenticationProvider(customAuthProvider);
 		httpSecurity.addFilterBefore(jwtfilter, UsernamePasswordAuthenticationFilter.class);
 		httpSecurity.authorizeHttpRequests()
-					.mvcMatchers("/bootstrap-5.0.2/**", "/test.css", "/forgotPsw", "/otpForForgotPsw","/emailForForgotPsw")
+					.mvcMatchers("/bootstrap-5.0.2/**", "/test.css", "/forgotPsw", "/checkOtp","/emailForForgotPsw",
+							"/foundUser","/invalidOtp")
 					.permitAll()
 					.anyRequest()
 					.authenticated()

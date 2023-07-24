@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import com.example.student.register.dao.SpecificationUtil;
 import com.example.student.register.dto.UserRegisterDto;
 import com.example.student.register.dto.UserUpdateDto;
@@ -13,9 +15,13 @@ import com.example.student.register.entity.Role;
 import com.example.student.register.entity.User;
 import com.example.student.register.generator.OtpGenerator;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -40,7 +46,13 @@ public class UserService {
 
     private String userId;
 //    private int id;
+    
+    @Value("${spring.mail.username}")
+    private String sender;
 
+    @Autowired
+    private JavaMailSender javaMailSender;
+    
     public static User loginUser;
 
     public UserService(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder, OtpGenerator otpGenerator) {
@@ -279,22 +291,6 @@ public class UserService {
     	
     	return "login";
     }
-    
-//    public List<User> paginationUser(int current, int size) {
-//    	
-// 		List<User> listUser =  userDao.findAll(PageRequest.of(current, size)).getContent();
-//    	return listUser;
-//    }
-//
-//    public List<User> paginationUserAscSorting(int page , int size, String column){
-//        List<User> listUser = userDao.findAll(PageRequest.of(page, size, Sort.by(column).ascending())).getContent();
-//        return listUser;
-//    }
-//
-//    public List<User> paginationUserDescSorting(int page, int size, String column) {
-//        List<User> listUser = userDao.findAll(PageRequest.of(page, size, Sort.by(column).descending())).getContent();
-//        return listUser;
-//    }
 
     public List<User> searchUserAscSorting(String searchTerm, int page, int size, String column){
 
@@ -308,23 +304,55 @@ public class UserService {
         return userList;
     }
     
-    public void searchUserWithEmail(String email, Model model, RedirectAttributes attributes) {
-    	
-		/*
-		 * User user = userDao.findUserByEmail(email).get(); if(user!=null) {
-		 * user.setOtp(otpGenerator.generateOtp()); model.addAttribute("user", user);
-		 * System.out.println(user.getOtp()); }else {
-		 * attributes.addFlashAttribute("noUser", true); }
-		 */
+    @Transactional
+    public boolean searchUserWithEmail(String email, Model model, RedirectAttributes attributes) {
     	
     	try {
+    		String otp = otpGenerator.generateOtp();
+    		
 			User user = userDao.findUserByEmail(email).get();
-			user.setOtp(otpGenerator.generateOtp());
+			user.setOtp(otp);
+			userDao.saveAndFlush(user);
 			model.addAttribute("user", user);
+			attributes.addFlashAttribute("foundUser", true);
+			sendOtp(otp, user.getEmail());
+			
+			return true;
 		} catch (Exception e) {
 			attributes.addFlashAttribute("noUser", true);
+			return false;
 		}
     	
     }
+    
+    public void sendOtp(String otp, String email) {
+    	try {
+    		String message = "Your otp code is " + otp + " . Please don't share with anyone!";
+    		SimpleMailMessage mailMessage = new SimpleMailMessage();
+    		mailMessage.setFrom(sender);
+    		mailMessage.setTo(email);
+    		mailMessage.setText(message);
+    		mailMessage.setSubject("Forgot Password");
+    		
+    		javaMailSender.send(mailMessage);
+    		
+    	}catch (Exception e) {
+    		System.out.println(e.getMessage());
+		}
+    }
 
+    public boolean checkOtp(String email, String otp) {
+    	
+    	User user = userDao.findUserByEmail(email).get();
+    	
+    	if(user != null && user.getOtp().equals(otp)) {
+    		return true;
+    	}else {
+    		return false;
+    	}
+    }
+    
+    public User findUserByEmail(String email) {
+    	return userDao.findUserByEmail(email).get();
+    }
 }

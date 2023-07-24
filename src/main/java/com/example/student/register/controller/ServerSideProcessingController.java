@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.student.register.dto.PaginationDto;
+import com.example.student.register.dto.UserPaginationDto;
 import com.example.student.register.dto.StudentPaginationDto;
 import com.example.student.register.security.annotation.Admin;
 import com.example.student.register.security.annotation.UserRead;
@@ -30,7 +30,7 @@ public class ServerSideProcessingController {
 
 	@GetMapping("/serverSideProcessingForUser")
 	@UserRead
-	public PaginationDto serverSideProcessingForUser(@RequestParam("start") int start, @RequestParam("length") int size,
+	public UserPaginationDto serverSideProcessingForUser(@RequestParam("start") int start, @RequestParam("length") int size,
 			@RequestParam("draw") int draw, @RequestParam("order[0][column]") int sortColIndex,
 			@RequestParam("order[0][dir]") String order, @RequestParam("search[value]") String search) {
 
@@ -55,7 +55,7 @@ public class ServerSideProcessingController {
 					.collect(Collectors.toList());
 		}
 
-		PaginationDto userPaginationDto = new PaginationDto();
+		UserPaginationDto userPaginationDto = new UserPaginationDto();
 		userPaginationDto.setData(listUser);
 		userPaginationDto.setRecordsFiltered(totalUsers);
 		userPaginationDto.setRecordTotal(totalUsers);

@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PaginationDto {
+public class UserPaginationDto {
 
 	public int draw;
 	public int recordTotal;
