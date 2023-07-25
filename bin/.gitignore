@@ -31,10 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
-/.gitignore
-/.mvn/
-/mvnw
-/mvnw.cmd
-/pom.xml
+/.apt_generated_tests/
 /src/
 /student_data.xlsx

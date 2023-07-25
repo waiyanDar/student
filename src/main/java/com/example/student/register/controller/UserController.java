@@ -2,7 +2,6 @@ package com.example.student.register.controller;
 
 import com.example.student.register.dto.UserRegisterDto;
 import com.example.student.register.dto.UserUpdateDto;
-import com.example.student.register.entity.User;
 import com.example.student.register.explorter.UserExplorer;
 import com.example.student.register.security.annotation.Admin;
 import com.example.student.register.security.annotation.UserCreate;
@@ -23,8 +22,6 @@ import com.example.student.register.service.UserService;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -106,14 +103,15 @@ public class UserController {
 		return userService.deleteUser(userId, attributes);
 	}
 
-	@GetMapping("/searchUser")
-	public String searchUser(@RequestParam("userId") Optional<String> userId,
-			@RequestParam("username") Optional<String> username, Model model) {
-		List<User> user = userService.searchUser(userId, username);
-		model.addAttribute("userList", user);
-		model.addAttribute("searchUsername", username.orElse(""));
-		return "user-list";
-	}
+	/*
+	 * @GetMapping("/searchUser") public String searchUser(@RequestParam("userId")
+	 * Optional<String> userId,
+	 * 
+	 * @RequestParam("username") Optional<String> username, Model model) {
+	 * List<User> user = userService.searchUser(userId, username);
+	 * model.addAttribute("userList", user); model.addAttribute("searchUsername",
+	 * username.orElse("")); return "user-list"; }
+	 */
 
 	@GetMapping("/changePsw")
 	public String uiChange(Model model) {
@@ -168,6 +166,7 @@ public class UserController {
 	@GetMapping("/forgotPsw")
 	public String forgotPswForm(Model model) {
 		model.addAttribute("validOtp", false);
+		model.addAttribute("emial", "");
 		return "forgot-Psw";
 	}
 
@@ -184,6 +183,7 @@ public class UserController {
 	}
 
 	String emailForForgotPsw;
+	
 	@GetMapping("/foundUser")
 	public String foundUser(Model model) {
 		model.addAttribute("validOtp", false);
@@ -193,18 +193,19 @@ public class UserController {
 
 	@PostMapping("/checkOtp")
 	public String checkOtp(@RequestParam("otp") String otp, @RequestParam("email") String email,
-			RedirectAttributes attributes, Model model) {
-		if (userService.checkOtp(email, otp)) {
-			validOtp = true;
-//			model.addAttribute("validOtp", true);
-			return "redirect:/changePassword";
-		} else {
+							RedirectAttributes attributes, Model model) {
+		emailForForgotPsw = email;
+		return userService.checkOtp(email, otp, model, attributes);
 
-			attributes.addFlashAttribute("invalidOtp", true);
-			emailForForgotPsw = email;
-			return "redirect:/invalidOtp";
-		}
-
+	}
+	
+	@GetMapping("/expiredOtp")
+	public String expiredOtp(Model model) {
+		model.addAttribute("validOtp", false);
+//		model.addAttribute("expire", true);
+//		model.addAttribute("user", userService.findUserByEmail(emailForForgotPsw));
+		model.addAttribute("email" , emailForForgotPsw);
+		return "forgot-Psw";
 	}
 	boolean validOtp;
 
@@ -217,6 +218,7 @@ public class UserController {
 
 	@GetMapping("/changePassword")
 	public String getChangePasswordForm(Model model) throws Exception {
+		validOtp = userService.isValidOtpForModel();
 		if (!validOtp){
 			throw new Exception("Something's wrong");
 		}
@@ -228,7 +230,7 @@ public class UserController {
 									   RedirectAttributes attributes) throws Exception {
 
 		userService.forgotPasswordChange(password, emailForForgotPsw,validOtp, attributes);
-		validOtp = false;
+		emailForForgotPsw = null;
 		return "redirect:/login";
 	}
 }

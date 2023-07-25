@@ -44,7 +44,7 @@ public class SecurityConfig {
 		httpSecurity.addFilterBefore(jwtfilter, UsernamePasswordAuthenticationFilter.class);
 		httpSecurity.authorizeHttpRequests()
 					.mvcMatchers("/bootstrap-5.0.2/**", "/test.css", "/forgotPsw", "/checkOtp","/emailForForgotPsw",
-							"/foundUser","/invalidOtp","/forgotPasswordChange", "/changePassword")
+							"/foundUser","/invalidOtp","/forgotPasswordChange", "/changePassword","/expiredOtp")
 					.permitAll()
 					.anyRequest()
 					.authenticated()

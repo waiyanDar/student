@@ -45,7 +45,7 @@
 						</div>
 					</div>
 
-					<div class="row mb-4">
+					<div class="row mb-2">
 						<div class="col-md-2"></div>
 						<label for="email" class="col-md-2 col-form-label">Email</label>
 						<div class="col-md-4">
@@ -55,8 +55,12 @@
 								th:text="${invalidEmail}"></small>
 						</div>
 					</div>
-
 					<div class="row mb-4" th:if="${!oldUser}">
+					
+					<div>
+					<span style="margin-left: 450px" class="text-warning">Password should include small letter, capital letter, number</span> <br>
+					<span style="margin-left: 450px" class="text-warning"> and special character like 12@aA3</span>
+					</div>
 						<div class="col-md-2"></div>
 						<label for="password" class="col-md-2 col-form-label">Password</label>
 						<div class="col-md-4">
@@ -77,8 +81,7 @@
 
 					<div class="row mb-4" th:if="${!oldUser}">
 						<div class="col-md-2"></div>
-						<label for="confirmPassword" class="col-md-2 col-form-label">Confirm
-							Password</label>
+						<label for="confirmPassword" class="col-md-2 col-form-label">Confirm Password</label>
 						<div class="col-md-4">
 							<div class="input-group">
 								<input type="password" id="confirmPassword" class="form-control"

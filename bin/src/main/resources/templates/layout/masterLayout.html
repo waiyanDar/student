@@ -22,8 +22,7 @@
           integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e"
           crossorigin="anonymous">
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
 </head>
@@ -38,8 +37,6 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js">
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.0.2/sha.js"></script>
-
-<!--  <script src="login.js"></script> -->
 
 <!-- for data table -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -73,7 +70,7 @@
         $('#userTable').DataTable({
             "processing": true,
             "serverSide": true,
-            "ajax": {url: "serverSideProcessing"},
+            "ajax": {url: "serverSideProcessingForUser"},
             "lengthMenu": [5, 10, 25],
             "columns": [
                 {"data": "userId"},
@@ -110,12 +107,58 @@
 
         });
 
-
         $('#studentTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {url: "serverSideProcessingForStudent"},
+            "lengthMenu": [5, 10, 25],
+            "columns": [
+                {"data": "studentId"},
+                {"data": "name"},
+                {
+                    "render": function (data, type, row) {
+                        var courseNames = '';
+                        for (var i = 0; i < row.courses.length; i++) {
+                            courseNames += '<span style="margin-right: 10px;">' + row.courses[i].name + '</span>';
+                        }
+                        return courseNames;
+                    }
+                },
+                {
+                    "render": function (data, type, row) {
+                        var studentSeeMoreLink = "/seeMore?studentId=" + row.studentId;
+                        var studentDeleteLink = "/deleteStudent?studentId=" + row.studentId;
+
+                        return '<a href="' + studentSeeMoreLink + '" class="btn btn btn-secondary me-3" type="button">See More</a>' +
+                            '<button data-bs-toggle="modal" data-bs-target="#confirmationModal' + row.studentId + '" type="button" class="btn btn-danger">Delete</button>' +
+                            '<div class="modal fade" id="confirmationModal' + row.studentId + '" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">' +
+                            '<div class="modal-dialog modal-dialog-centered">' +
+                            '<div class="modal-content">' +
+                            '<div class="modal-header">' +
+                            '<h5 class="modal-title text-dark" id="exampleModalLabel">Confirmation</h5>' +
+                            '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                            '</div>' +
+                            '<div class="modal-body">' +
+                            '<h5 class="text-danger">Are you sure to delete (' + row.name + ')?</h5>' +
+                            '</div>' +
+                            '<div class="modal-footer">' +
+                            '<a href="' + studentDeleteLink + '" class="btn btn-danger" type="button">Yes</a>' +
+                            '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+
+                    }
+                }
+            ]
+        })
+
+        /* $('#studentTable').DataTable({
             "columnDefs": [
                 {"searchable": false, "targets": 3}
             ]
-        });
+        }); */
 
 
         /* select 2 */
@@ -143,7 +186,7 @@
         } else if (/^[a-zA-Z]+$/.test(password) || /^\d+$/.test(password)) {
             passwordStrengthLabel.textContent = "Weak";
             passwordStrengthLabel.style.color = "red";
-        } else if (/\d/.test(password) && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[!@#$%^&*()]/.test(password)) {
+        } else if (/\d/.test(password) && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[!@#$%^&* .]/.test(password)) {
             passwordStrengthLabel.textContent = "Strong";
             passwordStrengthLabel.style.color = "green";
         } else {

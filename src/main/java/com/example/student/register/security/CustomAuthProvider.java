@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.example.student.register.entity.Role;
 
-import com.example.student.register.holder.SecretKeyHolder;
+import com.example.student.register.holder.Holder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -39,7 +39,7 @@ public class CustomAuthProvider implements AuthenticationProvider {
 	private HttpServletResponse response;
 
 	@Autowired
-	private SecretKeyHolder keyHolder;
+	private Holder keyHolder;
 
 	@Autowired
 	private UserService userService;
@@ -88,7 +88,7 @@ public class CustomAuthProvider implements AuthenticationProvider {
 			response.addCookie(jwtCookie);
 
 			keyHolder.userSecretKey.put(userId, encodedKey);
-			keyHolder.setPrivateKey(null);
+//			keyHolder.setPrivateKey(null);
 
 			return new UsernamePasswordAuthenticationToken(inComeUserId, inComePassword, grantedAuthority);
 

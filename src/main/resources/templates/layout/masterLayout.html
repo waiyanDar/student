@@ -178,13 +178,13 @@
         if (password.length === 0) {
             passwordStrengthLabel.textContent = "";
         } else if (password.length < 6) {
-            passwordStrengthLabel.textContent = "Not enough";
+            passwordStrengthLabel.textContent = "Not enough! Password length should be between 6 and 9";
             passwordStrengthLabel.style.color = "red";
         } else if (password.length > 9) {
-            passwordStrengthLabel.textContent = "Too much";
+            passwordStrengthLabel.textContent = "Too much! Password length should be between 6 and 9";
             passwordStrengthLabel.style.color = "red";
         } else if (/^[a-zA-Z]+$/.test(password) || /^\d+$/.test(password)) {
-            passwordStrengthLabel.textContent = "Weak";
+            passwordStrengthLabel.textContent = "Weak!";
             passwordStrengthLabel.style.color = "red";
         } else if (/\d/.test(password) && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[!@#$%^&* .]/.test(password)) {
             passwordStrengthLabel.textContent = "Strong";

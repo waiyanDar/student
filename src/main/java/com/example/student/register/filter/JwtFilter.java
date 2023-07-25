@@ -17,7 +17,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.example.student.register.holder.SecretKeyHolder;
+import com.example.student.register.holder.Holder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private SecretKeyHolder keyHolder;
+	private Holder keyHolder;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -51,10 +51,8 @@ public class JwtFilter extends OncePerRequestFilter {
 		try {
 			userIdForKey = SecurityContextHolder.getContext().getAuthentication().getName();
 
-//			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
 		} catch (NullPointerException e) {
-			logger.log(Level.INFO, e.getCause() + e.getMessage());
+//			logger.log(Level.INFO, e.getCause() + e.getMessage());
 		}
 		String encodedKey = keyHolder.userSecretKey.get(userIdForKey);
 
@@ -118,7 +116,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-		return request.getServletPath().equals("/login");
+		return request.getServletPath().equals("/login") | request.getServletPath().equals("/forgotPsw")
+				| request.getServletPath().equals("/checkOtp") | request.getServletPath().equals("/emailForForgotPsw")
+				| request.getServletPath().equals("/foundUser") | request.getServletPath().equals("/invalidOtp")
+				| request.getServletPath().equals("/forgotPasswordChange") | request.getServletPath().equals("/changePassword")
+				| request.getServletPath().equals("/expiredOtp");
+
 	}
 
 }

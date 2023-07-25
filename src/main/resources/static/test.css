@@ -95,6 +95,12 @@ body{
   padding: 8% 0 0;
   margin: auto;
 }
+
+.changePswForm{
+	width : 500px;
+	padding : 8% 0 0;
+	margin: auto;
+}
 .login-page p {
     color: firebrick;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -108,6 +114,16 @@ margin-bottom: 26px;
   z-index: 1;
   background: #FFFFFF;
   max-width: 360px;
+  margin: 0 auto 100px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+.changePswForm .changePassword {
+  position: relative;
+  z-index: 1;
+  background: #FFFFFF;
+  max-width: 500px;
   margin: 0 auto 100px;
   padding: 45px;
   text-align: center;
