@@ -20,7 +20,6 @@ import com.example.student.register.security.DecryptPassword;
 
 import lombok.Getter;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -57,8 +56,8 @@ public class UserService {
 	private String userId;
 //    private int id;
 
-	@Value("${spring.mail.username}")
-	private String sender;
+//	@Value("${spring.mail.username}")
+//	private String sender;
 
 	public static User loginUser;
 
@@ -339,7 +338,7 @@ public class UserService {
 			
 			MimeMessage mailMessage = javaMailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mailMessage, true, "UTF-8");
-			helper.setFrom(sender);
+			helper.setFrom("nanibaka.ushi@gmail.com");
 			helper.setTo(email);
 			helper.setText(message);
 			helper.setSubject("Forgot Password");

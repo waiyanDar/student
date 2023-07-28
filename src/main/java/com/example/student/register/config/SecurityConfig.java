@@ -5,6 +5,7 @@ import com.example.student.register.security.CustomAuthProvider;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,9 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
-@Component
+@Configuration
 public class SecurityConfig {
 
 	@Autowired
@@ -69,4 +69,18 @@ public class SecurityConfig {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+	
+//	@Bean
+//	public JavaMailSender getJavaMailSender() {
+//		JavaMailSenderImpl mailSenderImpl = new JavaMailSenderImpl();
+//		mailSenderImpl.setHost("smtp.gmail.com");
+//		mailSenderImpl.setPort(587);
+//		mailSenderImpl.setUsername("nanibaka.ushi@gmail.com");
+//		mailSenderImpl.setPassword("aarzqeoasfjyfwpm");
+//		
+//		Properties properties = mailSenderImpl.getJavaMailProperties();
+//		properties.put("mail.smtp.starttls.enable", "true");
+//		
+//		return mailSenderImpl;
+//	}
 }

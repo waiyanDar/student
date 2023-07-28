@@ -25,6 +25,7 @@ public class Course {
     @Column(unique = true)
     private String name;
 
+    private String photoPath;
 
     @PostPersist
     public void generateCourseId() {

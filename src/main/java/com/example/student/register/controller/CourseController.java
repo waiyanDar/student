@@ -12,11 +12,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.student.register.entity.Course;
+import com.example.student.register.dto.CourseDto;
 import com.example.student.register.security.annotation.Admin;
 import com.example.student.register.service.CourseService;
-import com.example.student.register.service.UserService;
+import com.example.student.register.service.SmbService;
 
 import lombok.Data;
 
@@ -24,14 +25,11 @@ import lombok.Data;
 @Data
 public class CourseController {
 
-    private final CourseService courseService;
-
-    @Autowired
-    private UserService userService;
-    
-    public CourseController(CourseService courseService ) {
-    	this.courseService = courseService;
-    }
+	@Autowired
+    private CourseService courseService;
+	
+	@Autowired
+	private SmbService smbservice;
     
     @ModelAttribute("loginDate")
 	public String loginDate() {
@@ -41,26 +39,36 @@ public class CourseController {
     @GetMapping("/addCourse")
     @Admin
     public String courseForm(Model model) {
-        model.addAttribute("course", new Course());
+        model.addAttribute("course", new CourseDto());
         return "course-form";
     }
 
     @PostMapping("/addCourse")
     @Admin
-    public String addCourse(@Valid Course course, BindingResult result, Model model) {
+    public String addCourse(@Valid CourseDto courseDto, BindingResult result, RedirectAttributes attributes ,Model model) {
+    	
         if (result.hasErrors()) {
-            return "course-form";
+        	
+        	System.out.println(result.getFieldError().getDefaultMessage());
+            return "redirect:/addCourse";
+            
         }
-       
         
         try {
-        	courseService.addCourse(course);
-        	model.addAttribute("course", new Course());
-            return "course-form";
+        	System.out.println("add courese 2");
+        	
+        	courseService.addCourse(courseDto);
+//        	model.addAttribute("course", new CourseDto());
+            return "redirect:/addCourse";
+            
 		} catch (DataIntegrityViolationException e) {
-			model.addAttribute("duplicateCourse", course.getName());
-			model.addAttribute("course", new Course());
-			return "course-form";
+			
+        	System.out.println("add courese 3");
+
+			attributes.addFlashAttribute("duplicateCourse", true);
+			
+			return "redirect:/addCourse";
+			
 		}
     }
 

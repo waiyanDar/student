@@ -9,6 +9,7 @@ import com.example.student.register.security.annotation.UserDelete;
 import com.example.student.register.security.annotation.UserRead;
 import com.example.student.register.security.annotation.UserUpdate;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,7 +33,7 @@ public class UserController {
 
 	private final UserExplorer userExplorer;
 
-	public UserController(UserService userService, UserExplorer userExplorer) {
+	public UserController(@Lazy UserService userService,@Lazy UserExplorer userExplorer) {
 		this.userService = userService;
 		this.userExplorer = userExplorer;
 
