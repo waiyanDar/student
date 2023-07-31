@@ -22,9 +22,7 @@ public class DecryptPassword {
     public String decryptPassword(String encryptedPsw){
 
         try{
-//            System.out.println("private key : " + generatePK);
-//            System.out.println("public key  : " + generator.getPublicKey());
-
+        	
             byte [] privateKeyByte = Base64.getDecoder().decode(PRIVATE_KEY);
             PKCS8EncodedKeySpec keySpec =new PKCS8EncodedKeySpec(privateKeyByte);
 
@@ -38,6 +36,7 @@ public class DecryptPassword {
 
             String decryptedPsw =new String(decryptedPswByte, StandardCharsets.UTF_8);
             return decryptedPsw;
+            
         }catch (Exception e){
         	e.printStackTrace();
             return "fail";

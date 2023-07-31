@@ -13,30 +13,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class ErrorController {
 
 	private static final Logger logger = Logger.getLogger(ErrorController.class.getName());
-/*
-
-	@ExceptionHandler(AccessDeniedException.class)
-	public String handleAccessDeniedException(AccessDeniedException ex, Model model) {
-
-		logger.log(Level.SEVERE, ex.getMessage());
-
-		System.out.println("access denied");
-
-		model.addAttribute("msg", "Access Denied: " + ex.getMessage());
-
-		return "error";
-	}
-	
-	@ExceptionHandler(NoSuchElementException.class)
-	public String handleNoSuchElementException(NoSuchElementException ex, Model model) {
-	    logger.log(Level.SEVERE, ex.getMessage());
-
-	    model.addAttribute("msg", "No Such Element Exception : " + ex.getMessage());
-
-	    return "error";
-	}
-
-*/
 
 	@ExceptionHandler(Throwable.class)
 	public String exception(Throwable throwable, Model model) {

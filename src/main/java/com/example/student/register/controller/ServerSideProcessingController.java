@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.example.student.register.dto.UserUpdateDto;
 import com.example.student.register.entity.Student;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import com.example.student.register.service.StudentService;
 import com.example.student.register.service.UserService;
 
 @RestController
+//@Aspect
 public class ServerSideProcessingController {
 
 	private final UserService userService;

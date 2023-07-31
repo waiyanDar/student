@@ -23,6 +23,7 @@ import lombok.Data;
 
 @Controller
 @Data
+//@Aspect
 public class CourseController {
 
 	@Autowired
@@ -49,27 +50,24 @@ public class CourseController {
     	
         if (result.hasErrors()) {
         	
-        	System.out.println(result.getFieldError().getDefaultMessage());
+        	attributes.addFlashAttribute("invalidName", result.getFieldError("name").getDefaultMessage());
             return "redirect:/addCourse";
             
         }
-        
+                
         try {
-        	System.out.println("add courese 2");
         	
         	courseService.addCourse(courseDto);
-//        	model.addAttribute("course", new CourseDto());
+        	attributes.addFlashAttribute("successCourse", courseDto.getName());
             return "redirect:/addCourse";
             
 		} catch (DataIntegrityViolationException e) {
 			
-        	System.out.println("add courese 3");
-
-			attributes.addFlashAttribute("duplicateCourse", true);
+			attributes.addFlashAttribute("duplicateCourse", courseDto.getName());
 			
 			return "redirect:/addCourse";
 			
-		}
+		} 
     }
 
     @GetMapping("/")

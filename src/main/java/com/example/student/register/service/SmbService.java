@@ -36,27 +36,30 @@ public class SmbService {
 	private static Logger debugLogger = LoggerFactory.getLogger("debug ");
 	private static Logger errorLogger = LoggerFactory.getLogger("error ");
 
-	public String storePhoto(MultipartFile photo) {
+	public String storePhoto(String newFileName, MultipartFile photo) {
 		try {
 
 			if (!smbConnection.checkConnection()) {
 
 				smbConnection.getConnection();
-				System.out.println("check connection");
 			}
 
-			String path = writePhoto(photo);
+			String path = writePhoto(newFileName, photo);
 
 			debugLogger.info("Successfully uploaded " + photo.getOriginalFilename());
+			
+			smbConnection.closeConnection();
+			
 			return path;
 			
 		} catch (Exception e) {
-			errorLogger.error("Fial to upload " + photo.getOriginalFilename());
+			errorLogger.error("Fail to upload " + photo.getOriginalFilename());
+			System.out.println(e.getMessage());
 			return null;
 		}
 	}
 
-	private String writePhoto(MultipartFile photo) throws IOException {
+	private String writePhoto(String newFileName, MultipartFile photo) throws IOException {
 
 		DiskShare diskShare = smbConnection.getDiskShare();
 
@@ -64,15 +67,20 @@ public class SmbService {
 				+ configForSmb.PHOTO_FOLDER_NAME;
 
 		String directory = checkFolder(folderPath, diskShare);
-		String fileName = directory + photo.getOriginalFilename();
+		
+		String extentionName = getFileExtensionName(photo.getOriginalFilename());
+		
+		String fileName = directory + newFileName+extentionName;
 
 		File file = diskShare.openFile(fileName, EnumSet.of(AccessMask.GENERIC_WRITE), null, SMB2ShareAccess.ALL,
 				SMB2CreateDisposition.FILE_CREATE, null);
 		
-		InputStream fileInputStream = photo.getInputStream();
+		InputStream fileInputStream = getInputStream(photo);
 
 		file.write(new InputStreamByteChunkProvider(fileInputStream));
-
+		
+		closeInputStream(fileInputStream);
+		
 		return fileName;
 	}
 
@@ -81,6 +89,7 @@ public class SmbService {
 		if (diskShare.fileExists(folderPath)) {
 			debugLogger.info("Folder path is exists");
 			return folderPath;
+			
 		} else {
 			debugLogger.info("Folder path is created");
 			return buildDirectory(folderPath, diskShare);
@@ -105,5 +114,40 @@ public class SmbService {
 			}
 		}
 		return directory;
+	}
+	
+	private String getFileExtensionName (String fileName) {
+		
+		int index = fileName.lastIndexOf('.');
+		int length = fileName.length();
+		String fileExtensionName = fileName.substring(index,length);
+		
+		return fileExtensionName;
+	}
+	
+	private InputStream getInputStream (MultipartFile photo) {
+		
+		try {
+			debugLogger.info("Successfully get input stream of " + photo.getOriginalFilename());
+			return photo.getInputStream();
+		} catch (IOException e) {
+			errorLogger.error("Fail to get input stream of " + photo.getOriginalFilename());
+			return null;
+		}
+		
+	}
+	
+	private void closeInputStream (InputStream inputStream) {
+		
+		try {
+			inputStream.close();
+			
+			debugLogger.info("Successfully closed input stream");
+		} catch (IOException e) {
+			
+			errorLogger.error("Fail to close input stream");
+			
+		}
+		
 	}
 }

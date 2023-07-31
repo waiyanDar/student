@@ -10,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 import com.example.student.register.dao.RoleDao;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +21,7 @@ import java.util.logging.Logger;
 import static com.example.student.register.security.roleHierarchy.RolesForSecurity.*;
 
 @SpringBootApplication
+@EnableAspectJAutoProxy
 public class StudentRegisterApplication {
 
     private final RoleDao roleDao;

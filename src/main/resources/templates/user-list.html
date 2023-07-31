@@ -8,7 +8,7 @@
 
             <div th:if="${success}" class="alert alert-success" role="alert">
                 <p>
-                    <span th:text="${userId}"></span> is successfully registered
+                    <span th:text="${success}"></span> is successfully registered
                 </p>
             </div>
             <div class="alert alert-success" th:if="${exportExcel}">
@@ -17,13 +17,13 @@
             <div th:if="${updateSuccess}" class="alert alert-success"
                  role="alert">
                 <p>
-                    <span th:text="${userId}"></span> is successfully updated
+                    <span th:text="${updateSuccess}"></span> is successfully updated
                 </p>
 
             </div>
             <div th:if="${deleteUser}" class="alert alert-danger" role="alert">
                 <p>
-                    <span th:text="${userId}"></span> is successfully deleted
+                    <span th:text="${deleteUser}"></span> is successfully deleted
                 </p>
             </div>
 
