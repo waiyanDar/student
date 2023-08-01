@@ -12,20 +12,20 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @ControllerAdvice
 public class ErrorController {
 
-	private static final Logger logger = Logger.getLogger(ErrorController.class.getName());
+    private static final Logger logger = Logger.getLogger(ErrorController.class.getName());
 
-	@ExceptionHandler(Throwable.class)
-	public String exception(Throwable throwable, Model model) {
+    @ExceptionHandler(Throwable.class)
+    public String exception(Throwable throwable, Model model) {
 
-		String msg = throwable != null ? throwable.getMessage() : "Unknown Error";
-		model.addAttribute("msg", msg);
-		logger.log(Level.SEVERE, msg);
-		return "error";
-	}
+        String msg = throwable != null ? throwable.getMessage() : "Unknown Error";
+        model.addAttribute("msg", msg);
+        logger.log(Level.SEVERE, msg);
+        return "error";
+    }
 
-	@ModelAttribute("loginDate")
-	public String loginDate() {
-		return LocalDate.now().toString();
-	}
+    @ModelAttribute("loginDate")
+    public String loginDate() {
+        return LocalDate.now().toString();
+    }
 
 }

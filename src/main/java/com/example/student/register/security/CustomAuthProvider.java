@@ -35,97 +35,98 @@ import static com.example.student.register.security.roleHierarchy.RolesForSecuri
 @Component
 public class CustomAuthProvider implements AuthenticationProvider {
 
-	@Autowired
-	private HttpServletResponse response;
+    @Autowired
+    private HttpServletResponse response;
 
-	@Autowired
-	private Holder keyHolder;
+    @Autowired
+    private Holder keyHolder;
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private DecryptPassword decryptPassword;
+    @Autowired
+    private DecryptPassword decryptPassword;
 
-	public static String jwt;
+    public static String jwt;
 
-	@Override
-	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-		String test1 = authentication.getCredentials().toString();
+        String test1 = authentication.getCredentials().toString();
 
-		String inComeUserId = authentication.getName();
-		String inComePassword =decryptPassword.decryptPassword(test1);;
+        String inComeUserId = authentication.getName();
+        String inComePassword = decryptPassword.decryptPassword(test1);
+        ;
 
-		System.out.println("decrypt : "+inComePassword);
-		
-		String userId = "";
-		String password = "";
-		List<Role> roles = new ArrayList<>();
+        System.out.println("decrypt : " + inComePassword);
 
-		try {
-			User user = userService.findUserByUserId(inComeUserId);
-			userId = user.getUserId();
-			password = user.getPassword();
-			roles = user.getRoles();
-		} catch (NoSuchElementException e) {
-			throw new BadCredentialsException("User id is wrong", e);
-		}
+        String userId = "";
+        String password = "";
+        List<Role> roles = new ArrayList<>();
 
-		List<GrantedAuthority> grantedAuthority = roles.stream()
-				.map(r -> new SimpleGrantedAuthority(ROLES_PREFIX + r.getName())).collect(Collectors.toList());
+        try {
+            User user = userService.findUserByUserId(inComeUserId);
+            userId = user.getUserId();
+            password = user.getPassword();
+            roles = user.getRoles();
+        } catch (NoSuchElementException e) {
+            throw new BadCredentialsException("User id is wrong", e);
+        }
 
-		if (userId.equals(inComeUserId) && passwordEncoder.matches(inComePassword, password)) {
-			jwt = generateJwtToken(userId);
+        List<GrantedAuthority> grantedAuthority = roles.stream()
+                .map(r -> new SimpleGrantedAuthority(ROLES_PREFIX + r.getName())).collect(Collectors.toList());
 
-			Cookie jwtCookie = new Cookie("jwt", jwt);
-			jwtCookie.setMaxAge(18000);
-			jwtCookie.setPath("/");
-			response.addCookie(jwtCookie);
+        if (userId.equals(inComeUserId) && passwordEncoder.matches(inComePassword, password)) {
+            jwt = generateJwtToken(userId);
 
-			keyHolder.userSecretKey.put(userId, encodedKey);
+            Cookie jwtCookie = new Cookie("jwt", jwt);
+            jwtCookie.setMaxAge(18000);
+            jwtCookie.setPath("/");
+            response.addCookie(jwtCookie);
+
+            keyHolder.userSecretKey.put(userId, encodedKey);
 //			keyHolder.setPrivateKey(null);
 
-			return new UsernamePasswordAuthenticationToken(inComeUserId, inComePassword, grantedAuthority);
+            return new UsernamePasswordAuthenticationToken(inComeUserId, inComePassword, grantedAuthority);
 
-		} else {
-			throw new BadCredentialsException("Something's wrong");
-		}
-	}
+        } else {
+            throw new BadCredentialsException("Something's wrong");
+        }
+    }
 
-	@Override
-	public boolean supports(Class<?> authentication) {
-		return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
-	}
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
+    }
 
-	public static String encodedKey;
+    public static String encodedKey;
 
-	private String generateJwtToken(String userId) {
-		try {
-			generateSecretKey();
-		} catch (NoSuchAlgorithmException e) {
+    private String generateJwtToken(String userId) {
+        try {
+            generateSecretKey();
+        } catch (NoSuchAlgorithmException e) {
 
-		}
-		int expirationInSec = 1800;
+        }
+        int expirationInSec = 1800;
 
-		SecretKey key = Keys.hmacShaKeyFor(encodedKey.getBytes(StandardCharsets.UTF_8));
+        SecretKey key = Keys.hmacShaKeyFor(encodedKey.getBytes(StandardCharsets.UTF_8));
 
-		Date now = new Date();
-		Date expiryDate = new Date(now.getTime() + (expirationInSec * 1000));
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + (expirationInSec * 1000));
 
-		String jwt = Jwts.builder().setClaims(Collections.singletonMap("userId", userId)).setIssuedAt(now)
-				.setExpiration(expiryDate).signWith(key).compact();
-		return jwt;
-	}
+        String jwt = Jwts.builder().setClaims(Collections.singletonMap("userId", userId)).setIssuedAt(now)
+                .setExpiration(expiryDate).signWith(key).compact();
+        return jwt;
+    }
 
-	private void generateSecretKey() throws NoSuchAlgorithmException {
+    private void generateSecretKey() throws NoSuchAlgorithmException {
 
-		KeyGenerator keyGenerator = KeyGenerator.getInstance("HMACSHA512");
-		SecretKey secretKey = keyGenerator.generateKey();
-		encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
-	}
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("HMACSHA512");
+        SecretKey secretKey = keyGenerator.generateKey();
+        encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+    }
 }

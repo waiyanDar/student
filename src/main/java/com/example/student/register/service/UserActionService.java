@@ -16,38 +16,38 @@ import lombok.Data;
 @Data
 @Aspect
 public class UserActionService {
-	
-	@Autowired
-	private UserActionDao userActionDao;
-	
-	private SecurityContextHolder contextHolder;
-	
-	@After("execution( * com.example.student.register.controller.UserController.*(..))")
-	public void testing(JoinPoint joinPoint) {
-		
-		String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-		
-		UserAction userAction = userActionDao.findUserActionByUserId(userId).get();
-		
-		boolean firstTime = false;
-		
-		if (userAction == null) {
-			
-			userAction = new UserAction();
-			userAction.setUserId(userId);
-			firstTime = true;
-		}
-		
-		userAction.getAction().add(joinPoint.getSignature().getName());
-		
-		if (firstTime) {
-			userActionDao.save(userAction);
-			firstTime = false;
-		}else {
-			userActionDao.saveAndFlush(userAction);
-		}
-		
-		System.out.println(userId + " did " +joinPoint.getSignature().getName());
-	}
+
+    @Autowired
+    private UserActionDao userActionDao;
+
+    private SecurityContextHolder contextHolder;
+
+    //	@After("execution( * com.example.student.register.controller.UserController.*(..))")
+    public void testing(JoinPoint joinPoint) {
+
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        UserAction userAction = userActionDao.findUserActionByUserId(userId).get();
+
+        boolean firstTime = false;
+
+        if (userAction == null) {
+
+            userAction = new UserAction();
+            userAction.setUserId(userId);
+            firstTime = true;
+        }
+
+        userAction.getAction().add(joinPoint.getSignature().getName());
+
+        if (firstTime) {
+            userActionDao.save(userAction);
+            firstTime = false;
+        } else {
+            userActionDao.saveAndFlush(userAction);
+        }
+
+        System.out.println(userId + " did " + joinPoint.getSignature().getName());
+    }
 
 }

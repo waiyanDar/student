@@ -16,10 +16,10 @@
             <p th:if="${loginError}">Invalid user id or password</p>
         </div>
         <form onsubmit="encrypt(event)" id="loginForm" class="login-form" th:action="@{/login}" method="post">
-            <input type="text" placeholder="User ID" id="username" name="username" />
-            <input type="password" placeholder="Password" id="password"  />
-            <button  type="submit">Login</button>
-            
+            <input type="text" placeholder="User ID" id="username" name="username"/>
+            <input type="password" placeholder="Password" id="password"/>
+            <button type="submit">Login</button>
+
         </form>
         <p class="message"><a th:href="@{/forgotPsw}">Forgot password?</a></p>
     </div>

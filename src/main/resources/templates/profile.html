@@ -1,147 +1,150 @@
 <!DOCTYPE html>
 <html th:replace="layout/masterLayout :: layout(~{::main})"
-	xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 <body>
-	<main role="main">
-		<div class="main_contents text-dark">
-			<div id="sub_content">
-				<div class="row">
-					<div class="col-8"></div>
-					<div class="col-2">
-					
-					</div>
-					<div class="col-2"></div>
-				</div>
-				<form th:object="${user}" th:action="${actionUrlForU}" method="post">
+<main role="main">
+    <div class="main_contents text-dark">
+        <div id="sub_content">
+            <div class="row">
+                <div class="col-8"></div>
+                <div class="col-2">
 
-					<h2 th:if="${oldUser}" class="col-md-6 offset-md-2 mb-5 mt-4">Change password</h2>
-					<div th:if="${successChangePsw}">
-						<p>Successfully changed password</p>
-					</div>
-					
-					<div class="row" th:if="${oldUser}">
-						<div class="col-md-2"></div>
-						<label for="oldPassword" class="col-md-2 col-form-label">Old Password</label>
-						<div class="col-md-4">
-							<div class="input-group">
-							<input type="password" name="oldPassword" id="oldPassword" style="height: 38px;"
-								placeholder="old password" class="form-control">
-							<div class="input-group-append" >
-								<p class="input-group-text">
-									<i id="oldPasswordToggleIcon" class="fa fa-eye-slash"
-									   style="line-height: 1.5" onclick="toggleOldPasswordVisibility()"></i>
-								</p>
-							</div>
-							</div>
-							<small class="text-danger" th:if="${oldPswWrong}" th:text="${oldPswWrong}"></small>
-								 <small class="text-danger" th:if="${oldPswBlank}" th:text="${oldPswBlank}"></small>
-						</div>
-					</div>
-					<!--<div class="row mb-4" th:if="${oldUser}">
-						<div class="col-md-2"></div>
-						<label for="upPassword" class="col-md-2 col-form-label">Password</label>
-						<div class="col-md-4">
-							<input type="password" name="newPassword" id="upPassword"
-								placeholder="new password" class="form-control"> <small
-								class="text-danger" th:if="${pswBlank}" th:text="${pswBlank}"></small>
-						</div>
-					</div>
-					
-					<div class="row mb-4" th:if="${oldUser}">
-						<div class="col-md-2"></div>
-						<label for="upConfirmPassword" class="col-md-2 col-form-label">Confirm
-							Password</label>
-						<div class="col-md-4">
-							<input type="password" name="confirmPassword"
-								id="upConfirmPassword" placeholder="confirm password"
-								class="form-control"> <small class="text-danger"
-								th:if="${pswBlank}" th:text="${pswBlank}"></small> <small
-								class="text-danger" th:if="${pswNoMatch}"
-								th:text="${pswNoMatch}"></small>
-						</div>
-					</div>-->
+                </div>
+                <div class="col-2"></div>
+            </div>
+            <form th:object="${user}" th:action="${actionUrlForU}" method="post">
 
-					<div class="row mb-4" th:if="${oldUser}">
-					<div>
-					<span style="margin-left: 460px; margin-top: -10px" class="text-warning">Password should include small letter, capital letter, number</span> <br>
-					<span style="margin-left: 460px" class="text-warning"> and special character like 12@aA3</span>
-					</div>
-						<div class="col-md-2"></div>
-						<label for="password" class="col-md-2 col-form-label">Password</label>
-						<div class="col-md-4">
-							<div class="input-group">
-								<input type="password" name="newPassword" id="password" class="form-control" placeholder="password"
-									   onkeyup="checkPasswordStrength()" required style="height: 38px">
-								<div class="input-group-append" >
-									<p class="input-group-text">
-										<i id="passwordToggleIcon" class="fa fa-eye-slash"
-										   style="line-height: 1.5" onclick="togglePasswordVisibility()"></i>
-									</p>
-								</div>
-							</div>
-							<span id="passwordStrengthLabel"></span>
-						</div>
-					</div>
+                <h2 th:if="${oldUser}" class="col-md-6 offset-md-2 mb-5 mt-4">Change password</h2>
+                <div th:if="${successChangePsw}">
+                    <p>Successfully changed password</p>
+                </div>
 
-					<div class="row mb-4" th:if="${oldUser}">
-						<div class="col-md-2"></div>
-						<label for="confirmPassword" class="col-md-2 col-form-label">Confirm Password</label>
-						<div class="col-md-4">
-							<div class="input-group">
-								<input type="password" name="confirmPassword" id="confirmPassword" class="form-control" placeholder="password"
-									   onkeyup="checkPasswordStrength()" required style="height: 38px">
-								<div class="input-group-append" >
-									<p class="input-group-text">
-										<i id="confirmPasswordToggleIcon" class="fa fa-eye-slash"
-										   style="line-height: 1.5" onclick="toggleConfirmPasswordVisibility()"></i>
-									</p>
-								</div>
-							</div>
-							<span id="matchLabel"></span>
-						</div>
-					</div>
-					
-					<div class="col-md-3"></div>
-					<div class="row mb-4" th:if="${oldUser}">
-						<div class="col-md-4"></div>
+                <div class="row" th:if="${oldUser}">
+                    <div class="col-md-2"></div>
+                    <label for="oldPassword" class="col-md-2 col-form-label">Old Password</label>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input type="password" name="oldPassword" id="oldPassword" style="height: 38px;"
+                                   placeholder="old password" class="form-control">
+                            <div class="input-group-append">
+                                <p class="input-group-text">
+                                    <i id="oldPasswordToggleIcon" class="fa fa-eye-slash"
+                                       style="line-height: 1.5" onclick="toggleOldPasswordVisibility()"></i>
+                                </p>
+                            </div>
+                        </div>
+                        <small class="text-danger" th:if="${oldPswWrong}" th:text="${oldPswWrong}"></small>
+                        <small class="text-danger" th:if="${oldPswBlank}" th:text="${oldPswBlank}"></small>
+                    </div>
+                </div>
+                <!--<div class="row mb-4" th:if="${oldUser}">
+                    <div class="col-md-2"></div>
+                    <label for="upPassword" class="col-md-2 col-form-label">Password</label>
+                    <div class="col-md-4">
+                        <input type="password" name="newPassword" id="upPassword"
+                            placeholder="new password" class="form-control"> <small
+                            class="text-danger" th:if="${pswBlank}" th:text="${pswBlank}"></small>
+                    </div>
+                </div>
 
-						<div class="col-md-6">
+                <div class="row mb-4" th:if="${oldUser}">
+                    <div class="col-md-2"></div>
+                    <label for="upConfirmPassword" class="col-md-2 col-form-label">Confirm
+                        Password</label>
+                    <div class="col-md-4">
+                        <input type="password" name="confirmPassword"
+                            id="upConfirmPassword" placeholder="confirm password"
+                            class="form-control"> <small class="text-danger"
+                            th:if="${pswBlank}" th:text="${pswBlank}"></small> <small
+                            class="text-danger" th:if="${pswNoMatch}"
+                            th:text="${pswNoMatch}"></small>
+                    </div>
+                </div>-->
 
-							<button type="submit" data-bs-toggle="modal"
-								data-bs-target="#exampleModal" class="btn btn-success col-md-2">Update
-							</button>
-							<a th:href="@{/}" class="btn btn-secondary col-md-2 ms-3">Back</a>
+                <div class="row mb-4" th:if="${oldUser}">
+                    <div>
+                        <span style="margin-left: 460px; margin-top: -10px" class="text-warning">Password should include small letter, capital letter, number</span>
+                        <br>
+                        <span style="margin-left: 460px" class="text-warning"> and special character like 12@aA3</span>
+                    </div>
+                    <div class="col-md-2"></div>
+                    <label for="password" class="col-md-2 col-form-label">Password</label>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input type="password" name="newPassword" id="password" class="form-control"
+                                   placeholder="password"
+                                   onkeyup="checkPasswordStrength()" required style="height: 38px">
+                            <div class="input-group-append">
+                                <p class="input-group-text">
+                                    <i id="passwordToggleIcon" class="fa fa-eye-slash"
+                                       style="line-height: 1.5" onclick="togglePasswordVisibility()"></i>
+                                </p>
+                            </div>
+                        </div>
+                        <span id="passwordStrengthLabel"></span>
+                    </div>
+                </div>
 
-							<!-- <div class="modal fade" id="exampleModal" tabindex="-1"
-								aria-labelledby="exampleModalLabel" aria-hidden="true">
-								<div class="modal-dialog modal-dialog-centered">
-									<div class="modal-content">
-										<div class="modal-header">
-											<h5 class="modal-title text-dark" id="exampleModalLabel">Confirmation</h5>
-											<button type="button" class="btn-close"
-												data-bs-dismiss="modal" aria-label="Close"></button>
-										</div>
-										<div class="modal-body">
-											<h5 style="color: rgb(127, 209, 131);">Are you sure to
-												change password?</h5>
-										</div>
-										<div class="modal-footer">
-											<button type="submit" class="btn btn-warning col-md-2"
-												data-bs-dismiss="modal">Yes</button>
-											<button type="button" class="btn btn-secondary ms-2 col-md-2"
-												data-bs-dismiss="modal">No</button>
-										</div>
-									</div>
-								</div>
-							</div> -->
+                <div class="row mb-4" th:if="${oldUser}">
+                    <div class="col-md-2"></div>
+                    <label for="confirmPassword" class="col-md-2 col-form-label">Confirm Password</label>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input type="password" name="confirmPassword" id="confirmPassword" class="form-control"
+                                   placeholder="password"
+                                   onkeyup="checkPasswordStrength()" required style="height: 38px">
+                            <div class="input-group-append">
+                                <p class="input-group-text">
+                                    <i id="confirmPasswordToggleIcon" class="fa fa-eye-slash"
+                                       style="line-height: 1.5" onclick="toggleConfirmPasswordVisibility()"></i>
+                                </p>
+                            </div>
+                        </div>
+                        <span id="matchLabel"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-3"></div>
+                <div class="row mb-4" th:if="${oldUser}">
+                    <div class="col-md-4"></div>
+
+                    <div class="col-md-6">
+
+                        <button type="submit" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal" class="btn btn-success col-md-2">Update
+                        </button>
+                        <a th:href="@{/}" class="btn btn-secondary col-md-2 ms-3">Back</a>
+
+                        <!-- <div class="modal fade" id="exampleModal" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-dark" id="exampleModalLabel">Confirmation</h5>
+                                        <button type="button" class="btn-close"
+                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h5 style="color: rgb(127, 209, 131);">Are you sure to
+                                            change password?</h5>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-warning col-md-2"
+                                            data-bs-dismiss="modal">Yes</button>
+                                        <button type="button" class="btn btn-secondary ms-2 col-md-2"
+                                            data-bs-dismiss="modal">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
 
 
-						</div>
-					</div>
-				</form>
+                    </div>
+                </div>
+            </form>
 
-			</div>
-		</div>
-	</main>
+        </div>
+    </div>
+</main>
 </body>
 </html>

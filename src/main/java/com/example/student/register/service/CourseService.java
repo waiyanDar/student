@@ -12,25 +12,25 @@ import com.example.student.register.entity.Course;
 @Service
 public class CourseService {
 
-	@Autowired
-	private CourseDao courseDao;
+    @Autowired
+    private CourseDao courseDao;
 
-	@Autowired
-	private SmbService smbService;
+    @Autowired
+    private SmbService smbService;
 
-	public void addCourse(CourseDto courseDto) {
+    public void addCourse(CourseDto courseDto) {
 
-		Course course = new Course();
-		course.setName(courseDto.getName());
+        Course course = new Course();
+        course.setName(courseDto.getName());
 
-		String photoPath = smbService.storePhoto(courseDto.getName(), courseDto.getPhoto());
-		course.setPhotoPath(photoPath);
+        String photoPath = smbService.storePhoto(courseDto.getName(), courseDto.getPhoto());
+        course.setPhotoPath(photoPath);
 
-		courseDao.save(course);
-	}
+        courseDao.save(course);
+    }
 
-	public List<Course> findAllCourse() {
-		return courseDao.findAll();
-	}
+    public List<Course> findAllCourse() {
+        return courseDao.findAll();
+    }
 
 }

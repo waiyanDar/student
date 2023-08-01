@@ -9,20 +9,20 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 
 @Configuration
-@EnableGlobalMethodSecurity(securedEnabled = true,prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class GlobalMethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
-	private final RoleHierarchy roleHierarchy;
-	
-	public GlobalMethodSecurityConfig(RoleHierarchy roleHierarchy) {
-		this.roleHierarchy = roleHierarchy;
-	}
+    private final RoleHierarchy roleHierarchy;
 
-	@Override
-	protected AccessDecisionManager accessDecisionManager() {
-		AffirmativeBased affirmativeBased = (AffirmativeBased) super.accessDecisionManager();
-		affirmativeBased.getDecisionVoters().add(new RoleHierarchyVoter(roleHierarchy));
-		return affirmativeBased;
-	}
+    public GlobalMethodSecurityConfig(RoleHierarchy roleHierarchy) {
+        this.roleHierarchy = roleHierarchy;
+    }
+
+    @Override
+    protected AccessDecisionManager accessDecisionManager() {
+        AffirmativeBased affirmativeBased = (AffirmativeBased) super.accessDecisionManager();
+        affirmativeBased.getDecisionVoters().add(new RoleHierarchyVoter(roleHierarchy));
+        return affirmativeBased;
+    }
 
 }

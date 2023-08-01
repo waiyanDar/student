@@ -11,10 +11,10 @@ import com.example.student.register.entity.Role;
 public class RoleService {
 
     private RoleDao roleDao;
-    
+
     public RoleService(RoleDao roleDao) {
-		this.roleDao = roleDao;
-	}
+        this.roleDao = roleDao;
+    }
 
     public void saveRole(Role role) {
         roleDao.save(role);

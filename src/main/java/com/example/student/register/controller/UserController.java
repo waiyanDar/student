@@ -30,207 +30,207 @@ import javax.validation.Valid;
 //@Aspect
 public class UserController {
 
-	private final UserService userService;
+    private final UserService userService;
 
-	private final UserExplorer userExplorer;
+    private final UserExplorer userExplorer;
 
-	public UserController(@Lazy UserService userService, @Lazy UserExplorer userExplorer) {
-		this.userService = userService;
-		this.userExplorer = userExplorer;
+    public UserController(@Lazy UserService userService, @Lazy UserExplorer userExplorer) {
+        this.userService = userService;
+        this.userExplorer = userExplorer;
 
-	}
+    }
 
-	@ModelAttribute("loginDate")
-	public String loginDate() {
-		return LocalDate.now().toString();
-	}
+    @ModelAttribute("loginDate")
+    public String loginDate() {
+        return LocalDate.now().toString();
+    }
 
 //	@ModelAttribute("userId")
 //	public String userId() {
 //		return userService.getUserId();
 //	}
 
-	@GetMapping("/registerUser")
-	@UserCreate
-	public String registerForm(Model model) {
+    @GetMapping("/registerUser")
+    @UserCreate
+    public String registerForm(Model model) {
 
-		return userService.getRegisterForm(model);
+        return userService.getRegisterForm(model);
 
-	}
+    }
 
-	@PostMapping("/registerUser")
-	@UserCreate
-	public String registerUser(@Valid UserRegisterDto userDto, BindingResult result, RedirectAttributes attributes,
-			Model model) {
+    @PostMapping("/registerUser")
+    @UserCreate
+    public String registerUser(@Valid UserRegisterDto userDto, BindingResult result, RedirectAttributes attributes,
+                               Model model) {
 
-		return userService.registerUser(userDto, result, attributes, model);
-	}
+        return userService.registerUser(userDto, result, attributes, model);
+    }
 
-	@GetMapping("/userUpdate")
-	@UserUpdate
-	public String userUpdateForm(@RequestParam("userId") String userId, Model model) {
+    @GetMapping("/userUpdate")
+    @UserUpdate
+    public String userUpdateForm(@RequestParam("userId") String userId, Model model) {
 
-		userUpdateId = userId;
-		return userService.getUpdateForm(userId, "/userUpdate", model);
+        userUpdateId = userId;
+        return userService.getUpdateForm(userId, "/userUpdate", model);
 
-	}
+    }
 
-	String userUpdateId;
+    String userUpdateId;
 
-	@PostMapping("/userUpdate")
-	@UserUpdate
-	public String updateUser(@Valid UserUpdateDto userDto, BindingResult result, RedirectAttributes attributes,
-			Model model) {
+    @PostMapping("/userUpdate")
+    @UserUpdate
+    public String updateUser(@Valid UserUpdateDto userDto, BindingResult result, RedirectAttributes attributes,
+                             Model model) {
 
-		userDto.setUserId(userUpdateId);
-		return userService.updateUser(userDto, "/userUpdate", result, attributes, model);
+        userDto.setUserId(userUpdateId);
+        return userService.updateUser(userDto, "/userUpdate", result, attributes, model);
 
-	}
+    }
 
-//        @GetMapping("/findAllUser")
-	@UserRead
-	public String findAllUser(Model model) {
+    //        @GetMapping("/findAllUser")
+    @UserRead
+    public String findAllUser(Model model) {
 
-		model.addAttribute("userList", userService.findAllUser());
+        model.addAttribute("userList", userService.findAllUser());
 
-		return "user-list";
-	}
+        return "user-list";
+    }
 
-	@GetMapping("/deleteUser")
-	@UserDelete
-	public String deleteUser(@RequestParam("userId") String userId, RedirectAttributes attributes) {
+    @GetMapping("/deleteUser")
+    @UserDelete
+    public String deleteUser(@RequestParam("userId") String userId, RedirectAttributes attributes) {
 
-		return userService.deleteUser(userId, attributes);
-	}
+        return userService.deleteUser(userId, attributes);
+    }
 
-	@GetMapping("/changePsw")
-	public String uiChange(Model model) {
+    @GetMapping("/changePsw")
+    public String uiChange(Model model) {
 
-		return userService.getPswForm(model);
+        return userService.getPswForm(model);
 
-	}
+    }
 
-	@PostMapping("/changePsw")
-	public String updatePassword(@RequestParam("oldPassword") String oldPassword,
-			@RequestParam("newPassword") String password, @RequestParam("confirmPassword") String confirmPassword,
-			RedirectAttributes attributes, Model model) {
+    @PostMapping("/changePsw")
+    public String updatePassword(@RequestParam("oldPassword") String oldPassword,
+                                 @RequestParam("newPassword") String password, @RequestParam("confirmPassword") String confirmPassword,
+                                 RedirectAttributes attributes, Model model) {
 
-		return userService.changePassword(oldPassword, password, confirmPassword, model, attributes);
+        return userService.changePassword(oldPassword, password, confirmPassword, model, attributes);
 
-	}
+    }
 
-	@GetMapping("/login")
-	public String login(Model model) {
+    @GetMapping("/login")
+    public String login(Model model) {
 
-		return userService.login(model);
-	}
+        return userService.login(model);
+    }
 
-	@GetMapping("/login-error")
-	public String loginError(RedirectAttributes attributes) {
+    @GetMapping("/login-error")
+    public String loginError(RedirectAttributes attributes) {
 
-		attributes.addFlashAttribute("loginError", true);
+        attributes.addFlashAttribute("loginError", true);
 
-		return "redirect:/login";
-	}
+        return "redirect:/login";
+    }
 
-	@GetMapping("/logout")
-	public String logout() {
-		return "redirect:/login";
-	}
+    @GetMapping("/logout")
+    public String logout() {
+        return "redirect:/login";
+    }
 
-	@GetMapping("/exportUserToExcel")
-	@Admin
-	public String exportStudentToExcel(RedirectAttributes attributes) {
-		userExplorer.exportUserToExcel();
-		attributes.addFlashAttribute("exportExcel", true);
-		return "redirect:/findAllUser";
-	}
+    @GetMapping("/exportUserToExcel")
+    @Admin
+    public String exportStudentToExcel(RedirectAttributes attributes) {
+        userExplorer.exportUserToExcel();
+        attributes.addFlashAttribute("exportExcel", true);
+        return "redirect:/findAllUser";
+    }
 
-	@GetMapping("/findAllUser")
-	@UserRead
-	public String paginationUser() {
+    @GetMapping("/findAllUser")
+    @UserRead
+    public String paginationUser() {
 
-		return "user-list";
-	}
+        return "user-list";
+    }
 
-	@GetMapping("/forgotPsw")
-	public String forgotPswForm(Model model) {
-		model.addAttribute("validOtp", false);
-		model.addAttribute("emial", "");
-		return "forgot-Psw";
-	}
+    @GetMapping("/forgotPsw")
+    public String forgotPswForm(Model model) {
+        model.addAttribute("validOtp", false);
+        model.addAttribute("emial", "");
+        return "forgot-Psw";
+    }
 
-	@PostMapping("/emailForForgotPsw")
-	public String emailForForgotPsw(@RequestParam("email") String email, Model model, RedirectAttributes attributes) {
-		emailForForgotPsw = email;
-		model.addAttribute("validOtp", false);
-		if (userService.searchUserWithEmail(email, model, attributes)) {
+    @PostMapping("/emailForForgotPsw")
+    public String emailForForgotPsw(@RequestParam("email") String email, Model model, RedirectAttributes attributes) {
+        emailForForgotPsw = email;
+        model.addAttribute("validOtp", false);
+        if (userService.searchUserWithEmail(email, model, attributes)) {
 
-			return "redirect:/foundUser";
-		} else {
-			return "redirect:/forgotPsw";
-		}
-	}
+            return "redirect:/foundUser";
+        } else {
+            return "redirect:/forgotPsw";
+        }
+    }
 
-	String emailForForgotPsw;
+    String emailForForgotPsw;
 
-	@GetMapping("/foundUser")
-	public String foundUser(Model model) {
-		
-		model.addAttribute("validOtp", false);
-		model.addAttribute("user", userService.findUserByEmail(emailForForgotPsw));
-		return "forgot-Psw";
-		
-	}
+    @GetMapping("/foundUser")
+    public String foundUser(Model model) {
 
-	@PostMapping("/checkOtp")
-	public String checkOtp(@RequestParam("otp") String otp, @RequestParam("email") String email,
-			RedirectAttributes attributes, Model model) {
-		
-		emailForForgotPsw = email;
-		return userService.checkOtp(email, otp, model, attributes);
+        model.addAttribute("validOtp", false);
+        model.addAttribute("user", userService.findUserByEmail(emailForForgotPsw));
+        return "forgot-Psw";
 
-	}
+    }
 
-	@GetMapping("/expiredOtp")
-	public String expiredOtp(Model model) {
-		
-		model.addAttribute("validOtp", false);
-		model.addAttribute("email", emailForForgotPsw);
-		return "forgot-Psw";
-		
-	}
+    @PostMapping("/checkOtp")
+    public String checkOtp(@RequestParam("otp") String otp, @RequestParam("email") String email,
+                           RedirectAttributes attributes, Model model) {
 
-	boolean validOtp;
+        emailForForgotPsw = email;
+        return userService.checkOtp(email, otp, model, attributes);
 
-	@GetMapping("/invalidOtp")
-	public String invalidOtp(Model model) {
-		
-		model.addAttribute("validOtp", false);
-		model.addAttribute("user", userService.findUserByEmail(emailForForgotPsw));
-		return "forgot-Psw";
-		
-	}
+    }
 
-	@GetMapping("/changePassword")
-	public String getChangePasswordForm(Model model) throws Exception {
-		
-		validOtp = userService.isValidOtpForModel();
-		
-		if (!validOtp) {
-			throw new Exception("Something's wrong");
-		}
-		model.addAttribute("validOtp", true);
-		return "forgot-Psw";
-	}
+    @GetMapping("/expiredOtp")
+    public String expiredOtp(Model model) {
 
-	@PostMapping("/forgotPasswordChange")
-	public String forgotPasswordChange(@RequestParam("password") String password, RedirectAttributes attributes)
-			throws Exception {
+        model.addAttribute("validOtp", false);
+        model.addAttribute("email", emailForForgotPsw);
+        return "forgot-Psw";
 
-		userService.forgotPasswordChange(password, emailForForgotPsw, validOtp, attributes);
-		emailForForgotPsw = null;
-		return "redirect:/login";
-		
-	}
+    }
+
+    boolean validOtp;
+
+    @GetMapping("/invalidOtp")
+    public String invalidOtp(Model model) {
+
+        model.addAttribute("validOtp", false);
+        model.addAttribute("user", userService.findUserByEmail(emailForForgotPsw));
+        return "forgot-Psw";
+
+    }
+
+    @GetMapping("/changePassword")
+    public String getChangePasswordForm(Model model) throws Exception {
+
+        validOtp = userService.isValidOtpForModel();
+
+        if (!validOtp) {
+            throw new Exception("Something's wrong");
+        }
+        model.addAttribute("validOtp", true);
+        return "forgot-Psw";
+    }
+
+    @PostMapping("/forgotPasswordChange")
+    public String forgotPasswordChange(@RequestParam("password") String password, RedirectAttributes attributes)
+            throws Exception {
+
+        userService.forgotPasswordChange(password, emailForForgotPsw, validOtp, attributes);
+        emailForForgotPsw = null;
+        return "redirect:/login";
+
+    }
 }

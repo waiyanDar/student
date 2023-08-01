@@ -10,31 +10,31 @@ import static com.example.student.register.security.roleHierarchy.RolesForSecuri
 @Configuration
 public class RoleHierarchyConfig {
 
-	@Bean
-	public RoleHierarchy roleHierarchy() {
-		RoleHierarchyImpl roleHierarchyImpl = new RoleHierarchyImpl();
-		roleHierarchyImpl.setHierarchy(new RoleHierarchyBuilder().append(ROLES_ADMIN, USER_ADMIN)
-																 .append(USER_ADMIN, USER_CREATE)
-																 .append(USER_ADMIN, USER_DELETE)
-																 .append(USER_ADMIN, USER_UPDATE)
-																 .append(USER_ADMIN, USER_READ)
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchyImpl = new RoleHierarchyImpl();
+        roleHierarchyImpl.setHierarchy(new RoleHierarchyBuilder().append(ROLES_ADMIN, USER_ADMIN)
+                .append(USER_ADMIN, USER_CREATE)
+                .append(USER_ADMIN, USER_DELETE)
+                .append(USER_ADMIN, USER_UPDATE)
+                .append(USER_ADMIN, USER_READ)
 
-																 .build());
-		
-		return roleHierarchyImpl;
-	}
+                .build());
+
+        return roleHierarchyImpl;
+    }
 }
 
- class RoleHierarchyBuilder {
-	
-	private StringBuilder stringBuilder = new StringBuilder();
-	
-	public RoleHierarchyBuilder append(String upLineRole, String downLineRole) {
-		stringBuilder.append(String.format("ROLE_%s > ROLE_%s\n" , upLineRole, downLineRole));
-		return this;
-	}
+class RoleHierarchyBuilder {
 
-	public String build() {
-		return this.stringBuilder.toString();
-	}
+    private StringBuilder stringBuilder = new StringBuilder();
+
+    public RoleHierarchyBuilder append(String upLineRole, String downLineRole) {
+        stringBuilder.append(String.format("ROLE_%s > ROLE_%s\n", upLineRole, downLineRole));
+        return this;
+    }
+
+    public String build() {
+        return this.stringBuilder.toString();
+    }
 }

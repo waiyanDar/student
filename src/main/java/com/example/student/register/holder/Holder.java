@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 public class Holder {
 
 
-    public Map<String , String> userSecretKey= new HashMap<>();
+    public Map<String, String> userSecretKey = new HashMap<>();
 
 //    public String privateKey;
-    
-    public Map<String , LocalTime> otpHolder = new HashMap<>();
+
+    public Map<String, LocalTime> otpHolder = new HashMap<>();
 
 }

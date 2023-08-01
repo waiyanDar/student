@@ -18,58 +18,57 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-	@Autowired
-	@Lazy
-	private CustomAuthProvider customAuthProvider;
-	
-	@Autowired
-	@Lazy
-	private  RoleHierarchy roleHierarchy;
-	
-	@Autowired
-	@Lazy
-	private JwtFilter jwtfilter;
+    @Autowired
+    @Lazy
+    private CustomAuthProvider customAuthProvider;
 
-	@Bean
-	public DefaultWebSecurityExpressionHandler expressionHandler() {
-		DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
-		handler.setRoleHierarchy(roleHierarchy);
-		return handler;
-	}
+    @Autowired
+    @Lazy
+    private RoleHierarchy roleHierarchy;
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    @Autowired
+    @Lazy
+    private JwtFilter jwtfilter;
 
-		httpSecurity.authenticationProvider(customAuthProvider);
-		httpSecurity.addFilterBefore(jwtfilter, UsernamePasswordAuthenticationFilter.class);
-		httpSecurity.authorizeHttpRequests()
-					.mvcMatchers("/bootstrap-5.0.2/**", "/test.css", "/forgotPsw", "/checkOtp","/emailForForgotPsw",
-							"/foundUser","/invalidOtp","/forgotPasswordChange", "/changePassword","/expiredOtp")
-					.permitAll()
-					.anyRequest()
-					.authenticated()
-					.and()
-					.formLogin()
-					.loginPage("/login")
-					.failureUrl("/login-error")
-					.permitAll().and()
-					.logout()
-					.logoutUrl("/logout")
-					.logoutSuccessUrl("/login")
-					.deleteCookies("jwt")
-					.permitAll();
+    @Bean
+    public DefaultWebSecurityExpressionHandler expressionHandler() {
+        DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
+        handler.setRoleHierarchy(roleHierarchy);
+        return handler;
+    }
 
-		httpSecurity.csrf().disable();
-		return httpSecurity.build();
-	}
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+
+        httpSecurity.authenticationProvider(customAuthProvider);
+        httpSecurity.addFilterBefore(jwtfilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.authorizeHttpRequests()
+                .mvcMatchers("/bootstrap-5.0.2/**", "/test.css", "/forgotPsw", "/checkOtp", "/emailForForgotPsw",
+                        "/foundUser", "/invalidOtp", "/forgotPasswordChange", "/changePassword", "/expiredOtp")
+                .permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .failureUrl("/login-error")
+                .permitAll().and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
+                .deleteCookies("jwt")
+                .permitAll();
+
+        httpSecurity.csrf().disable();
+        return httpSecurity.build();
+    }
 
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-	
 //	@Bean
 //	public JavaMailSender getJavaMailSender() {
 //		JavaMailSenderImpl mailSenderImpl = new JavaMailSenderImpl();

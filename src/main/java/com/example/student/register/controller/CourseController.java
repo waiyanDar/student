@@ -26,16 +26,16 @@ import lombok.Data;
 //@Aspect
 public class CourseController {
 
-	@Autowired
+    @Autowired
     private CourseService courseService;
-	
-	@Autowired
-	private SmbService smbservice;
-    
+
+    @Autowired
+    private SmbService smbservice;
+
     @ModelAttribute("loginDate")
-	public String loginDate() {
-		return LocalDate.now().toString();
-	}
+    public String loginDate() {
+        return LocalDate.now().toString();
+    }
 
     @GetMapping("/addCourse")
     @Admin
@@ -46,28 +46,28 @@ public class CourseController {
 
     @PostMapping("/addCourse")
     @Admin
-    public String addCourse(@Valid CourseDto courseDto, BindingResult result, RedirectAttributes attributes ,Model model) {
-    	
+    public String addCourse(@Valid CourseDto courseDto, BindingResult result, RedirectAttributes attributes, Model model) {
+
         if (result.hasErrors()) {
-        	
-        	attributes.addFlashAttribute("invalidName", result.getFieldError("name").getDefaultMessage());
+
+            attributes.addFlashAttribute("invalidName", result.getFieldError("name").getDefaultMessage());
             return "redirect:/addCourse";
-            
+
         }
-                
+
         try {
-        	
-        	courseService.addCourse(courseDto);
-        	attributes.addFlashAttribute("successCourse", courseDto.getName());
+
+            courseService.addCourse(courseDto);
+            attributes.addFlashAttribute("successCourse", courseDto.getName());
             return "redirect:/addCourse";
-            
-		} catch (DataIntegrityViolationException e) {
-			
-			attributes.addFlashAttribute("duplicateCourse", courseDto.getName());
-			
-			return "redirect:/addCourse";
-			
-		} 
+
+        } catch (DataIntegrityViolationException e) {
+
+            attributes.addFlashAttribute("duplicateCourse", courseDto.getName());
+
+            return "redirect:/addCourse";
+
+        }
     }
 
     @GetMapping("/")

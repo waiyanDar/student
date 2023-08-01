@@ -27,127 +27,127 @@ import lombok.Data;
 @Data
 public class SmbService {
 
-	@Autowired
-	private SmbConnection smbConnection;
+    @Autowired
+    private SmbConnection smbConnection;
 
-	@Autowired
-	private ConfigForSmb configForSmb;
+    @Autowired
+    private ConfigForSmb configForSmb;
 
-	private static Logger debugLogger = LoggerFactory.getLogger("debug ");
-	private static Logger errorLogger = LoggerFactory.getLogger("error ");
+    private static Logger debugLogger = LoggerFactory.getLogger("debug ");
+    private static Logger errorLogger = LoggerFactory.getLogger("error ");
 
-	public String storePhoto(String newFileName, MultipartFile photo) {
-		try {
+    public String storePhoto(String newFileName, MultipartFile photo) {
+        try {
 
-			if (!smbConnection.checkConnection()) {
+            if (!smbConnection.checkConnection()) {
 
-				smbConnection.getConnection();
-			}
+                smbConnection.getConnection();
+            }
 
-			String path = writePhoto(newFileName, photo);
+            String path = writePhoto(newFileName, photo);
 
-			debugLogger.info("Successfully uploaded " + photo.getOriginalFilename());
-			
-			smbConnection.closeConnection();
-			
-			return path;
-			
-		} catch (Exception e) {
-			errorLogger.error("Fail to upload " + photo.getOriginalFilename());
-			System.out.println(e.getMessage());
-			return null;
-		}
-	}
+            debugLogger.info("Successfully uploaded " + photo.getOriginalFilename());
 
-	private String writePhoto(String newFileName, MultipartFile photo) throws IOException {
+            smbConnection.closeConnection();
 
-		DiskShare diskShare = smbConnection.getDiskShare();
+            return path;
 
-		String folderPath = configForSmb.SMB_SHARE_NAME + "/" + configForSmb.FOLDER_PATH + "/"
-				+ configForSmb.PHOTO_FOLDER_NAME;
+        } catch (Exception e) {
+            errorLogger.error("Fail to upload " + photo.getOriginalFilename());
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 
-		String directory = checkFolder(folderPath, diskShare);
-		
-		String extentionName = getFileExtensionName(photo.getOriginalFilename());
-		
-		String fileName = directory + newFileName+extentionName;
+    private String writePhoto(String newFileName, MultipartFile photo) throws IOException {
 
-		File file = diskShare.openFile(fileName, EnumSet.of(AccessMask.GENERIC_WRITE), null, SMB2ShareAccess.ALL,
-				SMB2CreateDisposition.FILE_CREATE, null);
-		
-		InputStream fileInputStream = getInputStream(photo);
+        DiskShare diskShare = smbConnection.getDiskShare();
 
-		file.write(new InputStreamByteChunkProvider(fileInputStream));
-		
-		closeInputStream(fileInputStream);
-		
-		return fileName;
-	}
+        String folderPath = configForSmb.SMB_SHARE_NAME + "/" + configForSmb.FOLDER_PATH + "/"
+                + configForSmb.PHOTO_FOLDER_NAME;
 
-	private String checkFolder(String folderPath, DiskShare diskShare) {
+        String directory = checkFolder(folderPath, diskShare);
 
-		if (diskShare.fileExists(folderPath)) {
-			debugLogger.info("Folder path is exists");
-			return folderPath;
-			
-		} else {
-			debugLogger.info("Folder path is created");
-			return buildDirectory(folderPath, diskShare);
-		}
+        String extentionName = getFileExtensionName(photo.getOriginalFilename());
 
-	}
+        String fileName = directory + newFileName + extentionName;
 
-	private String buildDirectory(String folderPath, DiskShare diskShare) {
-		
-		String directory = "";
+        File file = diskShare.openFile(fileName, EnumSet.of(AccessMask.GENERIC_WRITE), null, SMB2ShareAccess.ALL,
+                SMB2CreateDisposition.FILE_CREATE, null);
 
-		List<String> folderList = Arrays.asList(folderPath.split("/"));
-		
-		for (String folderName : folderList) {
-			
-			if (!folderName.isEmpty()) {
-				directory += folderName + "/";
-				
-				if (!diskShare.folderExists(directory)) {
-					diskShare.mkdir(directory);
-				}
-			}
-		}
-		return directory;
-	}
-	
-	private String getFileExtensionName (String fileName) {
-		
-		int index = fileName.lastIndexOf('.');
-		int length = fileName.length();
-		String fileExtensionName = fileName.substring(index,length);
-		
-		return fileExtensionName;
-	}
-	
-	private InputStream getInputStream (MultipartFile photo) {
-		
-		try {
-			debugLogger.info("Successfully get input stream of " + photo.getOriginalFilename());
-			return photo.getInputStream();
-		} catch (IOException e) {
-			errorLogger.error("Fail to get input stream of " + photo.getOriginalFilename());
-			return null;
-		}
-		
-	}
-	
-	private void closeInputStream (InputStream inputStream) {
-		
-		try {
-			inputStream.close();
-			
-			debugLogger.info("Successfully closed input stream");
-		} catch (IOException e) {
-			
-			errorLogger.error("Fail to close input stream");
-			
-		}
-		
-	}
+        InputStream fileInputStream = getInputStream(photo);
+
+        file.write(new InputStreamByteChunkProvider(fileInputStream));
+
+        closeInputStream(fileInputStream);
+
+        return fileName;
+    }
+
+    private String checkFolder(String folderPath, DiskShare diskShare) {
+
+        if (diskShare.fileExists(folderPath)) {
+            debugLogger.info("Folder path is exists");
+            return folderPath;
+
+        } else {
+            debugLogger.info("Folder path is created");
+            return buildDirectory(folderPath, diskShare);
+        }
+
+    }
+
+    private String buildDirectory(String folderPath, DiskShare diskShare) {
+
+        String directory = "";
+
+        List<String> folderList = Arrays.asList(folderPath.split("/"));
+
+        for (String folderName : folderList) {
+
+            if (!folderName.isEmpty()) {
+                directory += folderName + "/";
+
+                if (!diskShare.folderExists(directory)) {
+                    diskShare.mkdir(directory);
+                }
+            }
+        }
+        return directory;
+    }
+
+    private String getFileExtensionName(String fileName) {
+
+        int index = fileName.lastIndexOf('.');
+        int length = fileName.length();
+        String fileExtensionName = fileName.substring(index, length);
+
+        return fileExtensionName;
+    }
+
+    private InputStream getInputStream(MultipartFile photo) {
+
+        try {
+            debugLogger.info("Successfully get input stream of " + photo.getOriginalFilename());
+            return photo.getInputStream();
+        } catch (IOException e) {
+            errorLogger.error("Fail to get input stream of " + photo.getOriginalFilename());
+            return null;
+        }
+
+    }
+
+    private void closeInputStream(InputStream inputStream) {
+
+        try {
+            inputStream.close();
+
+            debugLogger.info("Successfully closed input stream");
+        } catch (IOException e) {
+
+            errorLogger.error("Fail to close input stream");
+
+        }
+
+    }
 }

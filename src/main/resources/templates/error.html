@@ -2,16 +2,17 @@
 <html th:replace="layout/masterLayout :: layout(~{::main})" xmlns:th="http://www.thymeleaf.org">
 <body>
 <main role="main" class="d-flex justify-content-center align-items-center min-vh-100">
-	<div class="container position-relative">
-		<div class="row justify-content-center">
-			<div class="col-md-6">
-				<div class="alert alert-danger text-center" role="alert" style="position: relative; top: -70px; right: -100px;">
-					<p class="text-dark">We apologize for the inconvenience.</p>
-					<p class="text-dark" th:text="${msg}"></p>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="container position-relative">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="alert alert-danger text-center" role="alert"
+                     style="position: relative; top: -70px; right: -100px;">
+                    <p class="text-dark">We apologize for the inconvenience.</p>
+                    <p class="text-dark" th:text="${msg}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 </body>
 </html>

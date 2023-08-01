@@ -8,19 +8,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class OtpGenerator {
 
-	public String generateOtp() {
-		String otp = "";
-		
-		try {
-			
-			SecureRandom random = SecureRandom.getInstanceStrong();
-			int c = random.nextInt(900000) + 100000;
-			otp += c;
-			
-		} catch (NoSuchAlgorithmException e) {
-			
-		}
-		
-		return otp;
-	}
+    public String generateOtp() {
+        String otp = "";
+
+        try {
+
+            SecureRandom random = SecureRandom.getInstanceStrong();
+            int c = random.nextInt(900000) + 100000;
+            otp += c;
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
+
+        return otp;
+    }
 }

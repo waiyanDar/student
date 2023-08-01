@@ -25,48 +25,50 @@ import javax.validation.Valid;
 public class StudentController {
 
     private final StudentService studentService;
-    
+
     private final CourseService courseService;
 
     private final StudentExplorer studentExplorer;
-    
-    public StudentController(StudentService studentService, CourseService courseService , StudentExplorer studentExplorer) {
-    	this.studentService = studentService;
-    	this.courseService = courseService;
-    	this.studentExplorer = studentExplorer;
+
+    public StudentController(StudentService studentService, CourseService courseService, StudentExplorer studentExplorer) {
+        this.studentService = studentService;
+        this.courseService = courseService;
+        this.studentExplorer = studentExplorer;
     }
-    
+
     @ModelAttribute("loginDate")
-	public String loginDate() {
-		return LocalDate.now().toString();
-	}
+    public String loginDate() {
+        return LocalDate.now().toString();
+    }
 
     String studentId;
+
     @ModelAttribute("studentId")
-    public String studentId(){
+    public String studentId() {
         return studentId;
     }
+
     @GetMapping("/registerStudent")
     @Admin
     public String getStudentRegisterForm(Model model) {
 
-    	modelForStu(model,new StudentDto(), false, "/registerStudent", "");
-    	return "student-form";
+        modelForStu(model, new StudentDto(), false, "/registerStudent", "");
+        return "student-form";
     }
 
     @PostMapping("/registerStudent")
     @Admin
     public String registerStudent(@Valid StudentDto studentDto, BindingResult result, Model model, RedirectAttributes attributes) throws IOException {
-    	
+
 
         if (result.hasErrors()) {
             checkValidationForStu(result, model);
-            modelForStu(model,studentDto,false, "", "");
+            modelForStu(model, studentDto, false, "", "");
             return "student-form";
         }
 
 //        student.setPhoto(ArrayUtils.toObject(photo.getBytes()));
-        Student student =  studentService.registerStudent(studentDto);
+        Student student = studentService.registerStudent(studentDto);
         studentId = student.getStudentId();
         attributes.addFlashAttribute("stuAdd", true);
         return "redirect:/findAllStudent";
@@ -80,7 +82,7 @@ public class StudentController {
     public String studentInfo(@RequestParam("studentId") String studentId, Model model) {
         Student oStudent = studentService.findStudentByStudentId(studentId);
         StudentDto studentDto = StudentDto.form(oStudent);
-        if(oStudent.getPhoto() != null && oStudent.getPhoto().length >1){
+        if (oStudent.getPhoto() != null && oStudent.getPhoto().length > 1) {
             String photo = Base64.getEncoder().encodeToString(oStudent.getPhoto());
             model.addAttribute("sPhoto", photo);
         }
@@ -89,39 +91,39 @@ public class StudentController {
         modelForStu(model, studentDto, true, "/updateStudent", oStudentId);
         return "student-form";
     }
-    
+
     @PostMapping("/updateStudent")
     @Admin
-    public String updateStudent(@Valid StudentDto studentDto, BindingResult result,RedirectAttributes attributes,Model model) {
-        if (result.hasErrors()){
+    public String updateStudent(@Valid StudentDto studentDto, BindingResult result, RedirectAttributes attributes, Model model) {
+        if (result.hasErrors()) {
             checkValidationForStu(result, model);
             modelForStu(model, studentDto, true, "/updateStudent", oStudentId);
             return "student-form";
         }
 
-       try {
-           Student student = studentService.updateStudent(studentDto, oId, oStudentId);
-           studentId = student.getStudentId();
-           attributes.addFlashAttribute("stuUpdate", true);
-       }catch (IOException e){
-           modelForStu(model, studentDto, true, "/updateStudent", oStudentId);
-       }
+        try {
+            Student student = studentService.updateStudent(studentDto, oId, oStudentId);
+            studentId = student.getStudentId();
+            attributes.addFlashAttribute("stuUpdate", true);
+        } catch (IOException e) {
+            modelForStu(model, studentDto, true, "/updateStudent", oStudentId);
+        }
         return "redirect:/findAllStudent";
     }
 
-//    @GetMapping("/findAllStudent")
+    //    @GetMapping("/findAllStudent")
 //    @Admin
     public String findAllStudent(Model model) {
-    	
-         model.addAttribute("students", studentService.findAllStudent());
-         return "student-list";
+
+        model.addAttribute("students", studentService.findAllStudent());
+        return "student-list";
     }
-    
+
     @GetMapping("/findAllStudent")
     @Admin
     public String paginationStudent() {
-    	
-         return "student-list";
+
+        return "student-list";
     }
 
     @GetMapping("/deleteStudent")
@@ -136,15 +138,16 @@ public class StudentController {
     @GetMapping("/exportStudentToExcel")
     @Admin
     public String exportStudentToExcel(RedirectAttributes attributes) {
-    	studentExplorer.explortStudentToExcel();
-    	attributes.addFlashAttribute("exportExcel", true);
-    	return "redirect:/findAllStudent";
+        studentExplorer.explortStudentToExcel();
+        attributes.addFlashAttribute("exportExcel", true);
+        return "redirect:/findAllStudent";
     }
-    
+
 
     boolean oldStu;
-//    @ModelAttribute("oldStu")
-    public boolean isOldStu(){
+
+    //    @ModelAttribute("oldStu")
+    public boolean isOldStu() {
         return oldStu;
     }
 
@@ -152,9 +155,9 @@ public class StudentController {
         model.addAttribute("student", student);
         model.addAttribute("oldStu", oldStu);
         model.addAttribute("genders", Student.Gender.values());
-        model.addAttribute("educations" , Student.Education.values());
+        model.addAttribute("educations", Student.Education.values());
         model.addAttribute("courses", courseService.findAllCourse());
-        model.addAttribute("actionUrlForStu",link );
+        model.addAttribute("actionUrlForStu", link);
         model.addAttribute("studentId", studentId);
     }
 

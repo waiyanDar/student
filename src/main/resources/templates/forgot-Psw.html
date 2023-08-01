@@ -1,197 +1,197 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<link rel="stylesheet"
-	href="../../static/bootstrap-5.0.2/css/bootstrap.min.css"
-	th:href="@{bootstrap-5.0.2/css/bootstrap.min.css}">
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-	crossorigin="anonymous"></script>
-<link rel="stylesheet" href="test.css">
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.0.0/jsencrypt.min.js"></script>
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet"
+          href="../../static/bootstrap-5.0.2/css/bootstrap.min.css"
+          th:href="@{bootstrap-5.0.2/css/bootstrap.min.css}">
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="test.css">
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.0.0/jsencrypt.min.js"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 </head>
 <body class="login-page-body">
 
-	<div class="login-page">
+<div class="login-page">
 
-		<div class="alert alert-success" th:if="${foundUser}">
-			<p class="text-success text-center">
-				We sent code to <span th:text="${user.email}"></span> . Check your email.
-			</p>
-		</div>
-		<div class="alert alert-warning" th:if="${expireOtp}">
-			<p class="text-danger text-center">Code is expired!</p>
-		</div>
-		<div class="alert alert-danger" th:if="${invalidOtp}">
-			<p class="text-danger">Invalid Code!</p>
-		</div>
-		<div class="form">
-			<div class="login">
+    <div class="alert alert-success" th:if="${foundUser}">
+        <p class="text-success text-center">
+            We sent code to <span th:text="${user.email}"></span> . Check your email.
+        </p>
+    </div>
+    <div class="alert alert-warning" th:if="${expireOtp}">
+        <p class="text-danger text-center">Code is expired!</p>
+    </div>
+    <div class="alert alert-danger" th:if="${invalidOtp}">
+        <p class="text-danger">Invalid Code!</p>
+    </div>
+    <div class="form">
+        <div class="login">
 
-				<div class="login-header mt-3">
-					<div th:if="${!validOtp}">
-						<h3>Forgot Password</h3>
-					</div>
-					<div th:if="${validOtp}">
-						<h3 class="text-bold">Change Password</h3>
-					</div>
-				</div>
-				<p th:if="${noUser}">User not found</p>
-			</div>
-			<div th:if="${!validOtp}" class="mt-3">
-				<div th:if="${user}">
-					<form id="forgotPswShowEmail" class="login-form"
-						th:action="@{/emailForForgotPsw}" method="post">
-						<input type="text" placeholder="Email" th:value="${user.email}"
-							name="email" />
-							<!-- <div th:if="${expire}">
-							<button class="mb-3" type="submit">submit email</button>
-							</div> -->
-					</form>
-				</div>
-				<div th:if="!${user}">
-					<form id="forgotPswEmailForm" class="login-form"
-						th:action="@{/emailForForgotPsw}" method="post">
-						<input type="text" th:value="${email}" placeholder="Email" name="email" />
-						<button class="mb-3"  type="submit">get code</button>
-					</form>
-				</div>
+            <div class="login-header mt-3">
+                <div th:if="${!validOtp}">
+                    <h3>Forgot Password</h3>
+                </div>
+                <div th:if="${validOtp}">
+                    <h3 class="text-bold">Change Password</h3>
+                </div>
+            </div>
+            <p th:if="${noUser}">User not found</p>
+        </div>
+        <div th:if="${!validOtp}" class="mt-3">
+            <div th:if="${user}">
+                <form id="forgotPswShowEmail" class="login-form"
+                      th:action="@{/emailForForgotPsw}" method="post">
+                    <input type="text" placeholder="Email" th:value="${user.email}"
+                           name="email"/>
+                    <!-- <div th:if="${expire}">
+                    <button class="mb-3" type="submit">submit email</button>
+                    </div> -->
+                </form>
+            </div>
+            <div th:if="!${user}">
+                <form id="forgotPswEmailForm" class="login-form"
+                      th:action="@{/emailForForgotPsw}" method="post">
+                    <input type="text" th:value="${email}" placeholder="Email" name="email"/>
+                    <button class="mb-3" type="submit">get code</button>
+                </form>
+            </div>
 
-				<form id="otpForm" class="login-form" th:action="@{/checkOtp}"
-					method="post">
-					<input th:if="${user}" hidden name="email" type="text"
-						th:value="${user.email}" /> <input type="text" placeholder="Code" name="otp" />
-					<button th:if="${user}" type="submit">submit code</button>
-				</form>
-			</div>
-			<div th:if="${validOtp}">
-				<form onsubmit="encrypt(event)" th:action="@{/forgotPasswordChange}"method="post">
-					<div class="row mb-4">
-						<!-- 	<label for="password" class="col-md-3 col-form-label">Password</label> -->
-						<div class="col-md-12">
-							<div class="input-group">
-								<input type="password" id="password" class="form-control"
-									placeholder="Password" onkeyup="checkPasswordStrength()"
-									required style="height: 38px">
-								<div class="input-group-append">
-									<p class="input-group-text">
-										<i id="passwordToggleIcon" class="fa fa-eye-slash"
-											style="line-height: 1.5" onclick="togglePasswordVisibility()"></i>
-									</p>
-								</div>
-							</div>
-							<span id="passwordStrengthLabel"></span>
-						</div>
-					</div>
+            <form id="otpForm" class="login-form" th:action="@{/checkOtp}"
+                  method="post">
+                <input th:if="${user}" hidden name="email" type="text"
+                       th:value="${user.email}"/> <input type="text" placeholder="Code" name="otp"/>
+                <button th:if="${user}" type="submit">submit code</button>
+            </form>
+        </div>
+        <div th:if="${validOtp}">
+            <form onsubmit="encrypt(event)" th:action="@{/forgotPasswordChange}" method="post">
+                <div class="row mb-4">
+                    <!-- 	<label for="password" class="col-md-3 col-form-label">Password</label> -->
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <input type="password" id="password" class="form-control"
+                                   placeholder="Password" onkeyup="checkPasswordStrength()"
+                                   required style="height: 38px">
+                            <div class="input-group-append">
+                                <p class="input-group-text">
+                                    <i id="passwordToggleIcon" class="fa fa-eye-slash"
+                                       style="line-height: 1.5" onclick="togglePasswordVisibility()"></i>
+                                </p>
+                            </div>
+                        </div>
+                        <span id="passwordStrengthLabel"></span>
+                    </div>
+                </div>
 
-					<div class="row mb-4">
-						<!-- <label for="confirmPassword" class="col-md-3 col-form-label ">Confirm Password</label> -->
-						<div class="col-md-12">
-							<div class="input-group">
-								<input type="password" id="confirmPassword" class="form-control"
-									placeholder="Confirm Password"
-									onkeyup="checkPasswordStrength()" required style="height: 38px">
-								<div class="input-group-append">
-									<p class="input-group-text">
-										<i id="confirmPasswordToggleIcon" class="fa fa-eye-slash"
-											style="line-height: 1.5"
-											onclick="toggleConfirmPasswordVisibility()"></i>
-									</p>
-								</div>
-							</div>
-							<span id="matchLabel"></span>
-						</div>
-					</div>
+                <div class="row mb-4">
+                    <!-- <label for="confirmPassword" class="col-md-3 col-form-label ">Confirm Password</label> -->
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <input type="password" id="confirmPassword" class="form-control"
+                                   placeholder="Confirm Password"
+                                   onkeyup="checkPasswordStrength()" required style="height: 38px">
+                            <div class="input-group-append">
+                                <p class="input-group-text">
+                                    <i id="confirmPasswordToggleIcon" class="fa fa-eye-slash"
+                                       style="line-height: 1.5"
+                                       onclick="toggleConfirmPasswordVisibility()"></i>
+                                </p>
+                            </div>
+                        </div>
+                        <span id="matchLabel"></span>
+                    </div>
+                </div>
 
-					<div class="col-md-3 mt-3"></div>
-					<div class="row mb-4">
-						<div class="col-md-2"></div>
+                <div class="col-md-3 mt-3"></div>
+                <div class="row mb-4">
+                    <div class="col-md-2"></div>
 
-						<div class="col-md-8">
+                    <div class="col-md-8">
 
-							<button type="submit" class="btn btn-success ">Change</button>
+                        <button type="submit" class="btn btn-success ">Change</button>
 
-						</div>
-						<div class="col-md-2"></div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	<script>
-    function checkPasswordStrength(){
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function checkPasswordStrength() {
         var password = document.getElementById("password").value;
         var passwordStrengthLabel = document.getElementById("passwordStrengthLabel");
         var confirmPassword = document.getElementById("confirmPassword").value;
         var matchLabel = document.getElementById("matchLabel");
         passwordStrengthLabel.textContent = "";
 
-        if (password.length === 0){
+        if (password.length === 0) {
             passwordStrengthLabel.textContent = "";
-        }else if (password.length < 6){
+        } else if (password.length < 6) {
             passwordStrengthLabel.textContent = "Not enough! fill like 12@Aa3";
             passwordStrengthLabel.style.color = "red";
-        }else if (password.length > 9){
+        } else if (password.length > 9) {
             passwordStrengthLabel.textContent = "Too much";
             passwordStrengthLabel.style.color = "red";
-        }else if (/^[a-zA-Z]+$/.test(password) || /^\d+$/.test(password)){
+        } else if (/^[a-zA-Z]+$/.test(password) || /^\d+$/.test(password)) {
             passwordStrengthLabel.textContent = "Weak";
             passwordStrengthLabel.style.color = "red";
-        }else if (/\d/.test(password) && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[!@#$%^&* .]/.test(password)){
+        } else if (/\d/.test(password) && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[!@#$%^&* .]/.test(password)) {
             passwordStrengthLabel.textContent = "Strong";
             passwordStrengthLabel.style.color = "green";
-        }else {
+        } else {
             passwordStrengthLabel.textContent = "Medium";
             passwordStrengthLabel.style.color = "orange";
         }
 
-        if (confirmPassword.length > 0 && password !== confirmPassword){
+        if (confirmPassword.length > 0 && password !== confirmPassword) {
             matchLabel.innerHTML = "Passwords do not match";
             matchLabel.style.color = "red";
-        }else {
+        } else {
             matchLabel.innerHTML = "";
         }
     }
 
-    function togglePasswordVisibility(){
+    function togglePasswordVisibility() {
         var passwordInput = document.getElementById("password");
         var passwordToggleIcon = document.getElementById("passwordToggleIcon");
 
-        if (passwordInput.type === "password"){
+        if (passwordInput.type === "password") {
             passwordInput.type = "text";
             passwordToggleIcon.classList.remove("fa-eye-slash");
             passwordToggleIcon.classList.add("fa-eye");
-        }else {
+        } else {
             passwordInput.type = "password";
             passwordToggleIcon.classList.remove("fa-eye");
             passwordToggleIcon.classList.add("fa-eye-slash");
         }
     }
 
-    function toggleConfirmPasswordVisibility(){
+    function toggleConfirmPasswordVisibility() {
         var confirmPasswordInput = document.getElementById("confirmPassword");
         var confirmPasswordToggleIcon = document.getElementById("confirmPasswordToggleIcon");
 
-        if (confirmPasswordInput.type === "password"){
+        if (confirmPasswordInput.type === "password") {
             confirmPasswordInput.type = "type";
             confirmPasswordToggleIcon.classList.remove("fa-eye-slash");
             confirmPasswordToggleIcon.classList.add("fa-eye");
-        }else {
+        } else {
             confirmPasswordInput.type = "password";
             confirmPasswordToggleIcon.classList.remove("fa-eye");
             confirmPasswordToggleIcon.classList.add("fa-eye-slash");
         }
     }
 
-    function encrypt(event){
+    function encrypt(event) {
         event.preventDefault();
         var publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvzhfSPMMTIdXZD8n41yAAFcAgM1xDBQ0zHDR/TiewuqUEc6wFB6YLNZ84NmiV9eU/i0DFyXofq/bQ06cK+ath+ipf+uaNFGUHi9BqGZRRReuaQIGZJntEuJx9nAV+E02TJwemchHRlo/kiXwYnjbulcNnSPLDubSfS0628IP42l11KqJopRUXHUCCQZDwZXn/sbj8NVD+hhbFE/W/RXnPVVHjMcFiJUvbMDQOy2TgeQfOxiGmiNLcqG4Uq9z/tMTaHD7vMUqtTIcCO/57kcMr97VEGYf6kLS12VBTw1TwVQ2pbqIaMHyYk0BH1emmS5br+zX0RBoFYfyGcgW8YTE9wIDAQAB";
         var password = document.getElementById("password").value;

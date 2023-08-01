@@ -39,416 +39,416 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Getter
 public class UserService {
 
-	private final UserDao userDao;
+    private final UserDao userDao;
 
-	private final RoleDao roleDao;
+    private final RoleDao roleDao;
 
-	private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-	private final OtpGenerator otpGenerator;
+    private final OtpGenerator otpGenerator;
 
-	private final Holder holder;
+    private final Holder holder;
 
-	private final DecryptPassword decryptPassword;
+    private final DecryptPassword decryptPassword;
 
-	private final JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
-	private String userId;
+    private String userId;
 
-	public static User loginUser;
+    public static User loginUser;
 
-	public UserService(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder, OtpGenerator otpGenerator,
-			JavaMailSender javaMailSender, DecryptPassword decryptPassword, Holder holder) {
-		this.userDao = userDao;
-		this.roleDao = roleDao;
-		this.passwordEncoder = passwordEncoder;
-		this.otpGenerator = otpGenerator;
-		this.javaMailSender = javaMailSender;
-		this.decryptPassword = decryptPassword;
-		this.holder = holder;
-	}
+    public UserService(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder, OtpGenerator otpGenerator,
+                       JavaMailSender javaMailSender, DecryptPassword decryptPassword, Holder holder) {
+        this.userDao = userDao;
+        this.roleDao = roleDao;
+        this.passwordEncoder = passwordEncoder;
+        this.otpGenerator = otpGenerator;
+        this.javaMailSender = javaMailSender;
+        this.decryptPassword = decryptPassword;
+        this.holder = holder;
+    }
 
-	public String getUserId() {
-		return userId;
-	}
+    public String getUserId() {
+        return userId;
+    }
 
-	public String registerUser(UserRegisterDto userRegisterDto, BindingResult result, RedirectAttributes attributes,
-			Model model) {
+    public String registerUser(UserRegisterDto userRegisterDto, BindingResult result, RedirectAttributes attributes,
+                               Model model) {
 
-		if (!userRegisterDto.getPassword().equals(userRegisterDto.getConfirmPassword())) {
-			result.rejectValue("confirmPassword", "error.userDto", "Password and confirm password must match");
-		}
-		
-		if (result.hasErrors()) {
-			
-			checkValidation(result, model);
-			modelForUser(model, userRegisterDto, false, "/registerUser", "");
-			return "user-form";
-		}
-		
-		User user = null;
-		
-		try {
-			user = User.formForRegistration(userRegisterDto);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
-		user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
-		user.setRoles(userRegisterDto.getRoles());
-		
-		try {
-			
-			userDao.save(user);
-			attributes.addFlashAttribute("success", user.getUserId());
-			userId = user.getUserId();
-			
-			return "redirect:/findAllUser";
-			
-		} catch (DataIntegrityViolationException e) {
-			
-			result.addError(new FieldError("userDto", "email", "Email is taken"));
-			checkValidation(result, model);
-			modelForUser(model, userRegisterDto, false, "/registerUser", "");
-			
-			return "user-form";
-		}
+        if (!userRegisterDto.getPassword().equals(userRegisterDto.getConfirmPassword())) {
+            result.rejectValue("confirmPassword", "error.userDto", "Password and confirm password must match");
+        }
 
-	}
+        if (result.hasErrors()) {
 
-	public User findUserById(int id) {
-		
-		User user = userDao.findById(id).get();
-		userId = user.getUserId();
-		
-		return user;
-	}
+            checkValidation(result, model);
+            modelForUser(model, userRegisterDto, false, "/registerUser", "");
+            return "user-form";
+        }
 
-	public User findUserByUserId(String userId) {
-		
-		loginUser = userDao.findUserByUserId(userId).get();
-		
-		return loginUser;
-	}
+        User user = null;
 
-	public String deleteUser(String id, RedirectAttributes attributes) {
-		
-		User user = findUserByUserId(id);
-		userId = user.getUserId();
-		userDao.delete(user);
-		
-		attributes.addFlashAttribute("deleteUser", user.getUserId());
-		
-		return "redirect:/findAllUser";
-	}
+        try {
+            user = User.formForRegistration(userRegisterDto);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
 
-	public String updateUser(UserUpdateDto userUpdateDto, String actionUrl, BindingResult result,
-			RedirectAttributes attributes, Model model) {
+        user.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
+        user.setRoles(userRegisterDto.getRoles());
 
-		if (result.hasErrors()) {
-			checkValidation(result, model);
-			modelForUser(model, userUpdateDto, true, actionUrl, userId);
+        try {
 
-			return "user-form";
-		}
+            userDao.save(user);
+            attributes.addFlashAttribute("success", user.getUserId());
+            userId = user.getUserId();
 
-		User oUser = findUserByUserId(userUpdateDto.getUserId());
-		oUser.setUsername(userUpdateDto.getUsername());
-		oUser.setEmail(userUpdateDto.getEmail());
+            return "redirect:/findAllUser";
 
-		oUser.deleteRole();
-		oUser.setRoles(userUpdateDto.getRoles());
-		oUser.deletePhoto();
-		
-		try {
-			oUser.setPhoto(userUpdateDto.getPhoto().getBytes());
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+        } catch (DataIntegrityViolationException e) {
 
-		try {
-			
-			userDao.saveAndFlush(oUser);
-			attributes.addFlashAttribute("updateSuccess", oUser.getUserId());
-			
-			return "redirect:/findAllUser";
-			
-		} catch (DataIntegrityViolationException e) {
-			
-			result.addError(new FieldError("userDto", "email", "Email is taken"));
-			checkValidation(result, model);
+            result.addError(new FieldError("userDto", "email", "Email is taken"));
+            checkValidation(result, model);
+            modelForUser(model, userRegisterDto, false, "/registerUser", "");
 
-			modelForUser(model, userUpdateDto, true, actionUrl, userId);
-			
-			return "user-form";
-		}
-	}
+            return "user-form";
+        }
 
-	public String changePassword(String oldPassword, String password, String confirmPassword, Model model,
-			RedirectAttributes attributes) {
+    }
 
-		if (pswCheckValidation(oldPassword, password, confirmPassword, model)) {
-			
-			modelForUser(model, UserService.loginUser, true, "/changePsw", "");
-			return "profile";
-			
-		}
+    public User findUserById(int id) {
 
-		User oUser = findUserByUserId(loginUser.getUserId());
-		oUser.setPassword(passwordEncoder.encode(password));
-		userDao.saveAndFlush(oUser);
-		
-		modelForUser(model, UserService.loginUser, false, "/changePsw", "");
-		attributes.addFlashAttribute("successChangePsw", true);
-		
-		return "redirect:/";
-	}
+        User user = userDao.findById(id).get();
+        userId = user.getUserId();
 
-	private boolean pswCheckValidation(String oldPassword, String password, String confirmPassword, Model model) {
-		
-		boolean valid = false;
-		
-		if (oldPassword.isEmpty()) {
-			
-			model.addAttribute("oldPswBlank", "Please fill in old password field");
-			valid = true;
-			
-		} else if (!passwordEncoder.matches(oldPassword, loginUser.getPassword())) {
-			
-			model.addAttribute("oldPswWrong", "Current password is wrong");
-			valid = true;
-			
-		}
-		if (password.isEmpty() || confirmPassword.isEmpty()) {
-			
-			model.addAttribute("pswBlank", "Please fill in all the fields.");
-			valid = true;
-			
-		}
+        return user;
+    }
 
-		if (!password.equals(confirmPassword)) {
-			
-			model.addAttribute("pswNoMatch", "Passwords do not match.");
-			valid = true;
-			
-		}
-		return valid;
-	}
+    public User findUserByUserId(String userId) {
 
-	public List<User> findAllUser() {
-		return userDao.findAll();
-	}
+        loginUser = userDao.findUserByUserId(userId).get();
 
-	private <T> void modelForUser(Model model, T userDto, boolean oldUser, String link, String oUserId) {
-		
-		model.addAttribute("oldUser", oldUser);
-		model.addAttribute("user", userDto);
-		
-		Role role = roleDao.findById(1).get();
-		
-		if (loginUser.getRoles().contains(role)) {
-			
-			model.addAttribute("role", roleDao.findAll());
-			
-		} else {
-			
-			List<Role> roles = roleDao.findAll().stream().filter(r -> r.getId() != 1).collect(Collectors.toList());
-			model.addAttribute("role", roles);
-			
-		}
-		model.addAttribute("actionUrlForU", link);
-		model.addAttribute("userId", oUserId);
-	}
+        return loginUser;
+    }
 
-	private void checkValidation(BindingResult result, Model model) {
-		if (result.hasFieldErrors("username")) {
-			model.addAttribute("invalidName", result.getFieldError("username").getDefaultMessage());
-		}
-		if (result.hasFieldErrors("email")) {
-			model.addAttribute("invalidEmail", result.getFieldError("email").getDefaultMessage());
-		}
-		if (result.hasFieldErrors("password")) {
-			model.addAttribute("invalidPassword", result.getFieldError("password").getDefaultMessage());
-		}
-		if (result.hasFieldErrors("confirmPassword")) {
-			model.addAttribute("invalidCPsw", result.getFieldError("confirmPassword").getDefaultMessage());
-		}
-		if (result.hasFieldErrors("roles")) {
-			model.addAttribute("invalidRole", result.getFieldError("roles").getDefaultMessage());
-		}
-	}
+    public String deleteUser(String id, RedirectAttributes attributes) {
 
-	public String getRegisterForm(Model model) {
-		modelForUser(model, new UserRegisterDto(), false, "/registerUser", "");
-		return "user-form";
-	}
+        User user = findUserByUserId(id);
+        userId = user.getUserId();
+        userDao.delete(user);
 
-	public String getUpdateForm(String userId, String actionUrl, Model model) {
-		
-		User user = findUserByUserId(userId);
-		userId = user.getUserId();
-		
-		if (user.getPhoto() != null && user.getPhoto().length > 1) {
-			
-			String photo = Base64.getEncoder().encodeToString(user.getPhoto());
-			model.addAttribute("dPhoto", photo);
-		}
-		
-		modelForUser(model, UserUpdateDto.form(user), true, actionUrl, userId);
-		
-		return "user-form";
-		
-	}
+        attributes.addFlashAttribute("deleteUser", user.getUserId());
 
-	public String getProfileUpdateForm(String actionUrl, Model model) {
-		
-		User user = loginUser;
-		userId = user.getUserId();
-		modelForUser(model, UserUpdateDto.form(user), true, actionUrl, userId);
-		
-		return "user-form";
-	}
+        return "redirect:/findAllUser";
+    }
 
-	public String getDataForProfile(Model model) {
-		
-		model.addAttribute("id", loginUser.getId());
-		modelForUser(model, loginUser, false, "/changePsw", "");
-		
-		return "profile";
-	}
+    public String updateUser(UserUpdateDto userUpdateDto, String actionUrl, BindingResult result,
+                             RedirectAttributes attributes, Model model) {
 
-	public String getPswForm(Model model) {
-		
-		modelForUser(model, loginUser, true, "/changePsw", "");
-		
-		return "profile";
-	}
+        if (result.hasErrors()) {
+            checkValidation(result, model);
+            modelForUser(model, userUpdateDto, true, actionUrl, userId);
 
-	public String login(Model model) {
+            return "user-form";
+        }
 
-		return "login";
-	}
+        User oUser = findUserByUserId(userUpdateDto.getUserId());
+        oUser.setUsername(userUpdateDto.getUsername());
+        oUser.setEmail(userUpdateDto.getEmail());
 
-	public List<User> searchUserAscSorting(String searchTerm, int page, int size, String column) {
+        oUser.deleteRole();
+        oUser.setRoles(userUpdateDto.getRoles());
+        oUser.deletePhoto();
 
-		List<User> userList = userDao.findAll(SpecificationUtil.userWithSearchTerm(searchTerm),
-				PageRequest.of(page, size, Sort.by(column).ascending())).getContent();
-		return userList;
-	}
+        try {
+            oUser.setPhoto(userUpdateDto.getPhoto().getBytes());
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
 
-	public List<User> searchUserDescSorting(String searchTerm, int page, int size, String column) {
+        try {
 
-		List<User> userList = userDao.findAll(SpecificationUtil.userWithSearchTerm(searchTerm),
-				PageRequest.of(page, size, Sort.by(column).descending())).getContent();
-		return userList;
-	}
+            userDao.saveAndFlush(oUser);
+            attributes.addFlashAttribute("updateSuccess", oUser.getUserId());
 
-	@Transactional
-	public boolean searchUserWithEmail(String email, Model model, RedirectAttributes attributes) {
+            return "redirect:/findAllUser";
 
-		try {
-			String otp = otpGenerator.generateOtp();
+        } catch (DataIntegrityViolationException e) {
 
-			User user = userDao.findUserByEmail(email).get();
-			user.setOtp(otp);
-			userDao.saveAndFlush(user);
+            result.addError(new FieldError("userDto", "email", "Email is taken"));
+            checkValidation(result, model);
 
-			model.addAttribute("user", user);
-			attributes.addFlashAttribute("foundUser", true);
+            modelForUser(model, userUpdateDto, true, actionUrl, userId);
 
-			holder.otpHolder.put(otp, LocalTime.now());
-			sendOtp(otp, user.getEmail());
+            return "user-form";
+        }
+    }
 
-			return true;
-		} catch (Exception e) {
-			attributes.addFlashAttribute("noUser", true);
-			return false;
-		}
+    public String changePassword(String oldPassword, String password, String confirmPassword, Model model,
+                                 RedirectAttributes attributes) {
 
-	}
+        if (pswCheckValidation(oldPassword, password, confirmPassword, model)) {
 
-	public void sendOtp(String otp, String email) {
-		try {
-			User user = userDao.findUserByEmail(email).get();
-			
-			String message = "Dear " + user.getUsername() + ",\n"
-					+ "We have received a request to reset your account password.\n"
-					+ "Your code is: \t" + otp + ".\n"
-					+ "Please use this code to reset your password. Do not share this code with anyone, as it provides access to your account."
-					+ "This code is valid during 3minutes. "
-					+ "If you did not request a password reset, please ignore this email.\n\n" + "Thank you";
-			
-			MimeMessage mailMessage = javaMailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(mailMessage, true, "UTF-8");
-			helper.setFrom("nanibaka.ushi@gmail.com");
-			helper.setTo(email);
-			helper.setText(message);
-			helper.setSubject("Forgot Password");
+            modelForUser(model, UserService.loginUser, true, "/changePsw", "");
+            return "profile";
 
-			javaMailSender.send(mailMessage);
+        }
 
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
+        User oUser = findUserByUserId(loginUser.getUserId());
+        oUser.setPassword(passwordEncoder.encode(password));
+        userDao.saveAndFlush(oUser);
 
-	public String checkOtp(String email, String otp, Model model, RedirectAttributes attributes) {
+        modelForUser(model, UserService.loginUser, false, "/changePsw", "");
+        attributes.addFlashAttribute("successChangePsw", true);
 
-		User user = userDao.findUserByEmail(email).get();
-		LocalTime lt = LocalTime.now().minusMinutes(3);
-	
-		if (user != null && user.getOtp().equals(otp)) {
-			
-			if (lt.isAfter(holder.otpHolder.get(otp))) {
-				
-				user.setOtp(null);
-				attributes.addFlashAttribute("expireOtp", true);
-				
-				return "redirect:/expiredOtp";
-			}
-			
-			validOtpForModel = true;
-			model.addAttribute("validOtp", true);
-			
-			return "redirect:/changePassword";
-			
-		} else {
-			
-			attributes.addFlashAttribute("invalidOtp", true);
-			model.addAttribute("validOtp", false);
-			
-			return "redirect:/invalidOtp";
-			
-		}
-	}
+        return "redirect:/";
+    }
 
-	private boolean validOtpForModel;
-	
-	public boolean isValidOtpForModel() {
-		
-		return this.validOtpForModel;
-	}
+    private boolean pswCheckValidation(String oldPassword, String password, String confirmPassword, Model model) {
 
-	public User findUserByEmail(String email) {
-		
-		return userDao.findUserByEmail(email).get();
-	}
+        boolean valid = false;
 
-	public void forgotPasswordChange(String password, String email, boolean validOtp, RedirectAttributes attributes)
-			throws Exception {
-		if (!validOtp) {
-			throw new Exception("Something's wrong");
-		}
-		
-		validOtpForModel = false;
-		
-		User user = findUserByEmail(email);
-		String dePassword = decryptPassword.decryptPassword(password);
-		
-		user.setPassword(passwordEncoder.encode(dePassword));
-		user.setOtp(null);
-		userDao.saveAndFlush(user);
-		
-		attributes.addFlashAttribute("forgotPswSuccess", true);
-	}
+        if (oldPassword.isEmpty()) {
+
+            model.addAttribute("oldPswBlank", "Please fill in old password field");
+            valid = true;
+
+        } else if (!passwordEncoder.matches(oldPassword, loginUser.getPassword())) {
+
+            model.addAttribute("oldPswWrong", "Current password is wrong");
+            valid = true;
+
+        }
+        if (password.isEmpty() || confirmPassword.isEmpty()) {
+
+            model.addAttribute("pswBlank", "Please fill in all the fields.");
+            valid = true;
+
+        }
+
+        if (!password.equals(confirmPassword)) {
+
+            model.addAttribute("pswNoMatch", "Passwords do not match.");
+            valid = true;
+
+        }
+        return valid;
+    }
+
+    public List<User> findAllUser() {
+        return userDao.findAll();
+    }
+
+    private <T> void modelForUser(Model model, T userDto, boolean oldUser, String link, String oUserId) {
+
+        model.addAttribute("oldUser", oldUser);
+        model.addAttribute("user", userDto);
+
+        Role role = roleDao.findById(1).get();
+
+        if (loginUser.getRoles().contains(role)) {
+
+            model.addAttribute("role", roleDao.findAll());
+
+        } else {
+
+            List<Role> roles = roleDao.findAll().stream().filter(r -> r.getId() != 1).collect(Collectors.toList());
+            model.addAttribute("role", roles);
+
+        }
+        model.addAttribute("actionUrlForU", link);
+        model.addAttribute("userId", oUserId);
+    }
+
+    private void checkValidation(BindingResult result, Model model) {
+        if (result.hasFieldErrors("username")) {
+            model.addAttribute("invalidName", result.getFieldError("username").getDefaultMessage());
+        }
+        if (result.hasFieldErrors("email")) {
+            model.addAttribute("invalidEmail", result.getFieldError("email").getDefaultMessage());
+        }
+        if (result.hasFieldErrors("password")) {
+            model.addAttribute("invalidPassword", result.getFieldError("password").getDefaultMessage());
+        }
+        if (result.hasFieldErrors("confirmPassword")) {
+            model.addAttribute("invalidCPsw", result.getFieldError("confirmPassword").getDefaultMessage());
+        }
+        if (result.hasFieldErrors("roles")) {
+            model.addAttribute("invalidRole", result.getFieldError("roles").getDefaultMessage());
+        }
+    }
+
+    public String getRegisterForm(Model model) {
+        modelForUser(model, new UserRegisterDto(), false, "/registerUser", "");
+        return "user-form";
+    }
+
+    public String getUpdateForm(String userId, String actionUrl, Model model) {
+
+        User user = findUserByUserId(userId);
+        userId = user.getUserId();
+
+        if (user.getPhoto() != null && user.getPhoto().length > 1) {
+
+            String photo = Base64.getEncoder().encodeToString(user.getPhoto());
+            model.addAttribute("dPhoto", photo);
+        }
+
+        modelForUser(model, UserUpdateDto.form(user), true, actionUrl, userId);
+
+        return "user-form";
+
+    }
+
+    public String getProfileUpdateForm(String actionUrl, Model model) {
+
+        User user = loginUser;
+        userId = user.getUserId();
+        modelForUser(model, UserUpdateDto.form(user), true, actionUrl, userId);
+
+        return "user-form";
+    }
+
+    public String getDataForProfile(Model model) {
+
+        model.addAttribute("id", loginUser.getId());
+        modelForUser(model, loginUser, false, "/changePsw", "");
+
+        return "profile";
+    }
+
+    public String getPswForm(Model model) {
+
+        modelForUser(model, loginUser, true, "/changePsw", "");
+
+        return "profile";
+    }
+
+    public String login(Model model) {
+
+        return "login";
+    }
+
+    public List<User> searchUserAscSorting(String searchTerm, int page, int size, String column) {
+
+        List<User> userList = userDao.findAll(SpecificationUtil.userWithSearchTerm(searchTerm),
+                PageRequest.of(page, size, Sort.by(column).ascending())).getContent();
+        return userList;
+    }
+
+    public List<User> searchUserDescSorting(String searchTerm, int page, int size, String column) {
+
+        List<User> userList = userDao.findAll(SpecificationUtil.userWithSearchTerm(searchTerm),
+                PageRequest.of(page, size, Sort.by(column).descending())).getContent();
+        return userList;
+    }
+
+    @Transactional
+    public boolean searchUserWithEmail(String email, Model model, RedirectAttributes attributes) {
+
+        try {
+            String otp = otpGenerator.generateOtp();
+
+            User user = userDao.findUserByEmail(email).get();
+            user.setOtp(otp);
+            userDao.saveAndFlush(user);
+
+            model.addAttribute("user", user);
+            attributes.addFlashAttribute("foundUser", true);
+
+            holder.otpHolder.put(otp, LocalTime.now());
+            sendOtp(otp, user.getEmail());
+
+            return true;
+        } catch (Exception e) {
+            attributes.addFlashAttribute("noUser", true);
+            return false;
+        }
+
+    }
+
+    public void sendOtp(String otp, String email) {
+        try {
+            User user = userDao.findUserByEmail(email).get();
+
+            String message = "Dear " + user.getUsername() + ",\n"
+                    + "We have received a request to reset your account password.\n"
+                    + "Your code is: \t" + otp + ".\n"
+                    + "Please use this code to reset your password. Do not share this code with anyone, as it provides access to your account."
+                    + "This code is valid during 3minutes. "
+                    + "If you did not request a password reset, please ignore this email.\n\n" + "Thank you";
+
+            MimeMessage mailMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mailMessage, true, "UTF-8");
+            helper.setFrom("nanibaka.ushi@gmail.com");
+            helper.setTo(email);
+            helper.setText(message);
+            helper.setSubject("Forgot Password");
+
+            javaMailSender.send(mailMessage);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public String checkOtp(String email, String otp, Model model, RedirectAttributes attributes) {
+
+        User user = userDao.findUserByEmail(email).get();
+        LocalTime lt = LocalTime.now().minusMinutes(3);
+
+        if (user != null && user.getOtp().equals(otp)) {
+
+            if (lt.isAfter(holder.otpHolder.get(otp))) {
+
+                user.setOtp(null);
+                attributes.addFlashAttribute("expireOtp", true);
+
+                return "redirect:/expiredOtp";
+            }
+
+            validOtpForModel = true;
+            model.addAttribute("validOtp", true);
+
+            return "redirect:/changePassword";
+
+        } else {
+
+            attributes.addFlashAttribute("invalidOtp", true);
+            model.addAttribute("validOtp", false);
+
+            return "redirect:/invalidOtp";
+
+        }
+    }
+
+    private boolean validOtpForModel;
+
+    public boolean isValidOtpForModel() {
+
+        return this.validOtpForModel;
+    }
+
+    public User findUserByEmail(String email) {
+
+        return userDao.findUserByEmail(email).get();
+    }
+
+    public void forgotPasswordChange(String password, String email, boolean validOtp, RedirectAttributes attributes)
+            throws Exception {
+        if (!validOtp) {
+            throw new Exception("Something's wrong");
+        }
+
+        validOtpForModel = false;
+
+        User user = findUserByEmail(email);
+        String dePassword = decryptPassword.decryptPassword(password);
+
+        user.setPassword(passwordEncoder.encode(dePassword));
+        user.setOtp(null);
+        userDao.saveAndFlush(user);
+
+        attributes.addFlashAttribute("forgotPswSuccess", true);
+    }
 }
