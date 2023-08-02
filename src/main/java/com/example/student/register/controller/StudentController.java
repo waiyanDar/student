@@ -5,6 +5,7 @@ import com.example.student.register.entity.Student;
 import com.example.student.register.explorter.StudentExplorer;
 import com.example.student.register.security.annotation.Admin;
 import com.example.student.register.service.CourseService;
+import com.example.student.register.service.QuartzService;
 import com.example.student.register.service.StudentService;
 
 import org.springframework.stereotype.Controller;
@@ -25,14 +26,18 @@ public class StudentController {
 
     private final StudentService studentService;
 
+    private final QuartzService quartzService;
+
     private final CourseService courseService;
 
     private final StudentExplorer studentExplorer;
 
-    public StudentController(StudentService studentService, CourseService courseService, StudentExplorer studentExplorer) {
+    public StudentController(StudentService studentService, CourseService courseService,
+                             StudentExplorer studentExplorer, QuartzService quartzService) {
         this.studentService = studentService;
         this.courseService = courseService;
         this.studentExplorer = studentExplorer;
+        this.quartzService = quartzService;
     }
 
     @ModelAttribute("loginDate")
@@ -176,5 +181,24 @@ public class StudentController {
         if (result.hasFieldErrors("education")) {
             model.addAttribute("invalidEducation", result.getFieldError("education").getDefaultMessage());
         }
+    }
+    @ModelAttribute("quartzDate")
+    public String quartzDate(){
+        return quartzService.getStrDate();
+    }
+
+    @ModelAttribute("quartzDay")
+    public String quartzDay(){
+        return quartzService.getStrDays();
+    }
+
+    @ModelAttribute("autoReport")
+    public boolean isAutoReport(){
+        return quartzService.isBoolAutoReport();
+    }
+
+    @ModelAttribute("quartzTime")
+    public String quartzTime(){
+        return quartzService.getStrTime();
     }
 }

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.validation.Valid;
 
+import com.example.student.register.service.QuartzService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,9 @@ public class CourseController {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private QuartzService quartzService;
 
     @Autowired
     private SmbService smbservice;
@@ -73,6 +77,26 @@ public class CourseController {
     @GetMapping("/")
     public String goHome(Model model) {
         return "home";
+    }
+
+    @ModelAttribute("quartzDate")
+    public String quartzDate(){
+        return quartzService.getStrDate();
+    }
+
+    @ModelAttribute("quartzDay")
+    public String quartzDay(){
+        return quartzService.getStrDays();
+    }
+
+    @ModelAttribute("autoReport")
+    public boolean isAutoReport(){
+        return quartzService.isBoolAutoReport();
+    }
+
+    @ModelAttribute("quartzTime")
+    public String quartzTime(){
+        return quartzService.getStrTime();
     }
 
 }

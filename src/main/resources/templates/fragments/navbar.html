@@ -35,14 +35,20 @@
 							</form></li>
 						<li>
 							<!-- Button trigger modal -->
-							<button type="button" class="btn btn-outline text-primary"
+							<button type="button" class="btn btn-outline text-primary" onclick="checkReport()"
 								data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 								Report Setting</button>
 						</li>
 					</ul>
 				</div>
 			</div>
+			<div>
+				<p hidden id="getQuartzDate" th:text="${quartzDate}"></p>
+				<p hidden id="getQuartzDay" th:text="${quartzDay}"></p>
+				<p hidden id="getQuartzTime" th:text="${quartzTime}"></p>
+				<p hidden id="getAutoReport" th:text="${autoReport}"></p>
 
+			</div>
 			<!-- Modal -->
 			<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
 				data-bs-keyboard="false" tabindex="-1"
@@ -56,76 +62,75 @@
 								aria-label="Close"></button>
 						</div>
 						<div class="modal-body">
-							<form th:action="@{/quartz}" method="post" id="quartzForm">
-								<div class="form-check form-switch ">
-									<input onchange="checkReportForm()" class="form-check-input" type="checkbox" name="autoReport" id="autoReport">
-										 <label class="form-check-label" for="autoReport">Auto Report</label>
-								</div>
-								<br>
+								<form th:action="@{/editReport}"  method="post" id="quartzForm">
+									<div class="form-check form-switch ">
+										<input onchange="checkReportForm()" class="form-check-input" type="checkbox"  name="autoReport" id="autoReport">
+											 <label class="form-check-label" for="autoReport">Auto Report</label>
+									</div>
+									<br>
+									<div class="row">
+										<div class="col-5 me-3">
+											<div class="form-check form-check-inline">
+												<input id="editDaily" disabled class="form-check-input" onchange="showCustomDays()"
+													type="radio" name="date" value="daily" >
+												<label class="form-check-label" for="editDaily">Daily</label>
+											</div>
+											<div class="form-check form-check-inline">
+												<input id="editCustom" disabled class="form-check-input"
+													type="radio" name="date" value="custom" onchange="showCustomDays()">
+													<label class="form-check-label" for="editCustom">Custom</label>
+											</div>
+										</div>
+										<div class="col-3">
+											<div id="customDaysContainer" style="display: none;">
+												<div class="form-check">
+													<input class="form-check-input" type="checkbox"
+														name="customDays" id="monday" value="Mon">
+                                                    <label class="form-check-label" for="monday">Monday</label>
+												</div>
+												<div class="form-check">
+													<input class="form-check-input" type="checkbox"
+														name="customDays" id="tuesday" value="Tue"> <label
+														class="form-check-label" for="tuesday">Tuesday</label>
+												</div>
+												<div class="form-check">
+													<input class="form-check-input" type="checkbox"
+														name="customDays" id="wednesday" value="Wed">
+													<label class="form-check-label" for="wednesday">Wednesday</label>
+												</div>
+												<div class="form-check">
+													<input class="form-check-input" type="checkbox"
+														name="customDays" id="thursday" value="Thu">
+													<label class="form-check-label" for="thursday">Thursday</label>
+												</div>
+												<div class="form-check">
+													<input class="form-check-input" type="checkbox"
+														name="customDays" id="friday" value="Fri">
+													<label class="form-check-label" for="friday">Friday</label>
+												</div>
+												<div class="form-check">
+													<input class="form-check-input" type="checkbox"
+														name="customDays" id="saturday" value="Sat">
+													<label class="form-check-label" for="saturday">Saturday</label>
+												</div>
+												<div class="form-check">
+													<input class="form-check-input" type="checkbox"
+														name="customDays" id="sunday" checked value="Sun">
+													<label class="form-check-label"  for="sunday">Sunday</label>
+												</div>
+											</div>
+										</div>
+										<div class="col-3">
+											<input id="editTimeForm" onchange="checkTime()" name="time" disabled type="time">
+										</div>
+									</div>
 
-								<div class="row">
-									<div class="col-5 me-3">
-										<div class="form-check form-check-inline">
-											<input id="editDaily" disabled class="form-check-input" onchange="showCustomDays()"
-												type="radio" name="date" value="daily">
-											<label class="form-check-label" for="editDaily">Daily</label>
-										</div>
-										<div class="form-check form-check-inline">
-											<input id="editCustom" disabled class="form-check-input"
-												type="radio" name="date" value="custom" onchange="showCustomDays()"> 
-												<label class="form-check-label" for="editCustom">Custom</label>
-										</div>
-									</div>
-									<div class="col-3">
-										<div id="customDaysContainer" style="display: none;">
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox"
-													name="customDays" id="monday" value="Mon"> <label
-													class="form-check-label" for="monday">Monday</label>
-											</div>
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox"
-													name="customDays" id="tuesday" value="Tue"> <label
-													class="form-check-label" for="tuesday">Tuesday</label>
-											</div>
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox"
-													name="customDays" id="wednesday" value="Wed">
-												<label class="form-check-label" for="wednesday">Wednesday</label>
-											</div>
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox"
-													name="customDays" id="thursday" value="Thu">
-												<label class="form-check-label" for="thursday">Thursday</label>
-											</div>
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox"
-													name="customDays" id="friday" value="Fri">
-												<label class="form-check-label" for="friday">Friday</label>
-											</div>
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox"
-													name="customDays" id="saturday" value="Sat">
-												<label class="form-check-label" for="saturday">Saturday</label>
-											</div>
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox"
-													name="customDays" id="sunday" checked value="Sun">
-												<label class="form-check-label"  for="sunday">Sunday</label>
-											</div>
-										</div>
-									</div>
-									<div class="col-3">
-										<input id="editTimeForm" onchange="checkTime()" name="time" disabled type="time">
-									</div>
-								</div>
-
-							</form>
+								</form>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
-							<button type="button" onclick="submitQuartzForm()" disabled id="quartzChange" class="btn btn-primary">Change</button>
+							<button type="button" onclick="submitQuartzForm()"  id="quartzChange" class="btn btn-primary">Change</button>
 						</div>
 					</div>
 				</div>

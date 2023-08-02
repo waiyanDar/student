@@ -64,8 +64,6 @@ public class StudentRegisterApplication {
             Role role6 = new Role();
             role6.setName(USER_READ);
 
-            quartzTask.rescheduleTask();
-
             try {
 
                 roleDao.save(role1);

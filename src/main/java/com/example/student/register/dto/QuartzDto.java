@@ -1,19 +1,16 @@
 package com.example.student.register.dto;
 
 import lombok.Data;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Optional;
 
 @Data
 public class QuartzDto {
-	
-	private boolean autoReport;
-	private boolean editDaily;
-	private boolean monday;
-	private boolean tuesday;
-	private boolean wednesday;
-	private boolean thursday;
-	private boolean friday;
-	private boolean satursday;
-	private boolean sunday;
-	
-	private String time;
+
+	private Optional<Boolean> autoReport;
+	private Optional<String> date;
+	private Optional<String> days;
+	private Optional<String> time;
+
 }

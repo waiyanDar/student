@@ -1,5 +1,6 @@
 package com.example.student.register.controller;
 
+import com.example.student.register.dto.QuartzDto;
 import com.example.student.register.dto.UserRegisterDto;
 import com.example.student.register.dto.UserUpdateDto;
 import com.example.student.register.explorter.UserExplorer;
@@ -122,24 +123,35 @@ public class UserController {
 
         return "user-list";
     }
-    
-    boolean autoReport;
-    
-    @ModelAttribute("autoReport")
-    public boolean autoReport() {
-    	return autoReport;
-    }
         
-    @PostMapping("/quartz")
-    public String quartzControl(@RequestParam("date") String date, @RequestParam("customDays") Optional<String> days, 
-    							@RequestParam("time") String time, @RequestParam("autoReport") boolean autoReport) {
-    	
-    	this.autoReport = autoReport;
-    	
-    	quartzService.changeQuartzTime(date, days, time, autoReport);
-    	
-    	System.out.println(date + " " + days + " " + time + " " + autoReport);
+    @PostMapping("/editReport")
+    @Admin
+    public String quartzControl(@RequestParam("date") Optional<String> date, @RequestParam("customDays") Optional<String> days,
+    							@RequestParam("time") Optional<String> time, @RequestParam("autoReport") Optional<Boolean> autoReport) {
+
+            quartzService.changeQuartzTime(date, days, time, autoReport);
+
     	return "redirect:/findAllUser";
+    }
+
+    @ModelAttribute("quartzDate")
+    public String quartzDate(){
+        return quartzService.getStrDate();
+    }
+
+    @ModelAttribute("quartzDay")
+    public String quartzDay(){
+        return quartzService.getStrDays();
+    }
+
+    @ModelAttribute("autoReport")
+    public boolean isAutoReport(){
+        return quartzService.isBoolAutoReport();
+    }
+
+    @ModelAttribute("quartzTime")
+    public String quartzTime(){
+        return quartzService.getStrTime();
     }
 
 }
