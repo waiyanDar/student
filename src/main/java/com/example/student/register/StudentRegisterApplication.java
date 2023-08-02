@@ -3,6 +3,7 @@ package com.example.student.register;
 import com.example.student.register.dao.UserDao;
 import com.example.student.register.entity.Role;
 import com.example.student.register.entity.User;
+import com.example.student.register.quartz.QuartzTask;
 
 import javax.transaction.Transactional;
 
@@ -11,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.example.student.register.dao.RoleDao;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,18 +24,22 @@ import static com.example.student.register.security.roleHierarchy.RolesForSecuri
 
 @SpringBootApplication
 @EnableAspectJAutoProxy
+@EnableScheduling
 public class StudentRegisterApplication {
 
     private final RoleDao roleDao;
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
+    
+    private final QuartzTask quartzTask;
 
     private static final Logger logger = Logger.getLogger(StudentRegisterApplication.class.getName());
 
-    public StudentRegisterApplication(RoleDao roleDao, UserDao userDao, PasswordEncoder passwordEncoder) {
+    public StudentRegisterApplication(RoleDao roleDao, UserDao userDao, PasswordEncoder passwordEncoder, QuartzTask quartzTask) {
         this.roleDao = roleDao;
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
+        this.quartzTask = quartzTask;
     }
 
     public static void main(String[] args) {
@@ -42,7 +48,6 @@ public class StudentRegisterApplication {
 
     @Bean
     @Transactional
-//    @Profile("Test")
     public CommandLineRunner runner() {
         return arg -> {
 
@@ -59,6 +64,7 @@ public class StudentRegisterApplication {
             Role role6 = new Role();
             role6.setName(USER_READ);
 
+            quartzTask.rescheduleTask();
 
             try {
 

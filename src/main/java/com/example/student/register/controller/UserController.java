@@ -18,37 +18,35 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.student.register.service.QuartzService;
 import com.example.student.register.service.UserService;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
 @Controller
-//@Aspect
 public class UserController {
 
     private final UserService userService;
 
     private final UserExplorer userExplorer;
+    
+    private final QuartzService quartzService;
 
-    public UserController(@Lazy UserService userService, @Lazy UserExplorer userExplorer) {
+    public UserController(@Lazy UserService userService, @Lazy UserExplorer userExplorer, @Lazy QuartzService quartzService) {
         this.userService = userService;
         this.userExplorer = userExplorer;
-
+        this.quartzService = quartzService;
     }
 
     @ModelAttribute("loginDate")
     public String loginDate() {
         return LocalDate.now().toString();
     }
-
-//	@ModelAttribute("userId")
-//	public String userId() {
-//		return userService.getUserId();
-//	}
 
     @GetMapping("/registerUser")
     @UserCreate
@@ -87,15 +85,6 @@ public class UserController {
 
     }
 
-    //        @GetMapping("/findAllUser")
-    @UserRead
-    public String findAllUser(Model model) {
-
-        model.addAttribute("userList", userService.findAllUser());
-
-        return "user-list";
-    }
-
     @GetMapping("/deleteUser")
     @UserDelete
     public String deleteUser(@RequestParam("userId") String userId, RedirectAttributes attributes) {
@@ -119,25 +108,6 @@ public class UserController {
 
     }
 
-    @GetMapping("/login")
-    public String login(Model model) {
-
-        return userService.login(model);
-    }
-
-    @GetMapping("/login-error")
-    public String loginError(RedirectAttributes attributes) {
-
-        attributes.addFlashAttribute("loginError", true);
-
-        return "redirect:/login";
-    }
-
-    @GetMapping("/logout")
-    public String logout() {
-        return "redirect:/login";
-    }
-
     @GetMapping("/exportUserToExcel")
     @Admin
     public String exportStudentToExcel(RedirectAttributes attributes) {
@@ -152,85 +122,24 @@ public class UserController {
 
         return "user-list";
     }
-
-    @GetMapping("/forgotPsw")
-    public String forgotPswForm(Model model) {
-        model.addAttribute("validOtp", false);
-        model.addAttribute("emial", "");
-        return "forgot-Psw";
+    
+    boolean autoReport;
+    
+    @ModelAttribute("autoReport")
+    public boolean autoReport() {
+    	return autoReport;
+    }
+        
+    @PostMapping("/quartz")
+    public String quartzControl(@RequestParam("date") String date, @RequestParam("customDays") Optional<String> days, 
+    							@RequestParam("time") String time, @RequestParam("autoReport") boolean autoReport) {
+    	
+    	this.autoReport = autoReport;
+    	
+    	quartzService.changeQuartzTime(date, days, time, autoReport);
+    	
+    	System.out.println(date + " " + days + " " + time + " " + autoReport);
+    	return "redirect:/findAllUser";
     }
 
-    @PostMapping("/emailForForgotPsw")
-    public String emailForForgotPsw(@RequestParam("email") String email, Model model, RedirectAttributes attributes) {
-        emailForForgotPsw = email;
-        model.addAttribute("validOtp", false);
-        if (userService.searchUserWithEmail(email, model, attributes)) {
-
-            return "redirect:/foundUser";
-        } else {
-            return "redirect:/forgotPsw";
-        }
-    }
-
-    String emailForForgotPsw;
-
-    @GetMapping("/foundUser")
-    public String foundUser(Model model) {
-
-        model.addAttribute("validOtp", false);
-        model.addAttribute("user", userService.findUserByEmail(emailForForgotPsw));
-        return "forgot-Psw";
-
-    }
-
-    @PostMapping("/checkOtp")
-    public String checkOtp(@RequestParam("otp") String otp, @RequestParam("email") String email,
-                           RedirectAttributes attributes, Model model) {
-
-        emailForForgotPsw = email;
-        return userService.checkOtp(email, otp, model, attributes);
-
-    }
-
-    @GetMapping("/expiredOtp")
-    public String expiredOtp(Model model) {
-
-        model.addAttribute("validOtp", false);
-        model.addAttribute("email", emailForForgotPsw);
-        return "forgot-Psw";
-
-    }
-
-    boolean validOtp;
-
-    @GetMapping("/invalidOtp")
-    public String invalidOtp(Model model) {
-
-        model.addAttribute("validOtp", false);
-        model.addAttribute("user", userService.findUserByEmail(emailForForgotPsw));
-        return "forgot-Psw";
-
-    }
-
-    @GetMapping("/changePassword")
-    public String getChangePasswordForm(Model model) throws Exception {
-
-        validOtp = userService.isValidOtpForModel();
-
-        if (!validOtp) {
-            throw new Exception("Something's wrong");
-        }
-        model.addAttribute("validOtp", true);
-        return "forgot-Psw";
-    }
-
-    @PostMapping("/forgotPasswordChange")
-    public String forgotPasswordChange(@RequestParam("password") String password, RedirectAttributes attributes)
-            throws Exception {
-
-        userService.forgotPasswordChange(password, emailForForgotPsw, validOtp, attributes);
-        emailForForgotPsw = null;
-        return "redirect:/login";
-
-    }
 }

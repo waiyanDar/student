@@ -22,7 +22,8 @@
           integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e"
           crossorigin="anonymous">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 
 </head>
@@ -169,6 +170,7 @@
     });
 
     function checkPasswordStrength() {
+
         var password = document.getElementById("password").value;
         var passwordStrengthLabel = document.getElementById("passwordStrengthLabel");
         var confirmPassword = document.getElementById("confirmPassword").value;
@@ -178,13 +180,13 @@
         if (password.length === 0) {
             passwordStrengthLabel.textContent = "";
         } else if (password.length < 6) {
-            passwordStrengthLabel.textContent = "Not enough";
+            passwordStrengthLabel.textContent = "Not enough! Password length should be between 6 and 9";
             passwordStrengthLabel.style.color = "red";
         } else if (password.length > 9) {
-            passwordStrengthLabel.textContent = "Too much";
+            passwordStrengthLabel.textContent = "Too much! Password length should be between 6 and 9";
             passwordStrengthLabel.style.color = "red";
         } else if (/^[a-zA-Z]+$/.test(password) || /^\d+$/.test(password)) {
-            passwordStrengthLabel.textContent = "Weak";
+            passwordStrengthLabel.textContent = "Weak!";
             passwordStrengthLabel.style.color = "red";
         } else if (/\d/.test(password) && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[!@#$%^&* .]/.test(password)) {
             passwordStrengthLabel.textContent = "Strong";
@@ -202,13 +204,14 @@
     }
 
     function validateForm(event) {
+
         var password = document.getElementById("password").value;
         var confirmPassword = document.getElementById("confirmPassword").value;
         var passwordStrengthLabel = document.getElementById("passwordStrengthLabel");
-        /*
-                    if (password.length < 6 || password.length > 9 || passwordStrengthLabel.textContent !== "Strong" || password !== confirmPassword) {
-                       event.preventDefault();
-                    } */
+
+        if (password.length < 6 || password.length > 9 || passwordStrengthLabel.textContent !== "Strong" || password !== confirmPassword) {
+            event.preventDefault();
+        }
     }
 
     function toggleOldPasswordVisibility() {
@@ -216,13 +219,17 @@
         var passwordToggleIcon = document.getElementById("oldPasswordToggleIcon");
 
         if (passwordInput.type === "password") {
+
             passwordInput.type = "text";
             passwordToggleIcon.classList.remove("fa-eye-slash");
             passwordToggleIcon.classList.add("fa-eye");
+
         } else {
+
             passwordInput.type = "password";
             passwordToggleIcon.classList.remove("fa-eye");
             passwordToggleIcon.classList.add("fa-eye-slash");
+
         }
     }
 
@@ -231,13 +238,17 @@
         var passwordToggleIcon = document.getElementById("passwordToggleIcon");
 
         if (passwordInput.type === "password") {
+
             passwordInput.type = "text";
             passwordToggleIcon.classList.remove("fa-eye-slash");
             passwordToggleIcon.classList.add("fa-eye");
+
         } else {
+
             passwordInput.type = "password";
             passwordToggleIcon.classList.remove("fa-eye");
             passwordToggleIcon.classList.add("fa-eye-slash");
+
         }
     }
 
@@ -246,19 +257,52 @@
         var confirmPasswordToggleIcon = document.getElementById("confirmPasswordToggleIcon");
 
         if (confirmPasswordInput.type === "password") {
+
             confirmPasswordInput.type = "text";
             confirmPasswordToggleIcon.classList.remove("fa-eye-slash");
             confirmPasswordToggleIcon.classList.add("fa-eye");
+
         } else {
+
             confirmPasswordInput.type = "password";
             confirmPasswordToggleIcon.classList.remove("fa-eye");
             confirmPasswordToggleIcon.classList.add("fa-eye-slash");
+
         }
     }
 
     var form = document.getElementById("userForm");
     form.addEventListener("submit", validateForm);
 
+    function checkPhotoExtension() {
+
+        var file = document.getElementById("photo").value;
+        var extension = file.split('.').pop();
+
+        var extensionLabel = document.getElementById("extensionLabel");
+        var submitButton = document.getElementById("submitButton");
+
+        var size = document.getElementById('photo').files[0].size / 1000;
+
+        if (!(extension === "jpg" | extension === "jpeg" | extension === "png")) {
+
+            extensionLabel.textContent = "Please use one of jpg, jpeg, png!";
+            extensionLabel.style.color = "red";
+            submitButton.disabled = true;
+
+        } else if (size > 10000) {
+
+            extensionLabel.textContent = "Photo is larger than 10MB!";
+            extensionLabel.style.color = "red";
+            submitButton.disabled = true;
+
+        } else {
+
+            extensionLabel.textContent = "";
+            submitButton.disabled = false;
+
+        }
+    }
 
 </script>
 </body>

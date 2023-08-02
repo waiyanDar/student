@@ -1,53 +1,141 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
-<nav th:fragment="navbar" class="navbar bg-light navbar-dark text-dark">
-    <div class="container">
-        <div class="col-4">
-            <a class="nav-link text-dark" th:href="@{/}">
-                <h3>Student Registration</h3>
-            </a>
-        </div>
-        <div sec:authorize="isAuthenticated()" class="col-7">
-            <p>
-                User Role: <span th:text="${#authentication.getAuthorities()}"></span>
-            </p>
-            <p>
-                Current Date : <span th:text="${loginDate}"></span>
-            </p>
-        </div>
-        <div class="col-1" sec:authorize="isAuthenticated()">
+	<nav th:fragment="navbar" class="navbar bg-light navbar-dark text-dark">
+		<div class="container">
+			<div class="col-4">
+				<a class="nav-link text-dark" th:href="@{/}">
+					<h3>Student Registration</h3>
+				</a>
+			</div>
+			<div sec:authorize="isAuthenticated()" class="col-7">
+				<p>
+					User Role: <span th:text="${#authentication.getAuthorities()}"></span>
+				</p>
+				<p>
+					Current Date : <span th:text="${loginDate}"></span>
+				</p>
+			</div>
+			<div class="col-1" sec:authorize="isAuthenticated()">
+				<div class="dropdown">
+					<button class="btn btn-success dropdown-toggle" type="button"
+						id="dropdownMenuButton1" data-bs-toggle="dropdown"
+						aria-expanded="false">
+						<span th:text="${#authentication.getName()}"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+						<li><a th:href="@{/changePsw}"
+							class="dropdown-item text-warning" href="#">Change password</a></li>
+						<li><a href="javascript: document.logoutForm.submit()"
+							class="nav-link text-danger">Log Out</a>
+							<form name="logoutForm" th:action="@{/logout}" method="post"
+								th:hidden="true">
+								<input type="submit" hidden value="SignOut">
+							</form></li>
+						<li>
+							<!-- Button trigger modal -->
+							<button type="button" class="btn btn-outline text-primary"
+								data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+								Report Setting</button>
+						</li>
+					</ul>
+				</div>
+			</div>
 
-            <!--  <a th:href="@{/profile}" class="text-dark nav-link">
+			<!-- Modal -->
+			<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+				data-bs-keyboard="false" tabindex="-1"
+				aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h1 class="modal-title fs-5" id="staticBackdropLabel">Report
+								Setting</h1>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<form th:action="@{/quartz}" method="post" id="quartzForm">
+								<div class="form-check form-switch ">
+									<input onchange="checkReportForm()" class="form-check-input" type="checkbox" name="autoReport" id="autoReport">
+										 <label class="form-check-label" for="autoReport">Auto Report</label>
+								</div>
+								<br>
 
-            <span th:text="${#authentication.getName()}"></span>
-            <i class="bi bi-gear fs-5"></i>
-            </a> -->
+								<div class="row">
+									<div class="col-5 me-3">
+										<div class="form-check form-check-inline">
+											<input id="editDaily" disabled class="form-check-input" onchange="showCustomDays()"
+												type="radio" name="date" value="daily">
+											<label class="form-check-label" for="editDaily">Daily</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input id="editCustom" disabled class="form-check-input"
+												type="radio" name="date" value="custom" onchange="showCustomDays()"> 
+												<label class="form-check-label" for="editCustom">Custom</label>
+										</div>
+									</div>
+									<div class="col-3">
+										<div id="customDaysContainer" style="display: none;">
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox"
+													name="customDays" id="monday" value="Mon"> <label
+													class="form-check-label" for="monday">Monday</label>
+											</div>
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox"
+													name="customDays" id="tuesday" value="Tue"> <label
+													class="form-check-label" for="tuesday">Tuesday</label>
+											</div>
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox"
+													name="customDays" id="wednesday" value="Wed">
+												<label class="form-check-label" for="wednesday">Wednesday</label>
+											</div>
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox"
+													name="customDays" id="thursday" value="Thu">
+												<label class="form-check-label" for="thursday">Thursday</label>
+											</div>
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox"
+													name="customDays" id="friday" value="Fri">
+												<label class="form-check-label" for="friday">Friday</label>
+											</div>
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox"
+													name="customDays" id="saturday" value="Sat">
+												<label class="form-check-label" for="saturday">Saturday</label>
+											</div>
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox"
+													name="customDays" id="sunday" checked value="Sun">
+												<label class="form-check-label"  for="sunday">Sunday</label>
+											</div>
+										</div>
+									</div>
+									<div class="col-3">
+										<input id="editTimeForm" onchange="checkTime()" name="time" disabled type="time">
+									</div>
+								</div>
 
-            <div class="dropdown">
-                <button class="btn btn-success dropdown-toggle" type="button"
-                        id="dropdownMenuButton1" data-bs-toggle="dropdown"
-                        aria-expanded="false"><span th:text="${#authentication.getName()}"></span></button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li>
-                        <a th:href="@{/changePsw}" class="dropdown-item text-warning" href="#">Change password</a>
-                    </li>
-                    <li><a href="javascript: document.logoutForm.submit()"
-                           class=" nav-link text-danger">Log Out</a>
-                        <form name="logoutForm" th:action="@{/logout}" method="post"
-                              th:hidden="true">
-                            <input type="submit" hidden value="SignOut">
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div sec:authorize="!isAuthenticated()">
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">Close</button>
+							<button type="button" onclick="submitQuartzForm()" disabled id="quartzChange" class="btn btn-primary">Change</button>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <a th:href="@{/login}" class="btn-link text-dark">Log in</a>
-        </div>
-    </div>
-</nav>
+			<div sec:authorize="!isAuthenticated()">
+
+				<a th:href="@{/login}" class="btn-link text-dark">Log in</a>
+			</div>
+		</div>
+	</nav>
 </body>
 </html>
