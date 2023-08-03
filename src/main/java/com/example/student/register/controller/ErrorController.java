@@ -23,6 +23,8 @@ public class ErrorController {
 
     @ExceptionHandler(Throwable.class)
     public String exception(Throwable throwable, Model model) {
+    	
+    	throwable.printStackTrace();
 
         String msg = throwable != null ? throwable.getMessage() : "Unknown Error";
         model.addAttribute("msg", msg);

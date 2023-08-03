@@ -44,7 +44,6 @@ public class UserExplorer {
             headerRow.createCell(1).setCellValue("USER ID");
             headerRow.createCell(2).setCellValue("USERNAME");
             headerRow.createCell(3).setCellValue("EMAIL");
-//			headerRow.createCell(4).setCellValue("ROLE");
 
             for (Cell cell : headerRow) {
                 cell.setCellStyle(headerCellStyle);
@@ -58,11 +57,8 @@ public class UserExplorer {
                 dataRow.createCell(1).setCellValue(user.getUserId());
                 dataRow.createCell(2).setCellValue(user.getUsername());
                 dataRow.createCell(3).setCellValue(user.getEmail());
-
-//				user.getRoles().forEach(r -> roleName.add(r.getName()));
-//				Cell roleCell = dataRow.createCell(4);
-//				roleCell.setCellValue(String.join(", ",roleName = user.getRoles().forEach(r -> r.getName());));
-            }
+                
+   }
 
             for (int i = 0; i < 4; i++) {
                 sheet.autoSizeColumn(i);

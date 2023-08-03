@@ -1,17 +1,25 @@
 package com.example.student.register.quartz;
 
-import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.config.TriggerTask;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
+import com.example.student.register.service.SmbService;
+
+import lombok.Data;
+
 @Component
+@Data
 public class QuartzTask {
 	
-	String cronExpression = "0 0/1 * * * ?";
+	@Autowired
+	private SmbService smbService;
+	
+	static String cronExpression = "0 0/1 * * * ?";
 	
 	private final TaskScheduler taskScheduler;
 	private ScheduledFuture<?> scheduledFuture;
@@ -22,8 +30,7 @@ public class QuartzTask {
 	}
 	
 	public void changeCron(String newCron) {
-		this.cronExpression = newCron;
-		System.out.println(cronExpression);
+		cronExpression = newCron;
 		rescheduleTask();
 	}
 	
@@ -31,7 +38,7 @@ public class QuartzTask {
 		if (scheduledFuture != null) {
 			scheduledFuture.cancel(true);
 		}
-		TriggerTask triggerTask = new TriggerTask(this::everyOneMinute, new CronTrigger(cronExpression));
+		TriggerTask triggerTask = new TriggerTask(this::executeTask, new CronTrigger(cronExpression));
 		scheduledFuture = taskScheduler.schedule(triggerTask.getRunnable(), triggerTask.getTrigger());
 	}
 
@@ -39,8 +46,8 @@ public class QuartzTask {
 		if (scheduledFuture != null ) scheduledFuture.cancel(true);
 	}
 	
-	public void everyOneMinute() {
-		System.out.println("testing : " + new Date());
+	public void executeTask() {
+		smbService.writePdf();
 	}
 
 }

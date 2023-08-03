@@ -304,6 +304,120 @@
         }
     }
 
+    function checkReportForm() {
+        var checkbox = document.getElementById('autoReport');
+
+        var value = checkbox.checked;
+
+        var editDaily = document.getElementById("editDaily");
+        var editCustom = document.getElementById("editCustom");
+        var editTimeForm = document.getElementById("editTimeForm");
+
+        var quartzChange = document.getElementById("quartzChange");
+
+        if (value) {
+
+			checkbox.value=true;
+
+            editDaily.disabled = false;
+            editTimeForm.disabled = false;
+            editCustom.disabled = false;
+
+            quartzChange.disabled = false;
+
+            editDaily.checked = true;
+
+            editTimeForm.defaultValue = "18:00";
+
+        } else {
+
+			checkbox.value=true;
+
+            editDaily.disabled = true;
+            editTimeForm.disabled = true;
+            editCustom.disabled = true;
+
+            quartzChange.disabled = false;
+
+            editDaily.checked = false;
+
+            editTimeForm.defaultValue = "";
+
+        }
+
+
+    }
+
+    function checkTime() {
+    }
+
+    function checkReport(){
+        var autoReportValue = document.getElementById("getAutoReport").textContent;
+        var quartzTimeValue = document.getElementById("getQuartzTime").textContent;
+        var quartzDayValues = document.getElementById("getQuartzDay").textContent;
+        var quartzDateValue = document.getElementById("getQuartzDate").textContent;
+
+        var customDaysContainer = document.getElementById('customDaysContainer');
+
+        var checkboxForAuto= document.getElementById('autoReport');
+        var checkboxesFroCusDay = document.querySelectorAll('input[name="customDays"]');
+        var editDaily = document.getElementById("editDaily");
+        var editCustom = document.getElementById("editCustom");
+        var editTimeForm = document.getElementById("editTimeForm");
+
+        if (autoReportValue === "true"){
+
+            checkboxForAuto.checked = true;
+            editDaily.disabled = false;
+            editCustom.disabled = false;
+            editTimeForm.disabled = false;
+
+            if (quartzDateValue === "daily"){
+                editDaily.checked = true;
+
+            }else if (quartzDateValue === "custom"){
+                editCustom.checked = true;
+                customDaysContainer.style.display = 'block';
+
+                checkboxesFroCusDay.forEach(checkbox => {
+                    if (quartzDayValues.includes(checkbox.value)) {
+                        checkbox.checked = true;
+                    } else {
+                        checkbox.checked = false;
+                    }
+                });
+            }
+
+            editDaily.value = quartzDateValue;
+            editTimeForm.value = quartzTimeValue;
+        }
+    }
+
+    function showCustomDays() {
+        var customRadio = document.getElementById('editCustom');
+        var customDaysContainer = document.getElementById('customDaysContainer');
+
+        if (customRadio.checked) {
+            customDaysContainer.style.display = 'block';
+        } else {
+            customDaysContainer.style.display = 'none';
+        }
+    }
+
+    function submitQuartzForm() {
+        var editDaily = document.getElementById("editDaily");
+        var customDaysContainer = document.getElementById('customDaysContainer');
+        var quartzForm = document.getElementById('quartzForm');
+
+        if (editDaily.checked) {
+            customDaysContainer.style.display = 'none';
+            editDaily.value = 'daily';
+        } else {
+            customDaysContainer.style.display = 'block';
+            editDaily.value = 'custom';
+        }
+        quartzForm.submit();
+    }
 </script>
 </body>
 </html>

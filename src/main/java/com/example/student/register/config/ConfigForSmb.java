@@ -13,4 +13,7 @@ public class ConfigForSmb {
 	
 	public final String FOLDER_PATH = "/WYMM_test/student Registration/course";
 	public final String PHOTO_FOLDER_NAME = "photo";
+	
+	public final String PDF_FOLDER_PATH = "/WYMM_test/student Registration/user";
+	public final String PDF_FOLDER_NAME = "pdf";
 }

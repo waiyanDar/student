@@ -3,7 +3,6 @@ package com.example.student.register;
 import com.example.student.register.dao.UserDao;
 import com.example.student.register.entity.Role;
 import com.example.student.register.entity.User;
-import com.example.student.register.quartz.QuartzTask;
 
 import javax.transaction.Transactional;
 
@@ -31,15 +30,12 @@ public class StudentRegisterApplication {
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
     
-    private final QuartzTask quartzTask;
-
     private static final Logger logger = Logger.getLogger(StudentRegisterApplication.class.getName());
 
-    public StudentRegisterApplication(RoleDao roleDao, UserDao userDao, PasswordEncoder passwordEncoder, QuartzTask quartzTask) {
+    public StudentRegisterApplication(RoleDao roleDao, UserDao userDao, PasswordEncoder passwordEncoder) {
         this.roleDao = roleDao;
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
-        this.quartzTask = quartzTask;
     }
 
     public static void main(String[] args) {
@@ -80,10 +76,12 @@ public class StudentRegisterApplication {
 
             try {
                 User user = new User();
+            
                 user.setUsername("wai yan");
                 user.setPassword(passwordEncoder.encode("12345"));
                 user.setEmail("waiyan@gmail.com");
                 user.setRoles(Arrays.asList(role1));
+                
                 userDao.save(user);
             } catch (Exception e) {
                 logger.warning(e.getMessage());

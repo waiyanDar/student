@@ -348,10 +348,8 @@
 
     }
 
-    function checkTime() {
-    }
-
     function checkReport(){
+        
         var autoReportValue = document.getElementById("getAutoReport").textContent;
         var quartzTimeValue = document.getElementById("getQuartzTime").textContent;
         var quartzDayValues = document.getElementById("getQuartzDay").textContent;
@@ -404,17 +402,43 @@
         }
     }
 
+    function checkRole(){
+
+    	var role = document.getElementById("userAutorities").textContent;
+		var button = document.getElementById("reportButton");
+		
+    	if(role.includes("ROLE_ADMIN")){
+        	button.hidden = false;
+        	}else{
+            	button.hidden = true;
+            	}
+		
+        }
+
     function submitQuartzForm() {
+        
         var editDaily = document.getElementById("editDaily");
+        var editCustom = document.getElementById("editCustom");
         var customDaysContainer = document.getElementById('customDaysContainer');
         var quartzForm = document.getElementById('quartzForm');
+        var defaultSunday = document.getElementById('sunday');
+        var checkboxesFroCusDay = document.querySelectorAll('input[name="customDays"]');
 
         if (editDaily.checked) {
             customDaysContainer.style.display = 'none';
             editDaily.value = 'daily';
-        } else {
+            
+        } else if(editCustom.checked) {
             customDaysContainer.style.display = 'block';
             editDaily.value = 'custom';
+            
+                var allUnchecked = [...checkboxesFroCusDay].every(function(cb) {
+                    return !cb.checked;
+                });
+
+                if (allUnchecked) {
+                	defaultSunday.checked = true;
+                }
         }
         quartzForm.submit();
     }

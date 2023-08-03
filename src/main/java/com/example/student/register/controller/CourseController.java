@@ -18,23 +18,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.student.register.dto.CourseDto;
 import com.example.student.register.security.annotation.Admin;
 import com.example.student.register.service.CourseService;
-import com.example.student.register.service.SmbService;
 
 import lombok.Data;
 
 @Controller
 @Data
-//@Aspect
 public class CourseController {
 
     @Autowired
     private CourseService courseService;
 
     @Autowired
-    private QuartzService quartzService;
-
-    @Autowired
-    private SmbService smbservice;
+    private QuartzService quartzService;    
 
     @ModelAttribute("loginDate")
     public String loginDate() {

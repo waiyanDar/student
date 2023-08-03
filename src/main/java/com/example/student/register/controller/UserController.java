@@ -1,6 +1,5 @@
 package com.example.student.register.controller;
 
-import com.example.student.register.dto.QuartzDto;
 import com.example.student.register.dto.UserRegisterDto;
 import com.example.student.register.dto.UserUpdateDto;
 import com.example.student.register.explorter.UserExplorer;
@@ -129,7 +128,7 @@ public class UserController {
     public String quartzControl(@RequestParam("date") Optional<String> date, @RequestParam("customDays") Optional<String> days,
     							@RequestParam("time") Optional<String> time, @RequestParam("autoReport") Optional<Boolean> autoReport) {
 
-            quartzService.changeQuartzTime(date, days, time, autoReport);
+            quartzService.executeQuartz(date, days, time, autoReport);
 
     	return "redirect:/findAllUser";
     }
