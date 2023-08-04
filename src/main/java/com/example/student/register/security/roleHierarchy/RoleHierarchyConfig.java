@@ -13,7 +13,8 @@ public class RoleHierarchyConfig {
     @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchyImpl = new RoleHierarchyImpl();
-        roleHierarchyImpl.setHierarchy(new RoleHierarchyBuilder().append(ROLES_ADMIN, USER_ADMIN)
+        roleHierarchyImpl.setHierarchy(new RoleHierarchyBuilder().append(SUPER_ADMIN, ROLES_ADMIN)
+        		.append(ROLES_ADMIN, USER_ADMIN)
                 .append(USER_ADMIN, USER_CREATE)
                 .append(USER_ADMIN, USER_DELETE)
                 .append(USER_ADMIN, USER_UPDATE)

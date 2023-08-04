@@ -49,7 +49,6 @@ public class User {
         User user = new User();
         user.setUsername(userRegDto.getUsername());
         user.setEmail(userRegDto.getEmail());
-//        user.setPhoto(ArrayUtils.toObject(userRegDto.getPhoto().getBytes()));
         user.setPhoto(userRegDto.getPhoto().getBytes());
         return user;
     }

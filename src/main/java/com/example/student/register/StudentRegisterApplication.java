@@ -59,9 +59,12 @@ public class StudentRegisterApplication {
             role5.setName(USER_DELETE);
             Role role6 = new Role();
             role6.setName(USER_READ);
-
+            Role role7 = new Role();
+            role7.setName(SUPER_ADMIN);
+            
             try {
 
+            	roleDao.save(role7);
                 roleDao.save(role1);
                 roleDao.save(role2);
                 roleDao.save(role3);
@@ -75,14 +78,29 @@ public class StudentRegisterApplication {
             }
 
             try {
-                User user = new User();
+            	
+            	String email = "waiyan@gmail.com";
+            	
+            	User user = userDao.findUserByEmail(email).get();
+            	
+            	if(user != null) {
+            		
+            		user.setRoles(null);
+            		Role role = roleDao.findRoleByName(role7.getName()).get();
+            		user.setRoles(Arrays.asList(role));
+            		userDao.saveAndFlush(user);
+
+            	}else {
+                user = new User();
             
                 user.setUsername("wai yan");
                 user.setPassword(passwordEncoder.encode("12345"));
-                user.setEmail("waiyan@gmail.com");
-                user.setRoles(Arrays.asList(role1));
-                
+                user.setEmail(email);
+                user.setRoles(Arrays.asList(role7));
+               
                 userDao.save(user);
+                }
+                
             } catch (Exception e) {
                 logger.warning(e.getMessage());
             }

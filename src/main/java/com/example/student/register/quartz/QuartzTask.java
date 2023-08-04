@@ -19,7 +19,7 @@ public class QuartzTask {
 	@Autowired
 	private SmbService smbService;
 	
-	static String cronExpression = "0 0/1 * * * ?";
+	static String cronExpression = "0 0/5 * * * ?";
 	
 	private final TaskScheduler taskScheduler;
 	private ScheduledFuture<?> scheduledFuture;

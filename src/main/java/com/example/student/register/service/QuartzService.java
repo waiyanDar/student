@@ -37,7 +37,7 @@ public class QuartzService {
 		}else {
 			quartzTask.stopTask();
 		}
-    	
+    	    	
     }
     
     public void setDatas() {

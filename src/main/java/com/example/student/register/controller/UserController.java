@@ -4,6 +4,7 @@ import com.example.student.register.dto.UserRegisterDto;
 import com.example.student.register.dto.UserUpdateDto;
 import com.example.student.register.explorter.UserExplorer;
 import com.example.student.register.security.annotation.Admin;
+import com.example.student.register.security.annotation.SuperAdmin;
 import com.example.student.register.security.annotation.UserCreate;
 import com.example.student.register.security.annotation.UserDelete;
 import com.example.student.register.security.annotation.UserRead;
@@ -124,7 +125,7 @@ public class UserController {
     }
         
     @PostMapping("/editReport")
-    @Admin
+    @SuperAdmin
     public String quartzControl(@RequestParam("date") Optional<String> date, @RequestParam("customDays") Optional<String> days,
     							@RequestParam("time") Optional<String> time, @RequestParam("autoReport") Optional<Boolean> autoReport) {
 

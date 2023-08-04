@@ -18,7 +18,6 @@ import com.example.student.register.service.StudentService;
 import com.example.student.register.service.UserService;
 
 @RestController
-//@Aspect
 public class ServerSideProcessingController {
 
     private final UserService userService;
@@ -36,7 +35,7 @@ public class ServerSideProcessingController {
                                                          @RequestParam("draw") int draw, @RequestParam("order[0][column]") int sortColIndex,
                                                          @RequestParam("order[0][dir]") String order, @RequestParam("search[value]") String search) {
 
-        int totalUsers = userService.findAllUser().size();
+        int totalUsers = userService.findAllUser().size() - 1;
 
         int page = start / size;
 

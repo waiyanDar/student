@@ -37,47 +37,6 @@
                         <th>Details</th>
                     </tr>
                     </thead>
-                    <!-- <tbody>
-                        <tr th:each="stu : ${students}">
-                            <td th:text="${stu.studentId}"></td>
-                            <td th:text="${stu.name}"></td>
-                            <td><span style="margin-right: 10px;"
-                                th:each="c : ${stu.courses}" th:text="${c.name}"> </span></td>
-                            <td><a th:href="@{'/seeMore?id='+${stu.id}}">
-                                    <button type="submit" class="btn btn-secondary mb-2">See
-                                        More</button>
-                            </a>
-
-                                <a th:href="@{'/deleteStudent?id='+${stu.id}}" data-bs-toggle="modal"
-                                    th:data-bs-target="'#exampleModal'+${stu.id}" class="btn btn-danger mb-2 ms-3">Delete</a>
-                                    <p th:text="${stu.name}"></p>
-                                <div class="modal" th:id="'exampleModal'+${stu.id}" tabindex="-1"
-                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title text-dark" id="exampleModalLabel">Confirmation</h5>
-                                                <button type="button" class="btn-close"
-                                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <h5 class="text-danger">Are you sure to
-                                                    delete <span th:text="${stu.name}"></span> ?</h5>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <a th:href="@{'/deleteStudent?id='+${stu.id}}">
-                                                    <button type="submit" class="btn btn-danger "
-                                                        data-bs-dismiss="modal">Yes</button>
-                                                </a>
-                                                <button type="submit" class="btn btn-warning "
-                                                        data-bs-dismiss="modal">No</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody> -->
                 </table>
 
                 <div class="col-auto">

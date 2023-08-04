@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html th:replace="layout/masterLayout :: layout(~{::main})"
-      xmlns:th="http://www.thymeleaf.org">
+<html th:replace="layout/masterLayout :: layout(~{::main})" xmlns:th="http://www.thymeleaf.org">
 <body>
 <main role="main">
     <div class="main_contents text-dark">
@@ -8,11 +7,10 @@
             <form id="userForm" enctype="multipart/form-data"
                   th:object="${user}" th:action="${actionUrlForU}" method="post">
 
-                <h2 th:if="${!oldUser}" class="col-md-6 offset-md-2 mb-5 mt-4">User
-                    Registration</h2>
+                <h2 th:if="${!oldUser}" class="col-md-6 offset-md-2 mb-5 mt-4">User Registration</h2>
 
-                <h2 th:if="${oldUser}" class="col-md-6 offset-md-2 mb-5 mt-4">User
-                    Update</h2>
+                <h2 th:if="${oldUser}" class="col-md-6 offset-md-2 mb-5 mt-4">User Update</h2>
+                
                 <div th:if="${oldUser}" class="row">
                     <div class="col-2"></div>
                     <div class="col-auto">
@@ -29,9 +27,7 @@
                     <div class="col-md-2"></div>
                     <label for="id" class="col-md-2 col-form-label">User Id</label>
                     <div class="col-md-4">
-                        <input type="text" id="id" class="form-control" disabled
-                               th:value="${userId}">
-
+                        <input type="text" id="id" class="form-control" disabled th:value="${userId}">
                     </div>
                 </div>
                 <div class="row mb-4">
@@ -39,9 +35,8 @@
                     <label for="username" class="col-md-2 col-form-label">Name</label>
                     <div class="col-md-4">
                         <input type="text" id="username" class="form-control"
-                               placeholder="username" th:field="*{username}"> <small
-                            class="text-danger" th:if="${invalidName}"
-                            th:text="${invalidName}"></small>
+                               placeholder="username" th:field="*{username}"> 
+                     <small class="text-danger" th:if="${invalidName}" th:text="${invalidName}"></small>
                     </div>
                 </div>
 
@@ -50,13 +45,12 @@
                     <label for="email" class="col-md-2 col-form-label">Email</label>
                     <div class="col-md-4">
                         <input type="text" id="email" class="form-control"
-                               placeholder="email" th:field="*{email}"> <small
-                            class="text-danger" th:if="${invalidEmail}"
-                            th:text="${invalidEmail}"></small>
+                               placeholder="email" th:field="*{email}">
+                              <small class="text-danger" th:if="${invalidEmail}" th:text="${invalidEmail}"></small>
                     </div>
                 </div>
+                
                 <div class="row mb-4" th:if="${!oldUser}">
-
                     <div>
                         <span style="margin-left: 450px" class="text-warning">Password should include small letter, capital letter, number</span>
                         <br>
@@ -101,8 +95,7 @@
                 </div>
                 <div class="row mb-4">
                     <div class="col-md-2"></div>
-                    <label for="userRole" class="col-md-2 col-form-label">
-                        User Role </label>
+                    <label for="userRole" class="col-md-2 col-form-label"> User Role </label>
                     <div class="col-md-4">
                         <select id="userRole" class="js-states form-control"
                                 multiple="multiple" th:field="*{roles}" style="width: 100%;">
@@ -110,42 +103,33 @@
                                 <option th:each="r : ${role}" th:value="${r.id}"
                                         th:text="${r.name}" style="color: black !important"></option>
                             </optgroup>
-                        </select> <small class="text-danger" th:if="${invalidRole}"
-                                         th:text="${invalidRole}"></small>
+                        </select>
+                        <small class="text-danger" th:if="${invalidRole}" th:text="${invalidRole}"></small>
                     </div>
                 </div>
 
                 <div class="row mb-4">
-
                     <div class="col-md-2"></div>
-
                     <label for="photo" class="col-md-2 col-form-label">Photo</label>
-
                     <div class="col-md-4">
-                        <input type="file" th:field="*{photo}" class="form-control"
-                               id="photo">
+                        <input type="file" th:field="*{photo}" class="form-control" id="photo">
                     </div>
                 </div>
 
                 <div class="row mb-4" th:if="${!oldUser}">
                     <div class="col-md-4"></div>
-
                     <div class="col-md-6">
-
-                        <button type="submit" class="btn btn-secondary col-md-2"
-                                onclick="validateForm()">Add
+                        <button
+                         type="submit" class="btn btn-secondary col-md-2" onclick="validateForm()">Add
                         </button>
-
                     </div>
                 </div>
+                
                 <div class="row mb-4" th:if="${oldUser}">
                     <div class="col-md-4"></div>
-
                     <div class="col-md-6">
-
                         <button type="submit" class="btn btn-success col-md-2">Update</button>
-                        <a type="button" class="btn btn-secondary col-md-2 "
-                           th:href="@{/findAllUser}"> Back </a>
+                        <a type="button" class="btn btn-secondary col-md-2 " th:href="@{/findAllUser}"> Back </a>
                     </div>
                 </div>
             </form>

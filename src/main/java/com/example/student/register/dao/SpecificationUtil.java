@@ -8,21 +8,6 @@ import org.springframework.data.jpa.domain.Specification;
 import javax.persistence.criteria.Join;
 
 public class SpecificationUtil {
-//	public static Specification<Role> withUserId(Optional<String> userId) {
-//		if (userId.filter(StringUtils::hasLength).isPresent()) {
-//			return (root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("userId")),
-//					userId.get().toLowerCase().concat("%"));
-//		}
-//		return Specification.where(null);
-//	}
-//
-//	public static Specification<User> witWord(Optional<String> word) {
-//		if (word.filter(StringUtils::hasLength).isPresent()) {
-//			return (root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("username")),
-//					word.get().toLowerCase().concat("%"));
-//		}
-//		return Specification.where(null);
-//	}
 
     public static Specification<User> userWithSearchTerm(String searchTerm) {
         if (!searchTerm.isEmpty()) {

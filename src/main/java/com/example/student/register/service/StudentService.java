@@ -57,8 +57,12 @@ public class StudentService {
         oStudent.setStudentId(oStudentId);
         oStudent.setName(student.getName());
         oStudent.setPhone(student.getPhone());
-        oStudent.setPhoto(null);
-        oStudent.setPhoto(student.getPhoto().getBytes());
+        
+        if(!student.getPhoto().isEmpty()) {
+        	oStudent.setPhoto(null);
+            oStudent.setPhoto(student.getPhoto().getBytes());
+        }
+        
         oStudent.setDateOfBirth(student.getDateOfBirth());
         oStudent.setCourses(student.getCourses());
         oStudent.setGender(student.getGender());

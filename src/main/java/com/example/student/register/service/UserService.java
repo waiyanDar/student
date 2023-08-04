@@ -244,15 +244,18 @@ public class UserService {
         model.addAttribute("oldUser", oldUser);
         model.addAttribute("user", userDto);
 
-        Role role = roleDao.findById(1).get();
+//        Role role = roleDao.findById(1).get();
+        Role role = roleDao.findRoleByName("ADMIN").get();
+        Role role1 = roleDao.findRoleByName("SUPER_ADMIN").get();
 
-        if (loginUser.getRoles().contains(role)) {
+        if (loginUser.getRoles().contains(role) | loginUser.getRoles().contains(role1)) {
 
-            model.addAttribute("role", roleDao.findAll());
+        	List<Role> roles = roleDao.findAll().stream().filter(r ->	 !r.getName().equals("SUPER_ADMIN")).collect(Collectors.toList());
+            model.addAttribute("role", roles);
 
         } else {
 
-            List<Role> roles = roleDao.findAll().stream().filter(r -> r.getId() != 1).collect(Collectors.toList());
+            List<Role> roles = roleDao.findAll().stream().filter(r -> !r.getName().equals("ADMIN") && !r.getName().equals("SUPER_ADMIN")).collect(Collectors.toList());
             model.addAttribute("role", roles);
 
         }
@@ -333,6 +336,9 @@ public class UserService {
 
         List<User> userList = userDao.findAll(SpecificationUtil.userWithSearchTerm(searchTerm),
                 PageRequest.of(page, size, Sort.by(column).ascending())).getContent();
+        
+        userList = userList.stream().filter(u -> u.getId() != 1).collect(Collectors.toList());
+        
         return userList;
     }
 
@@ -340,6 +346,9 @@ public class UserService {
 
         List<User> userList = userDao.findAll(SpecificationUtil.userWithSearchTerm(searchTerm),
                 PageRequest.of(page, size, Sort.by(column).descending())).getContent();
+        
+        userList = userList.stream().filter(u -> u.getId() != 1).collect(Collectors.toList());
+
         return userList;
     }
 
