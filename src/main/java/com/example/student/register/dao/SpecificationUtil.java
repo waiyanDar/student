@@ -6,6 +6,7 @@ import com.example.student.register.entity.Course;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
 
 public class SpecificationUtil {
 
@@ -14,13 +15,20 @@ public class SpecificationUtil {
             return (root, query, criteriaBuilder) -> {
                 String likeSearchTerm = "%" + searchTerm.toLowerCase() + "%";
 
-                return criteriaBuilder.or(
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("userId")), likeSearchTerm),
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("username")), likeSearchTerm)
+                return criteriaBuilder.and(
+                        criteriaBuilder.notEqual(root.get("userId"), "USR001"),
+                        criteriaBuilder.or(
+                                criteriaBuilder.like(criteriaBuilder.lower(root.get("userId")), likeSearchTerm),
+                                criteriaBuilder.like(criteriaBuilder.lower(root.get("username")), likeSearchTerm)
+                        )
                 );
             };
         }
-        return Specification.where(null);
+        else {
+            return (root, query, criteriaBuilder) -> {
+                return criteriaBuilder.notEqual(root.get("userId"), "USR001");
+            };
+        }
     }
 
     public static Specification<Student> studentWithSearchTerm(String searchTerm) {

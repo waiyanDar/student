@@ -337,7 +337,7 @@ public class UserService {
         List<User> userList = userDao.findAll(SpecificationUtil.userWithSearchTerm(searchTerm),
                 PageRequest.of(page, size, Sort.by(column).ascending())).getContent();
         
-        userList = userList.stream().filter(u -> u.getId() != 1).collect(Collectors.toList());
+//        userList = userList.stream().filter(u -> u.getId() != 1).collect(Collectors.toList());
         
         return userList;
     }
@@ -347,7 +347,7 @@ public class UserService {
         List<User> userList = userDao.findAll(SpecificationUtil.userWithSearchTerm(searchTerm),
                 PageRequest.of(page, size, Sort.by(column).descending())).getContent();
         
-        userList = userList.stream().filter(u -> u.getId() != 1).collect(Collectors.toList());
+//        userList = userList.stream().filter(u -> u.getId() != 1).collect(Collectors.toList());
 
         return userList;
     }

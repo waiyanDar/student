@@ -56,14 +56,12 @@ public class CronExpressionBuilder {
                 } else {
 //                    quartzTask.stopTask();
                 	boolAutoReport = false;
-                    System.out.println("stopped task");
                 }
             }
 
         }else {
 //            quartzTask.stopTask();
         	boolAutoReport = false;
-            System.out.println("stopped task 2 ");
 
         }
         
