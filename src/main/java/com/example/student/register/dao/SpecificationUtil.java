@@ -6,7 +6,6 @@ import com.example.student.register.entity.Course;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
 
 public class SpecificationUtil {
 

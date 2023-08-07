@@ -22,10 +22,6 @@ public class StudentService {
         this.studentDao = studentDao;
     }
 
-//    public void registerStudent(Student student) {
-//        studentDao.save(student);
-//    }
-
     public Student registerStudent(StudentDto studentDto) throws IOException {
         Student student = Student.form(studentDto);
         return studentDao.save(student);
@@ -44,9 +40,7 @@ public class StudentService {
     }
 
     public String deleteStudent(String studentId) {
-//        Student student = findStudent(id);
         Student student = findStudentByStudentId(studentId);
-//        String studentId = student.getStudentId();
         studentDao.delete(student);
         return studentId;
     }

@@ -4,36 +4,111 @@
 <head>
     <meta charset="UTF-8">
     <title>Student Registration</title>
-    <link rel="stylesheet"
-          href="../../static/bootstrap-5.0.2/css/bootstrap.min.css"
+
+    <link rel="stylesheet" href="../../static/bootstrap-5.0.2/css/bootstrap.min.css"
           th:href="@{bootstrap-5.0.2/css/bootstrap.min.css}">
-    <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
             crossorigin="anonymous"></script>
+
     <link th:href="@{test.css}" rel="stylesheet"/>
-    <link rel="stylesheet"
-          href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
-    <link
-            href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
-            rel="stylesheet"/>
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css"
-          integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e"
-          crossorigin="anonymous">
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css"
+          integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <style>
+
+        .img {
+            width: 100%;
+            height: auto;
+        }
+
+        .btn-close {
+            position: absolute;
+            top: 5%;
+            left: 90%;
+            background-color: rgba(0, 0, 0, .025);
+            color: black;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
+
 <div th:replace="fragments/navbar.html :: navbar"></div>
 <div class="col" th:replace="fragments/sidebar.html :: sidenav"></div>
+
 <div class="row">
 
-    <div class="col" th:replace="${main}"></div>
+    <div class="col" th:replace="${main}">
+        <!--<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#timeout">
+            Launch static backdrop modal
+        </button>-->
+        <div class="modal fade" id="timeout" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+             aria-labelledby="timeoutLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <!--
+                                                <img src="../../static/photo/anime-dance.gif" alt="GIF" class="img">
+                        -->
+                        <div class="tenor-gif-embed" data-postid="17184386" data-share-method="host"
+                             data-aspect-ratio="1" data-width="100%">
+
+                        </div>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
 </div>
+<script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+
+<script>
+    const TIMEOUT_DURATION = 0.1 * 60 * 1000; // 5 minutes
+
+    function onTimeout() {
+        const modal = new bootstrap.Modal(document.getElementById('timeout'));
+        modal.show();
+    }
+
+    function startTimeout() {
+        window.timeoutID = setTimeout(onTimeout, TIMEOUT_DURATION);
+    }
+
+    function resetTimeout() {
+        clearTimeout(window.timeoutID);
+        startTimeout();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        startTimeout();
+
+        document.addEventListener('mousemove', resetTimeout);
+        document.addEventListener('mousedown', resetTimeout);
+        document.addEventListener('keypress', resetTimeout);
+        document.addEventListener('touchstart', resetTimeout);
+        document.addEventListener('scroll', resetTimeout);
+
+    });
+</script>
 <script
         src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js">
 </script>
@@ -41,14 +116,14 @@
 
 <!-- for data table -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script
-        src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>	 -->
-<script
-        src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 
 <script>
-    /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
     var dropdown = document.getElementsByClassName("dropdown-btn");
     var i;
 
@@ -315,9 +390,14 @@
 
         var quartzChange = document.getElementById("quartzChange");
 
+        var autoReportValue = document.getElementById("getAutoReport").textContent;
+        var quartzTimeValue = document.getElementById("getQuartzTime").textContent;
+        var quartzDayValues = document.getElementById("getQuartzDay").textContent;
+        var quartzDateValue = document.getElementById("getQuartzDate").textContent;
+
         if (value) {
 
-			checkbox.value=true;
+            checkbox.value = true;
 
             editDaily.disabled = false;
             editTimeForm.disabled = false;
@@ -325,13 +405,34 @@
 
             quartzChange.disabled = false;
 
-            editDaily.checked = true;
+            if (quartzDateValue === "daily") {
+                editDaily.checked = true;
 
-            editTimeForm.defaultValue = "18:00";
+            } else if (quartzDateValue === "custom") {
+                editCustom.checked = true;
+                customDaysContainer.style.display = 'block';
+
+                checkboxesFroCusDay.forEach(checkbox => {
+                    if (quartzDayValues.includes(checkbox.value)) {
+                        checkbox.checked = true;
+                    } else {
+                        checkbox.checked = false;
+                    }
+                });
+            } else {
+                editDaily.checked = true;
+            }
+
+            editDaily.value = quartzDateValue;
+            editTimeForm.value = quartzTimeValue;
+
+            if (editTimeForm.value.length === 0) {
+                editTimeForm.value = "18:00";
+            }
 
         } else {
 
-			checkbox.value=true;
+            checkbox.value = true;
 
             editDaily.disabled = true;
             editTimeForm.disabled = true;
@@ -348,10 +449,8 @@
 
     }
 
-    function checkTime() {
-    }
+    function checkReport() {
 
-    function checkReport(){
         var autoReportValue = document.getElementById("getAutoReport").textContent;
         var quartzTimeValue = document.getElementById("getQuartzTime").textContent;
         var quartzDayValues = document.getElementById("getQuartzDay").textContent;
@@ -359,23 +458,23 @@
 
         var customDaysContainer = document.getElementById('customDaysContainer');
 
-        var checkboxForAuto= document.getElementById('autoReport');
+        var checkboxForAuto = document.getElementById('autoReport');
         var checkboxesFroCusDay = document.querySelectorAll('input[name="customDays"]');
         var editDaily = document.getElementById("editDaily");
         var editCustom = document.getElementById("editCustom");
         var editTimeForm = document.getElementById("editTimeForm");
 
-        if (autoReportValue === "true"){
+        if (autoReportValue === "true") {
 
             checkboxForAuto.checked = true;
             editDaily.disabled = false;
             editCustom.disabled = false;
             editTimeForm.disabled = false;
 
-            if (quartzDateValue === "daily"){
+            if (quartzDateValue === "daily") {
                 editDaily.checked = true;
 
-            }else if (quartzDateValue === "custom"){
+            } else if (quartzDateValue === "custom") {
                 editCustom.checked = true;
                 customDaysContainer.style.display = 'block';
 
@@ -404,20 +503,47 @@
         }
     }
 
+    function checkRole() {
+
+        var role = document.getElementById("userAutorities").textContent;
+        var button = document.getElementById("reportButton");
+
+        if (role.includes("ROLE_SUPER_ADMIN")) {
+            button.hidden = false;
+        } else {
+            button.hidden = true;
+        }
+
+    }
+
     function submitQuartzForm() {
+
         var editDaily = document.getElementById("editDaily");
+        var editCustom = document.getElementById("editCustom");
         var customDaysContainer = document.getElementById('customDaysContainer');
         var quartzForm = document.getElementById('quartzForm');
+        var defaultSunday = document.getElementById('sunday');
+        var checkboxesFroCusDay = document.querySelectorAll('input[name="customDays"]');
 
         if (editDaily.checked) {
             customDaysContainer.style.display = 'none';
             editDaily.value = 'daily';
-        } else {
+
+        } else if (editCustom.checked) {
             customDaysContainer.style.display = 'block';
             editDaily.value = 'custom';
+
+            var allUnchecked = [...checkboxesFroCusDay].every(function (cb) {
+                return !cb.checked;
+            });
+
+            if (allUnchecked) {
+                defaultSunday.checked = true;
+            }
         }
         quartzForm.submit();
     }
 </script>
+
 </body>
 </html>

@@ -97,9 +97,9 @@
                     <div class="col-md-2"></div>
                     <label for="userRole" class="col-md-2 col-form-label"> User Role </label>
                     <div class="col-md-4">
-                        <select id="userRole" class="js-states form-control"
-                                multiple="multiple" th:field="*{roles}" style="width: 100%;">
-                            <optgroup class="text-dark">
+                        <select id="userRole" class="js-states form-control" 
+                                multiple="multiple" th:field="*{roles}" style="width: 100%; color: black !important;">
+                            <optgroup class="text-dark" style="color: black !important">
                                 <option th:each="r : ${role}" th:value="${r.id}"
                                         th:text="${r.name}" style="color: black !important"></option>
                             </optgroup>

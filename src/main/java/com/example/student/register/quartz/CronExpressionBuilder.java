@@ -21,7 +21,7 @@ public class CronExpressionBuilder {
     
     public String changeCronExpression(Optional<String> date, Optional<String> days, Optional<String> time, Optional<Boolean> autoReport) {
 
-        String conExpression = "0 ";
+        String cronExpression = "0 ";
 
         if (autoReport.isPresent()) {
             boolAutoReport = autoReport.get();
@@ -33,7 +33,7 @@ public class CronExpressionBuilder {
                     String[] arrTime = strTime.split(":");
 
                     for (int i = arrTime.length - 1; i >= 0; i--) {
-                        conExpression = conExpression + arrTime[i] + " ";
+                        cronExpression = cronExpression + arrTime[i] + " ";
                     }
                 }
                 if (date.isPresent()) {
@@ -45,27 +45,33 @@ public class CronExpressionBuilder {
                             strDate = "daily";
                         }
                     }
-                    if (strDate.equals("daily")) {
-                        conExpression = conExpression + "* * ?";
+                    
+                    if(strDate.equals("achoc")) {
+                    	
+                    	cronExpression = cronExpression + "* * *";
+                    	
+                    }else if (strDate.equals("daily")) {
+                    	
+                        cronExpression = cronExpression + "* * ?";
+                        
                     } else if (days.isPresent()) {
+                    	
                         strDays = days.get();
-                        conExpression = conExpression + "? * " + days.get();
+                        cronExpression = cronExpression + "? * " + days.get();
+                        
                     }
-//                    quartzTask.changeCron(conExpression);
 
                 } else {
-//                    quartzTask.stopTask();
                 	boolAutoReport = false;
                 }
             }
 
         }else {
-//            quartzTask.stopTask();
         	boolAutoReport = false;
 
         }
-        
-        return conExpression;
+        System.out.println(cronExpression);
+        return cronExpression;
     }
     
 }

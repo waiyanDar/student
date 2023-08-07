@@ -50,65 +50,9 @@
 <div class="col" th:replace="fragments/sidebar.html :: sidenav"></div>
 
 <div class="row">
-
-    <div class="col" th:replace="${main}">
-        <!--<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#timeout">
-            Launch static backdrop modal
-        </button>-->
-        <div class="modal fade" id="timeout" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-             aria-labelledby="timeoutLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-
-                        <!--
-                                                <img src="../../static/photo/anime-dance.gif" alt="GIF" class="img">
-                        -->
-                        <div class="tenor-gif-embed" data-postid="17184386" data-share-method="host"
-                             data-aspect-ratio="1" data-width="100%">
-
-                        </div>
-
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-    </div>
+    <div class="col" th:replace="${main}"></div>
 </div>
-<script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 
-<script>
-    const TIMEOUT_DURATION = 0.1 * 60 * 1000; // 5 minutes
-
-    function onTimeout() {
-        const modal = new bootstrap.Modal(document.getElementById('timeout'));
-        modal.show();
-    }
-
-    function startTimeout() {
-        window.timeoutID = setTimeout(onTimeout, TIMEOUT_DURATION);
-    }
-
-    function resetTimeout() {
-        clearTimeout(window.timeoutID);
-        startTimeout();
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        startTimeout();
-
-        document.addEventListener('mousemove', resetTimeout);
-        document.addEventListener('mousedown', resetTimeout);
-        document.addEventListener('keypress', resetTimeout);
-        document.addEventListener('touchstart', resetTimeout);
-        document.addEventListener('scroll', resetTimeout);
-
-    });
-</script>
 <script
         src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js">
 </script>
@@ -230,17 +174,11 @@
             ]
         })
 
-        /* $('#studentTable').DataTable({
-            "columnDefs": [
-                {"searchable": false, "targets": 3}
-            ]
-        }); */
-
-
         /* select 2 */
 
         $('#userRole').select2({
-            placeholder: 'Select roles'
+            placeholder: 'Select roles',
+            theme: "classic"
         });
     });
 
@@ -387,8 +325,10 @@
         var editDaily = document.getElementById("editDaily");
         var editCustom = document.getElementById("editCustom");
         var editTimeForm = document.getElementById("editTimeForm");
+        var achocInput = document.getElementById("achocInput");
 
         var quartzChange = document.getElementById("quartzChange");
+        var achoc = document.getElementById('achoc');
 
         var autoReportValue = document.getElementById("getAutoReport").textContent;
         var quartzTimeValue = document.getElementById("getQuartzTime").textContent;
@@ -402,15 +342,21 @@
             editDaily.disabled = false;
             editTimeForm.disabled = false;
             editCustom.disabled = false;
-
+            achocInput.disabled = false;
             quartzChange.disabled = false;
 
             if (quartzDateValue === "daily") {
                 editDaily.checked = true;
+                achocInput.disabled = false;
+                achoc.style.display = 'block';
 
+            }else if(quartzDateValue === "achoc"){
+            	achocInput.checked = true;
+            	
             } else if (quartzDateValue === "custom") {
                 editCustom.checked = true;
                 customDaysContainer.style.display = 'block';
+                achoc.style.display = 'none';
 
                 checkboxesFroCusDay.forEach(checkbox => {
                     if (quartzDayValues.includes(checkbox.value)) {
@@ -437,6 +383,7 @@
             editDaily.disabled = true;
             editTimeForm.disabled = true;
             editCustom.disabled = true;
+            achocInput.disabled = true;
 
             quartzChange.disabled = false;
 
@@ -455,8 +402,10 @@
         var quartzTimeValue = document.getElementById("getQuartzTime").textContent;
         var quartzDayValues = document.getElementById("getQuartzDay").textContent;
         var quartzDateValue = document.getElementById("getQuartzDate").textContent;
+        var achocInput = document.getElementById("achocInput");
 
         var customDaysContainer = document.getElementById('customDaysContainer');
+        var achoc = document.getElementById('achoc');
 
         var checkboxForAuto = document.getElementById('autoReport');
         var checkboxesFroCusDay = document.querySelectorAll('input[name="customDays"]');
@@ -470,14 +419,22 @@
             editDaily.disabled = false;
             editCustom.disabled = false;
             editTimeForm.disabled = false;
+            achocInput.disabled = false;
+            
 
             if (quartzDateValue === "daily") {
                 editDaily.checked = true;
+                achocInput.disabled = false;
+                achoc.style.display = 'block';
 
-            } else if (quartzDateValue === "custom") {
+            }else if(quartzDateValue === "achoc"){
+            	achocInput.checked = true;
+            	
+            }  else if (quartzDateValue === "custom") {
                 editCustom.checked = true;
                 customDaysContainer.style.display = 'block';
-
+                achoc.style.display = 'none';
+                
                 checkboxesFroCusDay.forEach(checkbox => {
                     if (quartzDayValues.includes(checkbox.value)) {
                         checkbox.checked = true;
@@ -495,11 +452,15 @@
     function showCustomDays() {
         var customRadio = document.getElementById('editCustom');
         var customDaysContainer = document.getElementById('customDaysContainer');
-
+        var achoc = document.getElementById('achoc');
+        
         if (customRadio.checked) {
             customDaysContainer.style.display = 'block';
+            achoc.style.display = 'none';
         } else {
+            
             customDaysContainer.style.display = 'none';
+            achoc.style.display = 'block';
         }
     }
 
